@@ -22,8 +22,8 @@
         border: 1px solid var(--main-black-color);
     }
 
-    div p,
-    div ol {
+    p,
+    ol {
         font-size: 0.875rem;
         padding: 0.875rem;
     }
@@ -74,6 +74,10 @@
     grid-row: 1;
     justify-content: space-between;
 
+    p {
+        width: 70%;
+    }
+
     img {
         margin-left: 2rem;
         max-width: 18.75rem;
@@ -81,7 +85,7 @@
 
     h3 {
         background-color: var(--main-white-color);
-        border: 1px solid var(--black-color);
+        border: 1px solid var(--main-black-color);
         margin-right: 5%;
         padding: 0.5rem;
         text-align: center;
