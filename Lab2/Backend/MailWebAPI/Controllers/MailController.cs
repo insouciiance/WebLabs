@@ -17,6 +17,9 @@ namespace MailWebAPI.Controllers
 
         public MailController(IConfiguration configuration) => _configuration = configuration;
 
+        [HttpGet]
+        public IActionResult Get() => Ok("ok");
+
         [HttpPost]
         public IActionResult Post([FromBody] MailRequest req)
         {

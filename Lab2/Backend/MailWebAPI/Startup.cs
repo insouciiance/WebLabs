@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AspNetCoreRateLimit;
 
 namespace MailWebAPI
 {
@@ -26,7 +27,6 @@ namespace MailWebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -40,6 +40,15 @@ namespace MailWebAPI
                         .AllowAnyHeader()
                         .AllowAnyMethod());
             });
+
+            services.AddOptions();
+            services.AddMemoryCache();
+
+            services.AddInMemoryRateLimiting();
+
+            services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+
+            services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,6 +68,8 @@ namespace MailWebAPI
             app.UseAuthorization();
 
             app.UseCors("Default");
+
+            app.UseIpRateLimiting();
 
             app.UseEndpoints(endpoints =>
             {
