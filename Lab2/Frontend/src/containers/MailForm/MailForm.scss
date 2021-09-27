@@ -1,0 +1,23 @@
+@use '/Lab2/Frontend/src/shared/scss/shared.scss' as *;
+
+.FormWrapper {
+    border: 2px solid $main-bright-color;
+    border-radius: 0.5rem;
+    color: $main-bright-color;
+    padding: 1rem;
+
+    .CallToAction {
+        margin: 0;
+        padding-bottom: 1rem;
+        text-align: center;
+    }
+
+    .ButtonContainer {
+        padding-top: 1rem;
+        text-align: center;
+
+        button {
+            min-width: 10rem;
+        }
+    }
+}

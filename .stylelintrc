@@ -8,6 +8,7 @@
         "max-nesting-depth": 2,
         "sh-waqar/declaration-use-variable": [
             ["color", "background-color", "border-color"]
-        ]
+        ],
+        "selector-class-pattern": null
     }
 }

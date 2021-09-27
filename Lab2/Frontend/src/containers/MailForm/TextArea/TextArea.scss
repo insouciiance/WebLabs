@@ -1,0 +1,17 @@
+@use '/Lab2/Frontend/src/shared/scss/shared.scss' as *;
+
+.Wrapper {
+    align-items: center;
+    display: flex;
+    justify-content: flex-start;
+    padding: 0.5rem 0;
+
+    label {
+        width: 35%;
+    }
+
+    textarea {
+        font-size: 1.5rem;
+        width: 65%;
+    }
+}

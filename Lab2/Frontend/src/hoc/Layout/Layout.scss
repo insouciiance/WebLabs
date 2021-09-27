@@ -1,0 +1,16 @@
+@use '/Lab2/Frontend/src/shared/scss/shared.scss' as *;
+
+header {
+    align-items: center;
+    background-color: $main-dark-color;
+    border-bottom: 1px solid $secondary-dark-color;
+    display: flex;
+    height: 4rem;
+    justify-content: center;
+
+    .Logo {
+        color: $main-accent-color;
+        font-size: 1.5rem;
+        margin: 0;
+    }
+}
