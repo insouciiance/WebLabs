@@ -5,3 +5,16 @@
     max-width: 35rem;
     padding-top: 4rem;
 }
+
+.SpinnerContainer {
+    align-items: center;
+    background-color: rgba($color: $main-dark-color, $alpha: 0.5);
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 1;
+}

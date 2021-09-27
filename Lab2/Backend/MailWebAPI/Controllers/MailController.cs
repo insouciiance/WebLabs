@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Threading;
 using System.Threading.Tasks;
 using MailWebAPI.Models;
 using Microsoft.Extensions.Configuration;
@@ -65,6 +66,16 @@ namespace MailWebAPI.Controllers
 
             mail.To.Add(recipient);
 
+            if (req.AuthorName is null or "")
+            {
+                return BadRequest("Author's name was not filled.");
+            }
+
+            if (req.Text is null or "")
+            {
+                return BadRequest("There was no text in the message.");
+            }
+
             try
             {
                 smtpClient.Send(mail);
@@ -74,7 +85,7 @@ namespace MailWebAPI.Controllers
                 return StatusCode(500);
             }
 
-            return Ok();
+            return Ok($"Mail sent successfully at {req.MailAddress}");
         }
     }
 }
