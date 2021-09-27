@@ -2,16 +2,15 @@ import React from 'react';
 
 import classes from './InputElement.scss';
 
-const InputElement = props => (
-    <div className={classes.Wrapper}>
-        <label htmlFor={props.name}>{props.labelText}</label>
-        <input
-            name={props.name}
-            id={props.name}
-            type={props.type}
-            onChange={props.onChange}
-        />
-    </div>
-);
+const InputElement = props => {
+    const { name, labelText, type, onChange } = props;
+
+    return (
+        <div className={classes.Wrapper}>
+            <label htmlFor={name}>{labelText}</label>
+            <input name={name} id={name} type={type} onChange={onChange} />
+        </div>
+    );
+};
 
 export default InputElement;

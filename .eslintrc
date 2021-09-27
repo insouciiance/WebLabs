@@ -24,6 +24,7 @@
         "sonarjs/cognitive-complexity": ["error", 15],
         "indent": ["error", 4],
         "no-extra-parens": ["error", "all", { "ignoreJSX": "multi-line" }],
-        "react/prop-types": 0
+        "react/prop-types": 0,
+        "react/destructuring-assignment": [2, "always"]
     }
 }

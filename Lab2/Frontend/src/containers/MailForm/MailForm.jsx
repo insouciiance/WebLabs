@@ -9,14 +9,15 @@ class MailForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            email: null,
-            name: null,
+            mailAddress: null,
+            authorName: null,
             text: null,
         };
     }
 
     onChange(name, event) {
-        if (name !== this.state[name]) {
+        const { [name]: currentValue } = this.state;
+        if (currentValue !== event.target.value) {
             this.setState({
                 [name]: event.target.value,
             });
@@ -24,21 +25,32 @@ class MailForm extends Component {
     }
 
     render() {
+        const { onSubmit } = this.props;
+        const { mailAddress, authorName, text } = this.state;
+
         return (
             <div className={classes.FormWrapper}>
                 <h2 className={classes.CallToAction}>Start mailing now</h2>
-                <form action="#" method="post">
+                <form
+                    onSubmit={onSubmit?.bind(this, {
+                        mailAddress,
+                        authorName,
+                        text,
+                    })}
+                    action="#"
+                    method="post"
+                >
                     <InputElement
                         labelText="Enter mailing address:"
                         type="text"
-                        name="email"
-                        onChange={this.onChange.bind(this, 'email')}
+                        name="mailAddress"
+                        onChange={this.onChange.bind(this, 'mailAddress')}
                     />
                     <InputElement
                         labelText="Enter your name:"
                         type="text"
-                        name="name"
-                        onChange={this.onChange.bind(this, 'name')}
+                        name="authorName"
+                        onChange={this.onChange.bind(this, 'authorName')}
                     />
                     <TextArea
                         labelText="Enter your message:"
