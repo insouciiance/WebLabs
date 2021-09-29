@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 namespace MailWebAPI.Controllers
 {
     [Route("api/{controller}")]
+    [ApiController]
     public class MailController : Controller
     {
         private readonly IConfiguration _configuration;
@@ -22,7 +23,7 @@ namespace MailWebAPI.Controllers
         public IActionResult Get() => Ok("ok");
 
         [HttpPost]
-        public IActionResult Post([FromBody] MailRequest req)
+        public ActionResult Post([FromBody] MailRequest req)
         {
             IConfigurationSection credentials = _configuration.GetSection("MailCredentials");
             string login = credentials.GetSection("Login").Value;
@@ -49,32 +50,16 @@ namespace MailWebAPI.Controllers
             }
             catch (FormatException)
             {
-                return BadRequest($"The address {req.MailAddress} is not a valid email address.");
-            }
-            catch (ArgumentNullException)
-            {
-                return BadRequest($"The mailing address was not filled.");
-            }
-            catch (ArgumentException)
-            {
-                return BadRequest($"The mailing address was not filled.");
+                ModelState.AddModelError(nameof(req.MailAddress), $"The address {req.MailAddress} is not a valid email address.");
+                return ValidationProblem();
             }
             catch (Exception e)
             {
-                return BadRequest($"There was an error: {e.Message}");
+                ModelState.AddModelError(nameof(req.MailAddress), $"There was an error: {e.Message}");
+                return ValidationProblem();
             }
 
             mail.To.Add(recipient);
-
-            if (req.AuthorName is null or "")
-            {
-                return BadRequest("Author's name was not filled.");
-            }
-
-            if (req.Text is null or "")
-            {
-                return BadRequest("There was no text in the message.");
-            }
 
             try
             {
@@ -82,10 +67,10 @@ namespace MailWebAPI.Controllers
             }
             catch
             {
-                return StatusCode(500);
+                return StatusCode((int)HttpStatusCode.ServiceUnavailable);
             }
 
-            return Ok($"Mail sent successfully at {req.MailAddress}");
+            return Ok(req);
         }
     }
 }

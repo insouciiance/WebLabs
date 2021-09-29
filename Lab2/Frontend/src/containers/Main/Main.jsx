@@ -3,6 +3,7 @@ import axios from '../../axiosInstance';
 import Popup from '../../components/UI/Popup/Popup';
 
 import Spinner from '../../components/UI/Spinner/Spinner';
+import parseResponseErrors from '../../shared/js/errorParser';
 import MailForm from '../MailForm/MailForm';
 import classes from './Main.scss';
 
@@ -12,29 +13,40 @@ class Main extends Component {
         this.state = {
             emailResultPopupActive: false,
             isRequestPending: false,
-            requestResult: null,
+            mailResult: {
+                data: null,
+                errors: null,
+            },
         };
     }
 
-    onSubmit = (data, event) => {
-        event.preventDefault();
+    onSubmit = (data, resetForm) => {
         this.setState({
             isRequestPending: true,
         });
+
         axios
-            .post('', data)
+            .post('mail', data)
             .then(res => {
                 this.setState({
                     isRequestPending: false,
                     emailResultPopupActive: true,
-                    requestResult: res.data,
+                    mailResult: {
+                        data: res.data,
+                        errors: null,
+                    },
                 });
+
+                resetForm();
             })
             .catch(error => {
                 this.setState({
                     isRequestPending: false,
                     emailResultPopupActive: true,
-                    requestResult: error.response.data,
+                    mailResult: {
+                        data: null,
+                        errors: parseResponseErrors(error.response),
+                    },
                 });
             });
     };
@@ -46,13 +58,33 @@ class Main extends Component {
     };
 
     render() {
-        const { isRequestPending, emailResultPopupActive, requestResult } =
+        const { isRequestPending, emailResultPopupActive, mailResult } =
             this.state;
+
+        const popupContents = [];
+
+        if (mailResult.data) {
+            popupContents.push(
+                <p key={mailResult} success="true">
+                    {`Successfully mailed ${mailResult.data.mailAddress}`}
+                </p>,
+            );
+        }
+
+        if (mailResult.errors) {
+            for (const value of Object.values(mailResult.errors)) {
+                popupContents.push(
+                    <p key={value} error="true">
+                        {value}
+                    </p>,
+                );
+            }
+        }
 
         return (
             <>
                 <div className={classes.MailFormContainer}>
-                    <MailForm onSubmit={this.onSubmit}></MailForm>
+                    <MailForm onSubmit={this.onSubmit} />
                 </div>
                 {isRequestPending ? (
                     <div className={classes.SpinnerContainer}>
@@ -61,7 +93,7 @@ class Main extends Component {
                 ) : null}
                 {emailResultPopupActive ? (
                     <Popup onDismiss={this.onEmailPopupDismiss}>
-                        <p>{requestResult}</p>
+                        {popupContents}
                     </Popup>
                 ) : null}
             </>

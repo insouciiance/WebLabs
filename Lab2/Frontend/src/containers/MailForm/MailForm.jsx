@@ -9,53 +9,62 @@ class MailForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            mailAddress: null,
-            authorName: null,
-            text: null,
+            mailAddress: '',
+            authorName: '',
+            text: '',
         };
     }
 
-    onChange(name, event) {
+    onChange = (event, name) => {
         const { [name]: currentValue } = this.state;
         if (currentValue !== event.target.value) {
             this.setState({
                 [name]: event.target.value,
             });
         }
-    }
+    };
+
+    onSubmit = event => {
+        event.preventDefault();
+
+        const { onSubmit: onPropsSubmit } = this.props;
+        const { mailAddress, authorName, text } = this.state;
+
+        onPropsSubmit({ mailAddress, authorName, text }, () => {
+            this.setState({
+                mailAddress: '',
+                authorName: '',
+                text: '',
+            });
+        });
+    };
 
     render() {
-        const { onSubmit } = this.props;
         const { mailAddress, authorName, text } = this.state;
 
         return (
             <div className={classes.FormWrapper}>
                 <h2 className={classes.CallToAction}>Start mailing now</h2>
-                <form
-                    onSubmit={onSubmit?.bind(this, {
-                        mailAddress,
-                        authorName,
-                        text,
-                    })}
-                    action="#"
-                    method="post"
-                >
+                <form onSubmit={this.onSubmit} action="#" method="post">
                     <InputElement
                         labelText="Enter mailing address:"
                         type="text"
                         name="mailAddress"
-                        onChange={this.onChange.bind(this, 'mailAddress')}
+                        onChange={e => this.onChange(e, 'mailAddress')}
+                        value={mailAddress}
                     />
                     <InputElement
                         labelText="Enter your name:"
                         type="text"
                         name="authorName"
-                        onChange={this.onChange.bind(this, 'authorName')}
+                        onChange={e => this.onChange(e, 'authorName')}
+                        value={authorName}
                     />
                     <TextArea
                         labelText="Enter your message:"
                         name="text"
-                        onChange={this.onChange.bind(this, 'text')}
+                        onChange={e => this.onChange(e, 'text')}
+                        value={text}
                     />
                     <div className={classes.ButtonContainer}>
                         <Button type="submit" name="submit">

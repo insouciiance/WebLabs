@@ -1,7 +1,7 @@
 @use '/Lab2/Frontend/src/shared/scss/shared.scss' as *;
 
 .PopupWrapper {
-    background-color: $secondary-dark-color;
+    background-color: $main-bright-color;
     border: 1px solid $main-accent-color;
     border-radius: 0.5rem;
     color: $main-bright-color;
@@ -14,5 +14,13 @@
 
     .DismissWrapper {
         text-align: center;
+    }
+
+    [success] {
+        color: $success-color;
+    }
+
+    [error] {
+        color: $error-color;
     }
 }

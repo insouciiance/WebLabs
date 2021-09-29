@@ -9,8 +9,7 @@ const Button = props => {
             type={type}
             className={classes.Button}
             onClick={onClick}
-            disabled={disabled}
-        >
+            disabled={disabled}>
             {children}
         </button>
     );
