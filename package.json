@@ -4,8 +4,8 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "lint": "eslint . --no-error-on-unmatched-pattern",
-        "lint:fix": "eslint . --fix",
+        "lint": "eslint . --ignore-path .gitignore --no-error-on-unmatched-pattern",
+        "lint:fix": "eslint . --fix --ignore-path .gitignore",
         "format": "prettier --check .",
         "format:fix": "prettier . --write",
         "lint:style": "stylelint \"./**/*.scss\"",
