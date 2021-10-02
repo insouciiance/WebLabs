@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AspNetCoreRateLimit;
+using MailWebAPI.Services;
 
 namespace MailWebAPI
 {
@@ -47,6 +48,7 @@ namespace MailWebAPI
             services.AddInMemoryRateLimiting();
 
             services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+            services.AddScoped<MailSender>();
 
             services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
         }

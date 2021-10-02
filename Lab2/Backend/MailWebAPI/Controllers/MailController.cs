@@ -6,71 +6,44 @@ using System.Net;
 using System.Net.Mail;
 using System.Threading;
 using System.Threading.Tasks;
+using Ganss.XSS;
 using MailWebAPI.Models;
+using MailWebAPI.Services;
 using Microsoft.Extensions.Configuration;
 
 namespace MailWebAPI.Controllers
 {
     [Route("api/{controller}")]
-    [ApiController]
+    [Controller]
     public class MailController : Controller
     {
-        private readonly IConfiguration _configuration;
+        private readonly MailSender _mailSender;
 
-        public MailController(IConfiguration configuration) => _configuration = configuration;
-
-        [HttpGet]
-        public IActionResult Get() => Ok("ok");
+        public MailController(MailSender mailSender) => _mailSender = mailSender;
 
         [HttpPost]
-        public ActionResult Post([FromBody] MailRequest req)
+        public async Task<ActionResult> Post([FromBody] MailRequest req)
         {
-            IConfigurationSection credentials = _configuration.GetSection("MailCredentials");
-            string login = credentials.GetSection("Login").Value;
-            string password = credentials.GetSection("Password").Value;
+            HtmlSanitizer sanitizer = new ();
+            string sanitizedHtml = sanitizer.Sanitize(req.Text);
 
-            SmtpClient smtpClient = new("smtp.gmail.com", 587)
+            if (sanitizedHtml == string.Empty)
             {
-                Credentials = new NetworkCredential(login, password),
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                EnableSsl = true
-            };
-
-            MailMessage mail = new()
-            {
-                From = new MailAddress(login, req.AuthorName),
-                Body = req.Text
-            };
-
-            MailAddress recipient;
-
-            try
-            {
-                recipient = new MailAddress(req.MailAddress);
+                ModelState.AddModelError(nameof(req.Text), "Email message must be specified.");
             }
-            catch (FormatException)
+
+            if (!MailAddress.TryCreate(req.MailAddress, out MailAddress recipient))
             {
                 ModelState.AddModelError(nameof(req.MailAddress), $"The address {req.MailAddress} is not a valid email address.");
                 return ValidationProblem();
             }
-            catch (Exception e)
+
+            if (!await _mailSender.TrySendAsync(recipient, req.AuthorName, sanitizedHtml))
             {
-                ModelState.AddModelError(nameof(req.MailAddress), $"There was an error: {e.Message}");
-                return ValidationProblem();
+                return StatusCode((int)HttpStatusCode.InternalServerError);
             }
 
-            mail.To.Add(recipient);
-
-            try
-            {
-                smtpClient.Send(mail);
-            }
-            catch
-            {
-                return StatusCode((int)HttpStatusCode.ServiceUnavailable);
-            }
-
-            return Ok(req);
+            return NoContent();
         }
     }
 }
