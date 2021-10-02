@@ -37,7 +37,8 @@ namespace MailWebAPI.Services
                 {
                     From = new MailAddress(_login, name),
                     Body = body,
-                    To = { address }
+                    To = { address },
+                    IsBodyHtml = true
                 };
 
                 await client.SendMailAsync(mail);

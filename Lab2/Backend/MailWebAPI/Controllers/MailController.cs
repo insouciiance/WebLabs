@@ -9,12 +9,11 @@ using System.Threading.Tasks;
 using Ganss.XSS;
 using MailWebAPI.Models;
 using MailWebAPI.Services;
-using Microsoft.Extensions.Configuration;
 
 namespace MailWebAPI.Controllers
 {
     [Route("api/{controller}")]
-    [Controller]
+    [ApiController]
     public class MailController : Controller
     {
         private readonly MailSender _mailSender;
@@ -30,6 +29,7 @@ namespace MailWebAPI.Controllers
             if (sanitizedHtml == string.Empty)
             {
                 ModelState.AddModelError(nameof(req.Text), "Email message must be specified.");
+                return ValidationProblem();
             }
 
             if (!MailAddress.TryCreate(req.MailAddress, out MailAddress recipient))
@@ -43,7 +43,12 @@ namespace MailWebAPI.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError);
             }
 
-            return NoContent();
+            return Ok(new
+            {
+                req.MailAddress,
+                req.AuthorName,
+                body = sanitizedHtml
+            });
         }
     }
 }

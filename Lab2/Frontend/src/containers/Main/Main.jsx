@@ -3,7 +3,6 @@ import axios from '../../axiosInstance';
 import Popup from '../../components/UI/Popup/Popup';
 
 import Spinner from '../../components/UI/Spinner/Spinner';
-import parseResponseErrors from '../../shared/js/errorParser';
 import MailForm from '../MailForm/MailForm';
 import classes from './Main.scss';
 
@@ -45,7 +44,7 @@ class Main extends Component {
                     emailResultPopupActive: true,
                     mailResult: {
                         data: null,
-                        errors: parseResponseErrors(error.response),
+                        errors: error.response.data.errors,
                     },
                 });
             });
