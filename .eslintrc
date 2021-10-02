@@ -3,8 +3,7 @@
         "browser": true,
         "es6": true
     },
-    "extends": ["metarhia", "plugin:react/recommended"],
-    "parser": "@babel/eslint-parser",
+    "extends": ["metarhia", "plugin:sonarjs/recommended"],
     "parserOptions": {
         "ecmaVersion": "latest",
         "jsx": true,
