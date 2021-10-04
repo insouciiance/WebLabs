@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import Button from '../../components/UI/Button/Button';
 import InputElement from './InputElement/InputElement';
 
 import classes from './MailForm.scss';
 import TextArea from './TextArea/TextArea';
 
-class MailForm extends Component {
+class MailForm extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {

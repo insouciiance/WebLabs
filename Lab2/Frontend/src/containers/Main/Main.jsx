@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import axios from '../../axiosInstance';
 import Popup from '../../components/UI/Popup/Popup';
 
@@ -6,7 +6,7 @@ import Spinner from '../../components/UI/Spinner/Spinner';
 import MailForm from '../MailForm/MailForm';
 import classes from './Main.scss';
 
-class Main extends Component {
+class Main extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
