@@ -20,7 +20,7 @@ namespace MailWebAPI.Services
             _password = xmLCredentials.GetSection("Password").Value;
         }
 
-        public async Task<bool> TrySendAsync(MailAddress address, string name, string body)
+        public async Task<bool> TrySendAsync(MailAddress address, string authorName, string body)
         {
             bool isSuccessful = true;
 
@@ -35,7 +35,7 @@ namespace MailWebAPI.Services
 
                 MailMessage mail = new()
                 {
-                    From = new MailAddress(_login, name),
+                    From = new MailAddress(_login, authorName),
                     Body = body,
                     To = { address },
                     IsBodyHtml = true

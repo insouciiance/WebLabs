@@ -32,11 +32,7 @@ namespace MailWebAPI.Controllers
                 return ValidationProblem();
             }
 
-            if (!MailAddress.TryCreate(req.MailAddress, out MailAddress recipient))
-            {
-                ModelState.AddModelError(nameof(req.MailAddress), $"The address {req.MailAddress} is not a valid email address.");
-                return ValidationProblem();
-            }
+            MailAddress recipient = new (req.MailAddress);
 
             if (!await _mailSender.TrySendAsync(recipient, req.AuthorName, sanitizedHtml))
             {

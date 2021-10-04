@@ -9,6 +9,7 @@ namespace MailWebAPI.Models
 {
     public class MailRequest
     {
+        [EmailAddress(ErrorMessage = "The mail address is not valid.")]
         [Required(ErrorMessage = "Mailing address must be specified.")]
         public string MailAddress { get; set; }
 
