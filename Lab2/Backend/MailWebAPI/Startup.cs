@@ -37,7 +37,7 @@ namespace MailWebAPI
             services.AddCors(options =>
             {
                 options.AddPolicy("Default",
-                    builder => builder.WithOrigins(@"http://localhost:8080")
+                    builder => builder.WithOrigins(@"https://insouciiance-app.azurewebsites.net")
                         .AllowAnyHeader()
                         .AllowAnyMethod());
             });

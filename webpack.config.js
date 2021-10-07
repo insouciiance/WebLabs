@@ -5,7 +5,7 @@ module.exports = {
     entry: './Lab2/Frontend/src/index.jsx',
     output: {
         filename: 'bundle.[hash].js',
-        path: path.resolve(__dirname, './Lab2/Frontend/src/dist'),
+        path: path.resolve(__dirname, './Lab2/Frontend/dist'),
     },
     plugins: [
         new HtmlWebpackPlugin({
