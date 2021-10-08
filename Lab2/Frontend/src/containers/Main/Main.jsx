@@ -65,7 +65,7 @@ class Main extends PureComponent {
         if (mailResult.data) {
             popupContents.push(
                 <p key={mailResult} success="true">
-                    {`Successfully mailed ${mailResult.data.mailAddress}`}
+                    {`Successfully mailed to ${mailResult.data.mailAddress}`}
                 </p>,
             );
         }
