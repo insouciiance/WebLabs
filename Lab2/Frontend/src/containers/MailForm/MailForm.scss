@@ -20,4 +20,10 @@
             min-width: 10rem;
         }
     }
+
+    @media screen and (max-width: 600px) {
+        border-left: 0;
+        border-radius: 0;
+        border-right: 0;
+    }
 }

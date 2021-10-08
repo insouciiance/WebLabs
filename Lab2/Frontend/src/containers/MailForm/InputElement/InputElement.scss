@@ -17,4 +17,18 @@
         padding: 0.25rem;
         width: 65%;
     }
+
+    @media screen and (max-width: 600px) {
+        flex-direction: column;
+        padding: 0.5rem 0;
+
+        label {
+            padding-bottom: 0.5rem;
+            width: 100%;
+        }
+
+        input {
+            width: 100%;
+        }
+    }
 }

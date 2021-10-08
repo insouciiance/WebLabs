@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-    // baseURL: 'https://insouciiance-mail.azurewebsites.net/api',
-    baseURL: 'https://localhost:44390/api',
+    baseURL: 'https://insouciiance-mail.azurewebsites.net/api',
+    // baseURL: 'https://localhost:44390/api',
 });
 
 axiosInstance.interceptors.response.use(null, error => {

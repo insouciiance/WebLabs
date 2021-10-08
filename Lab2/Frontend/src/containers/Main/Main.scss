@@ -4,6 +4,10 @@
     margin: auto;
     max-width: 35rem;
     padding-top: 4rem;
+
+    @media screen and (max-width: 600px) {
+        max-width: 100%;
+    }
 }
 
 .SpinnerContainer {

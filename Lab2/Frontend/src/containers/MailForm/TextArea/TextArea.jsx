@@ -8,7 +8,13 @@ const TextArea = props => {
     return (
         <div className={classes.Wrapper}>
             <label htmlFor={name}>{labelText}</label>
-            <textarea name={name} id={name} onChange={onChange} value={value} />
+            <textarea
+                name={name}
+                id={name}
+                onChange={onChange}
+                value={value}
+                rows="4"
+            />
         </div>
     );
 };
