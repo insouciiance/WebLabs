@@ -8,7 +8,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.response.use(null, error => {
     if (!error.response) {
         const errors = {
-            NetworkError: 'Error: Network error',
+            NetworkError: ['Error: Network error'],
         };
         error.response = {
             data: { errors },
