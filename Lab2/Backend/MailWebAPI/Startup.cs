@@ -36,8 +36,16 @@ namespace MailWebAPI
 
             services.AddCors(options =>
             {
-                options.AddPolicy("Default",
+                options.AddPolicy("Production",
                     builder => builder.WithOrigins(@"https://insouciiance-app.azurewebsites.net")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
+            });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("Development",
+                    builder => builder.WithOrigins(@"http://localhost:8080")
                         .AllowAnyHeader()
                         .AllowAnyMethod());
             });
@@ -61,6 +69,12 @@ namespace MailWebAPI
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MailWebAPI v1"));
+
+                app.UseCors("Development");
+            }
+            else
+            {
+                app.UseCors("Production");
             }
 
             app.UseHttpsRedirection();
@@ -68,8 +82,6 @@ namespace MailWebAPI
             app.UseRouting();
 
             app.UseAuthorization();
-
-            app.UseCors("Default");
 
             app.UseIpRateLimiting();
 
