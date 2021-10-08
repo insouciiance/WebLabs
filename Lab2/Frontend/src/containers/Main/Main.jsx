@@ -71,12 +71,14 @@ class Main extends PureComponent {
         }
 
         if (mailResult.errors) {
-            for (const value of Object.values(mailResult.errors)) {
-                popupContents.push(
-                    <p key={value} error="true">
-                        {value}
-                    </p>,
-                );
+            for (const key in mailResult.errors) {
+                for (const value of mailResult.errors[key]) {
+                    popupContents.push(
+                        <p key={value} error="true">
+                            {value}
+                        </p>,
+                    );
+                }
             }
         }
 
