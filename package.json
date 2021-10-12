@@ -1,0 +1,38 @@
+{
+    "name": "web-labs",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "lint": "eslint . --ignore-path .gitignore --no-error-on-unmatched-pattern",
+        "lint:fix": "eslint . --fix --ignore-path .gitignore",
+        "format": "prettier --check .",
+        "format:fix": "prettier . --write",
+        "lint:style": "stylelint \"./**/*.scss\"",
+        "lint:style:fix": "stylelint \"./**/*.scss\" --fix",
+        "prepare": "husky install",
+        "sass": "sass ."
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/insouciiance/WebLabs.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/insouciiance/WebLabs/issues"
+    },
+    "homepage": "https://github.com/insouciiance/WebLabs#readme",
+    "devDependencies": {
+        "eslint": "^7.32.0",
+        "eslint-config-metarhia": "^7.0.1",
+        "eslint-plugin-import": "^2.24.2",
+        "eslint-plugin-sonarjs": "^0.10.0",
+        "husky": "^7.0.2",
+        "prettier": "2.4.0",
+        "stylelint": "^13.13.1",
+        "stylelint-config-prettier": "^8.0.2",
+        "stylelint-config-sass-guidelines": "^8.0.0",
+        "stylelint-declaration-use-variable": "^1.7.3"
+    }
+}
