@@ -5,31 +5,14 @@
     },
     "extends": ["metarhia", "plugin:sonarjs/recommended"],
     "parserOptions": {
-        "ecmaVersion": "latest",
-        "jsx": true,
-        "sourceType": "module"
+        "ecmaVersion": "latest"
     },
     "globals": {
         "BigInt": true
     },
-    "plugins": ["sonarjs", "react"],
-    "settings": {
-        "import/resolver": {
-            "node": {
-                "extensions": [".js", ".jsx"]
-            }
-        }
-    },
+    "plugins": ["sonarjs"],
     "rules": {
         "sonarjs/cognitive-complexity": ["error", 15],
-        "indent": ["error", 4],
-        "no-extra-parens": ["error", "all", { "ignoreJSX": "multi-line" }],
-        "react/prop-types": 0,
-        "react/destructuring-assignment": [2, "always"],
-        "operator-linebreak": [
-            "error",
-            "after",
-            { "overrides": { "?": "before", ":": "before" } }
-        ]
+        "indent": ["error", 4]
     }
 }

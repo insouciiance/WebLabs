@@ -7,11 +7,7 @@
     "rules": {
         "max-nesting-depth": 2,
         "sh-waqar/declaration-use-variable": [
-            [
-                "/color/",
-                { "ignoreValues": ["transparent", "inherit", "/rgba/"] }
-            ]
-        ],
-        "selector-class-pattern": null
+            ["color", "background-color", "border-color"]
+        ]
     }
 }
