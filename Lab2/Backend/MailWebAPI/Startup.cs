@@ -18,12 +18,14 @@ namespace MailWebAPI
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            Environment = env;
         }
 
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment Environment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -34,18 +36,14 @@ namespace MailWebAPI
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MailWebAPI", Version = "v1" });
             });
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy("Production",
-                    builder => builder.WithOrigins(@"https://insouciiance-app.azurewebsites.net")
-                        .AllowAnyHeader()
-                        .AllowAnyMethod());
-            });
+            string corsOrigin = Environment.IsDevelopment()
+                ? @"http://localhost:8080"
+                : @"https://insouciiance-app.azurewebsites.net";
 
             services.AddCors(options =>
             {
-                options.AddPolicy("Development",
-                    builder => builder.WithOrigins(@"http://localhost:8080")
+                options.AddPolicy("Default",
+                    builder => builder.WithOrigins(corsOrigin)
                         .AllowAnyHeader()
                         .AllowAnyMethod());
             });
@@ -62,20 +60,16 @@ namespace MailWebAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
-            if (env.IsDevelopment())
+            if (Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MailWebAPI v1"));
+            }
 
-                app.UseCors("Development");
-            }
-            else
-            {
-                app.UseCors("Production");
-            }
+            app.UseCors("Default");
 
             app.UseHttpsRedirection();
 

@@ -1,8 +1,12 @@
 import axios from 'axios';
 
+const baseURL =
+    process.env.NODE_ENV.toLowerCase() === 'development'
+        ? 'https://localhost:44390/api'
+        : 'https://insouciiance-mail.azurewebsites.net/api';
+
 const axiosInstance = axios.create({
-    baseURL: 'https://insouciiance-mail.azurewebsites.net/api',
-    // baseURL: 'https://localhost:44390/api',
+    baseURL,
 });
 
 axiosInstance.interceptors.response.use(null, error => {

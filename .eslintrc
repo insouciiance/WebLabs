@@ -25,6 +25,11 @@
         "indent": ["error", 4],
         "no-extra-parens": ["error", "all", { "ignoreJSX": "multi-line" }],
         "react/prop-types": 0,
-        "react/destructuring-assignment": [2, "always"]
+        "react/destructuring-assignment": [2, "always"],
+        "operator-linebreak": [
+            "error",
+            "after",
+            { "overrides": { "?": "before", ":": "before" } }
+        ]
     }
 }
