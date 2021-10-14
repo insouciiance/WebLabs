@@ -15,9 +15,8 @@ namespace MailWebAPI.Services
 
         public MailSender(IConfiguration configuration)
         {
-            IConfigurationSection xmLCredentials = configuration.GetSection("MailCredentials");
-            _login = xmLCredentials.GetSection("Login").Value;
-            _password = xmLCredentials.GetSection("Password").Value;
+            _login = configuration["login"];
+            _password = configuration["password"];
         }
 
         public async Task<bool> TrySendAsync(MailAddress address, string authorName, string body)
