@@ -1,0 +1,11 @@
+@use '/Lab2/Frontend/src/shared/scss/shared.scss' as *;
+
+.Backdrop {
+    background-color: rgba($color: $main-dark-color, $alpha: 0.2);
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 1;
+}
