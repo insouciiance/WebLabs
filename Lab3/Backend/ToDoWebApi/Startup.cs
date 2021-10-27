@@ -56,7 +56,7 @@ namespace ToDoWebApi
                     options.Password.RequireNonAlphanumeric = true;
                 })
                 .AddEntityFrameworkStores<ToDosDbContext>();
-
+            
             string signingKeyPhrase = Configuration["SigningKeyPhrase"];
             SymmetricSecurityKey signingKey = new(Encoding.UTF8.GetBytes(signingKeyPhrase));
 
@@ -80,8 +80,6 @@ namespace ToDoWebApi
                     };
                 });
 
-            services.AddAuthorization();
-
             services.AddHttpContextAccessor();
 
             services
@@ -91,10 +89,14 @@ namespace ToDoWebApi
                 .AddType<ApplicationUserType>()
                 .AddType<RegisterUserInputType>()
                 .AddType<LoginUserPayloadType>()
+                .AddType<LoginUserPayloadType>()
+                .AddType<LogoutUserPayloadType>()
                 .AddType<ToDoNoteType>()
                 .AddType<ToDoNoteInputType>()
                 .AddType<ToDoNotePayloadType>()
                 .AddType<ToDoCheckboxType>()
+                .AddType<ToDoCheckboxInputType>()
+                .AddType<ToDoCheckboxPayloadType>()
                 .AddAuthorization();
         }
 
@@ -109,7 +111,6 @@ namespace ToDoWebApi
             app.UseRouting();
 
             app.UseAuthentication();
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

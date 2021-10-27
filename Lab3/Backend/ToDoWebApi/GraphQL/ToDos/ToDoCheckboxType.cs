@@ -17,10 +17,6 @@ namespace ToDoWebApi.GraphQL.ToDos
             descriptor.Description("Represents a to-do checkbox.");
 
             descriptor
-                .Field(c => c.Id)
-                .Ignore();
-
-            descriptor
                 .Field(c => c.NoteId)
                 .Ignore();
 
@@ -33,7 +29,8 @@ namespace ToDoWebApi.GraphQL.ToDos
 
         private class Resolvers
         {
-            public ToDoNote GetNote(ToDoCheckbox checkbox, [Service] ToDosDbContext context)
+            [UseDbContext(typeof(ToDosDbContext))]
+            public ToDoNote GetNote(ToDoCheckbox checkbox, [ScopedService] ToDosDbContext context)
             {
                 return context.Notes.FirstOrDefault(n => n.Id == checkbox.NoteId);
             }

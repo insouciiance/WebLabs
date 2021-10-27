@@ -25,11 +25,12 @@ namespace ToDoWebApi.GraphQL
         }
 
         [Authorize]
-        public IQueryable<ToDoNote> GetNotes(
+        [UseDbContext(typeof(ToDosDbContext))]
+        public IQueryable<ToDoNote> GetNote(
             [Service] IHttpContextAccessor contextAccessor,
-            [Service] ToDosDbContext context)
+            [ScopedService] ToDosDbContext context)
         {
-            string userId = contextAccessor.HttpContext.User.Claims.First().Value;
+            string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
 
             return context.Notes.Where(n => n.UserId == userId);
         }
