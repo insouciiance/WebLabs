@@ -94,9 +94,13 @@ namespace ToDoWebApi
                 .AddType<ToDoNoteType>()
                 .AddType<ToDoNoteInputType>()
                 .AddType<ToDoNotePayloadType>()
+                .AddType<ToDoNoteDeleteInputType>()
+                .AddType<ToDoNoteDeletePayloadType>()
                 .AddType<ToDoCheckboxType>()
                 .AddType<ToDoCheckboxInputType>()
                 .AddType<ToDoCheckboxPayloadType>()
+                .AddType<ToDoCheckboxDeleteInputType>()
+                .AddType<ToDoCheckboxDeletePayloadType>()
                 .AddAuthorization();
         }
 

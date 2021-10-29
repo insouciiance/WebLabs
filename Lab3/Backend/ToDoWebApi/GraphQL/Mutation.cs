@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using HotChocolate;
 using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Data;
+using HotChocolate.Execution;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using ToDoWebApi.Data.DbContexts;
 using ToDoWebApi.GraphQL.ToDos;
 using ToDoWebApi.GraphQL.Users;
@@ -18,7 +20,7 @@ namespace ToDoWebApi.GraphQL
     [GraphQLDescription("Represents the mutation operating on authentication of users.")]
     public class Mutation
     {
-        public async Task<LoginUserPayload> RegisterAsync(
+        public async Task<LoginUserPayload> Register(
             RegisterUserInput input,
             [Service] UserManager<ApplicationUser> userManager,
             [Service] SignInManager<ApplicationUser> signInManager,
@@ -40,14 +42,15 @@ namespace ToDoWebApi.GraphQL
             await signInManager.SignInAsync(user, false);
 
             string jwtToken = tokenCreator.Create(user);
-            return new LoginUserPayload(user.UserName, user.Email, jwtToken);
+            return new LoginUserPayload(user, jwtToken);
         }
 
-        public async Task<LoginUserPayload> LoginAsync(
+        [UseDbContext(typeof(ToDosDbContext))]
+        public async Task<LoginUserPayload> Login(
             LoginUserInput input,
             [Service] SignInManager<ApplicationUser> signInManager,
             [Service] JwtTokenCreator tokenCreator,
-            [Service] ToDosDbContext context)
+            [ScopedService] ToDosDbContext context)
         {
             string userName = input.UserName;
             ApplicationUser user = context.Users.FirstOrDefault(u => u.UserName == userName);
@@ -66,11 +69,11 @@ namespace ToDoWebApi.GraphQL
 
             string jwtToken = tokenCreator.Create(user);
 
-            return new LoginUserPayload(user.UserName, user.Email, jwtToken);
+            return new LoginUserPayload(user, jwtToken);
         }
 
         [Authorize]
-        public async Task<LogoutUserPayload> LogoutAsync(
+        public async Task<LogoutUserPayload> Logout(
             [Service] SignInManager<ApplicationUser> signInManager)
         {
             try
@@ -86,10 +89,11 @@ namespace ToDoWebApi.GraphQL
         }
 
         [Authorize]
+        [UseDbContext(typeof(ToDosDbContext))]
         public async Task<ToDoNotePayload> AddNote(
             ToDoNoteInput input,
             [Service] IHttpContextAccessor contextAccessor,
-            [Service] ToDosDbContext context)
+            [ScopedService] ToDosDbContext context)
         {
             string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
             ToDoNote newNote = new()
@@ -107,10 +111,34 @@ namespace ToDoWebApi.GraphQL
         }
 
         [Authorize]
+        [UseDbContext(typeof(ToDosDbContext))]
+        public async Task<ToDoNoteDeletePayload> DeleteNote(
+            ToDoNoteDeleteInput input,
+            [Service] IHttpContextAccessor contextAccessor,
+            [ScopedService] ToDosDbContext context)
+        {
+            string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
+
+            ToDoNote noteToDelete = context.Notes.FirstOrDefault(n => n.Id == input.Id);
+
+            if (noteToDelete is null || noteToDelete.UserId != userId)
+            {
+                return new ToDoNoteDeletePayload(false);
+            }
+
+            context.Notes.Remove(noteToDelete);
+
+            await context.SaveChangesAsync();
+
+            return new ToDoNoteDeletePayload(true);
+        }
+
+        [Authorize]
+        [UseDbContext(typeof(ToDosDbContext))]
         public async Task<ToDoCheckboxPayload> AddCheckbox(
             ToDoCheckboxInput input,
             [Service] IHttpContextAccessor contextAccessor,
-            [Service] ToDosDbContext context)
+            [ScopedService] ToDosDbContext context)
         {
             string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
             ToDoNote checkboxNote = context.Notes.FirstOrDefault(n => n.Id == input.NoteId);
@@ -133,6 +161,36 @@ namespace ToDoWebApi.GraphQL
             await context.SaveChangesAsync();
 
             return new ToDoCheckboxPayload(checkbox);
+        }
+
+        [Authorize]
+        [UseDbContext(typeof(ToDosDbContext))]
+        public async Task<ToDoCheckboxDeletePayload> DeleteCheckbox(
+            ToDoCheckboxDeleteInput input,
+            [Service] IHttpContextAccessor contextAccessor,
+            [ScopedService] ToDosDbContext context)
+        {
+            string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
+
+            ToDoCheckbox checkboxToDelete = context.Checkboxes.FirstOrDefault(c => c.Id == input.Id);
+
+            if (checkboxToDelete is null)
+            {
+                return new ToDoCheckboxDeletePayload(false);
+            }
+
+            await context.Entry(checkboxToDelete).Navigation("Note").LoadAsync();
+
+            if (checkboxToDelete.Note.UserId != userId)
+            {
+                return new ToDoCheckboxDeletePayload(false);
+            }
+
+            context.Checkboxes.Remove(checkboxToDelete);
+
+            await context.SaveChangesAsync();
+
+            return new ToDoCheckboxDeletePayload(true);
         }
     }
 }
