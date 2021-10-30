@@ -112,6 +112,29 @@ namespace ToDoWebApi.GraphQL
 
         [Authorize]
         [UseDbContext(typeof(ToDosDbContext))]
+        public async Task<ToDoNotePutPayload> PutNote(
+            ToDoNotePutInput input,
+            [Service] IHttpContextAccessor contextAccessor,
+            [ScopedService] ToDosDbContext context)
+        {
+            string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
+
+            ToDoNote noteToPut = context.Notes.FirstOrDefault(n => n.Id == input.Id);
+
+            if (noteToPut is null || noteToPut.UserId != userId)
+            {
+                return null;
+            }
+
+            noteToPut.Name = input.Name;
+
+            await context.SaveChangesAsync();
+
+            return new ToDoNotePutPayload(noteToPut);
+        }
+
+        [Authorize]
+        [UseDbContext(typeof(ToDosDbContext))]
         public async Task<ToDoNoteDeletePayload> DeleteNote(
             ToDoNoteDeleteInput input,
             [Service] IHttpContextAccessor contextAccessor,
@@ -161,6 +184,36 @@ namespace ToDoWebApi.GraphQL
             await context.SaveChangesAsync();
 
             return new ToDoCheckboxPayload(checkbox);
+        }
+
+        [Authorize]
+        [UseDbContext(typeof(ToDosDbContext))]
+        public async Task<ToDoCheckboxPutPayload> PutCheckbox(
+            ToDoCheckboxPutInput input,
+            [Service] IHttpContextAccessor contextAccessor,
+            [ScopedService] ToDosDbContext context)
+        {
+            string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
+
+            ToDoCheckbox checkboxToPut = context.Checkboxes.FirstOrDefault(c => c.Id == input.Id);
+
+            if (checkboxToPut is null)
+            {
+                return null;
+            }
+
+            await context.Entry(checkboxToPut).Navigation("Note").LoadAsync();
+
+            if (checkboxToPut.Note.UserId != userId)
+            {
+                return null;
+            }
+
+            checkboxToPut.Text = input.Text;
+
+            await context.SaveChangesAsync();
+
+            return new ToDoCheckboxPutPayload(checkboxToPut);
         }
 
         [Authorize]

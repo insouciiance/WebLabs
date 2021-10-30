@@ -94,11 +94,15 @@ namespace ToDoWebApi
                 .AddType<ToDoNoteType>()
                 .AddType<ToDoNoteInputType>()
                 .AddType<ToDoNotePayloadType>()
+                .AddType<ToDoNotePutInputType>()
+                .AddType<ToDoNotePutPayloadType>()
                 .AddType<ToDoNoteDeleteInputType>()
                 .AddType<ToDoNoteDeletePayloadType>()
                 .AddType<ToDoCheckboxType>()
                 .AddType<ToDoCheckboxInputType>()
                 .AddType<ToDoCheckboxPayloadType>()
+                .AddType<ToDoCheckboxPutInputType>()
+                .AddType<ToDoCheckboxPutPayloadType>()
                 .AddType<ToDoCheckboxDeleteInputType>()
                 .AddType<ToDoCheckboxDeletePayloadType>()
                 .AddAuthorization();
@@ -110,6 +114,11 @@ namespace ToDoWebApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                app.UseGraphQLVoyager(new VoyagerOptions
+                {
+                    GraphQLEndPoint = "/graphql"
+                }, "/graphql-voyager");
             }
 
             app.UseRouting();
@@ -120,11 +129,6 @@ namespace ToDoWebApi
             {
                 endpoints.MapGraphQL();
             });
-
-            app.UseGraphQLVoyager(new VoyagerOptions
-            {
-                GraphQLEndPoint = "/graphql"
-            }, "/graphql-voyager");
         }
     }
 }
