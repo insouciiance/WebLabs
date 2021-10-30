@@ -1,0 +1,12 @@
+@use '/Lab3/Frontend/src/shared/scss/shared.scss' as *;
+
+.FormWrapper {
+    display: flex;
+    justify-content: center;
+    padding-top: 200px;
+}
+
+.FormCta {
+    color: $main-color-bright;
+    padding-bottom: 1rem;
+}

@@ -26,16 +26,31 @@ namespace ToDoWebApi
     public class Startup
     {
         public IConfiguration Configuration { get; set; }
+        public IWebHostEnvironment Environment { get; set; }
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            string corsOrigin = Environment.IsDevelopment()
+                ? @"http://localhost:8080"
+                : null;
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("Default",
+                    builder => builder
+                        .WithOrigins(corsOrigin)
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
+            });
+
             services.AddPooledDbContextFactory<ToDosDbContext>(options =>
             {
                 string connectionString = Configuration["DefaultConnection"];
@@ -120,6 +135,8 @@ namespace ToDoWebApi
                     GraphQLEndPoint = "/graphql"
                 }, "/graphql-voyager");
             }
+
+            app.UseCors("Default");
 
             app.UseRouting();
 

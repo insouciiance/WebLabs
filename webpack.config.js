@@ -2,14 +2,14 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
 module.exports = {
-    entry: './Lab2/Frontend/src/index.jsx',
+    entry: './Lab3/Frontend/src/index.jsx',
     output: {
         filename: 'bundle.[hash].js',
-        path: path.resolve(__dirname, './Lab2/Frontend/dist'),
+        path: path.resolve(__dirname, './Lab3/Frontend/dist'),
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: './Lab2/Frontend/src/index.html',
+            template: './Lab3/Frontend/src/index.html',
         }),
     ],
     resolve: {
@@ -50,5 +50,8 @@ module.exports = {
                 use: ['file-loader'],
             },
         ],
+    },
+    devServer: {
+        historyApiFallback: true,
     },
 };
