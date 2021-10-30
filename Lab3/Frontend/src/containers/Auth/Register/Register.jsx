@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 
 import Button from '../../../components/Button/Button';
 import Form from '../../../components/Form/Form';
 import FormField from '../../../components/Form/FormField/FormField';
+import { authToken } from '../../../shared/js/authToken';
 import axios from '../../../shared/js/axiosInstance';
 
 import classes from './Register.scss';
 
-export default class Register extends Component {
+class Register extends Component {
     constructor(props) {
         super(props);
 
@@ -32,15 +34,23 @@ export default class Register extends Component {
                         password: "${password}"
                     })
                     {
-                        user {
-                            userName
-                        }
                         jwtToken
+                        expires
                     }
                 }`,
             })
-            .then(res => console.log(res))
-            .catch(err => console.log(err));
+            .then(res => {
+                const { history } = this.props;
+
+                console.log(res);
+                if (!res.data.errors) {
+                    const { jwtToken, expires } = res.data.data.register;
+
+                    authToken.set(jwtToken, expires);
+
+                    history.push('/home');
+                }
+            });
     };
 
     render() {
@@ -100,3 +110,5 @@ export default class Register extends Component {
         );
     }
 }
+
+export default withRouter(Register);

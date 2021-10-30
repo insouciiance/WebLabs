@@ -6,5 +6,5 @@ using ToDoWebApi.Models;
 
 namespace ToDoWebApi.GraphQL.Users
 {
-    public record LoginUserPayload(ApplicationUser user, string JwtToken);
+    public record LoginUserPayload(ApplicationUser User, string JwtToken, DateTime Expires);
 }

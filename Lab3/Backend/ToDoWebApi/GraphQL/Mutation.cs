@@ -36,13 +36,15 @@ namespace ToDoWebApi.GraphQL
 
             if (!result.Succeeded)
             {
-                return null;
+                throw new Exception($"There was a problem with authenticating {input.UserName}.");
             }
 
             await signInManager.SignInAsync(user, false);
 
             string jwtToken = tokenCreator.Create(user);
-            return new LoginUserPayload(user, jwtToken);
+            DateTime expires = DateTime.Now.AddHours(1);
+
+            return new LoginUserPayload(user, jwtToken, expires);
         }
 
         [UseDbContext(typeof(ToDosDbContext))]
@@ -68,8 +70,9 @@ namespace ToDoWebApi.GraphQL
             }
 
             string jwtToken = tokenCreator.Create(user);
+            DateTime expires = DateTime.Now.AddHours(1);
 
-            return new LoginUserPayload(user, jwtToken);
+            return new LoginUserPayload(user, jwtToken, expires);
         }
 
         [Authorize]
