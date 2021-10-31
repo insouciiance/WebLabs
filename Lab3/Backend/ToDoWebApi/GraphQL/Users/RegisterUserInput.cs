@@ -5,5 +5,5 @@ using System.Threading.Tasks;
 
 namespace ToDoWebApi.GraphQL.Users
 {
-    public record RegisterUserInput(string UserName, string Email, string Password);
+    public record RegisterUserInput(string UserName, string Email, string Password, string PasswordConfirm);
 }

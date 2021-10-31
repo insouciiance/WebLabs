@@ -15,9 +15,9 @@
 
 .NoteName {
     font-weight: bold;
+    overflow: hidden;
     padding-bottom: 0.5rem;
     position: relative;
-    text-align: center;
 
     &::after {
         background-color: $secondary-color;
@@ -37,19 +37,40 @@
 
 .Toolbar {
     display: flex;
+    font-size: 1.2rem;
     justify-content: space-between;
     padding: 0.5rem 0;
 
-    .Add {
-        background-color: $main-color-dark;
-        border-radius: 50%;
-        color: $main-color;
+    .Add,
+    .Remove {
         cursor: pointer;
-        font-size: 1.2rem;
-        font-weight: bold;
         height: 1.4rem;
+        line-height: 1.4rem;
         text-align: center;
         width: 1.4rem;
+
+        svg {
+            vertical-align: middle;
+        }
+    }
+
+    .Add {
+        color: $success-color;
+        transition: 0.2s;
+    }
+
+    .Remove {
+        color: $warning-color;
+    }
+
+    .AddCheckbox {
+        display: none;
+
+        &:checked + .Add {
+            color: $warning-color;
+            transform: rotate(45deg);
+            transform-origin: center;
+        }
     }
 }
 

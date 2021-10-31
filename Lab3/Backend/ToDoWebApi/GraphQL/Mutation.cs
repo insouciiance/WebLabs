@@ -26,6 +26,11 @@ namespace ToDoWebApi.GraphQL
             [Service] SignInManager<ApplicationUser> signInManager,
             [Service] JwtTokenCreator tokenCreator)
         {
+            if (input.Password != input.PasswordConfirm)
+            {
+                throw new Exception("Passwords do not match.");
+            }
+
             ApplicationUser user = new()
             {
                 UserName = input.UserName,
@@ -214,6 +219,7 @@ namespace ToDoWebApi.GraphQL
             }
 
             checkboxToPut.Text = input.Text;
+            checkboxToPut.Checked = input.Checked;
 
             await context.SaveChangesAsync();
 

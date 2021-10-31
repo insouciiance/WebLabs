@@ -26,6 +26,7 @@ class Home extends Component {
                         checkboxes {
                             id
                             text
+                            checked
                         }
                     }
                 }`,
@@ -54,6 +55,7 @@ class Home extends Component {
                             checkboxes {
                                 id
                                 text
+                                checked
                             }
                         }
                     }
@@ -75,7 +77,7 @@ class Home extends Component {
             .post('/', {
                 query: `mutation {
                     addCheckbox(input: {
-                        noteId: "${noteId}"
+                        noteId: "${noteId}",
                         text: "${text}"
                     })
                     {
@@ -145,17 +147,26 @@ class Home extends Component {
     onCheckboxRename = (checkboxId, text) => {
         const { notes } = this.state;
 
+        const checkbox = notes
+            .reduce(
+                (acc, curr) => acc.concat(curr.checkboxes),
+                notes[0].checkboxes,
+            )
+            .find(c => c.id === checkboxId);
+
         axios
             .post('/', {
                 query: `mutation {
                     putCheckbox(input: {
-                        id: "${checkboxId}",
-                        text: "${text}"
+                        id: "${checkbox.id}",
+                        text: "${text}",
+                        checked: ${checkbox.checked}
                     })
                     {
                         checkbox {
                             id
                             text
+                            checked
                             note {
                                 id
                             }
@@ -178,6 +189,88 @@ class Home extends Component {
                     checkboxNote.checkboxes[checkboxIndex] = {
                         id: newCheckbox.id,
                         text: newCheckbox.text,
+                        checked: newCheckbox.checked,
+                    };
+
+                    this.setState({ notes });
+                }
+            });
+    };
+
+    onNoteDelete = noteId => {
+        const { notes } = this.state;
+
+        axios
+            .post('/', {
+                query: `mutation {
+                    deleteNote(input: {
+                        id: "${noteId}"
+                    })
+                    {
+                        isSuccessful
+                    }
+                }`,
+            })
+            .then(res => {
+                console.log(res);
+                if (!res.data.errors && res.data.data.deleteNote.isSuccessful) {
+                    const deletedNoteIndex = notes.findIndex(
+                        n => n.id === noteId,
+                    );
+
+                    notes.splice(deletedNoteIndex, 1);
+
+                    this.setState({ notes });
+                }
+            });
+    };
+
+    onCheckboxToggle = checkboxId => {
+        const { notes } = this.state;
+
+        const checkbox = notes
+            .reduce(
+                (acc, curr) => acc.concat(curr.checkboxes),
+                notes[0].checkboxes,
+            )
+            .find(c => c.id === checkboxId);
+
+        axios
+            .post('/', {
+                query: `mutation {
+                    putCheckbox(input: {
+                        id: "${checkbox.id}",
+                        text: "${checkbox.text}",
+                        checked: ${!checkbox.checked}
+                    })
+                    {
+                        checkbox {
+                            id
+                            text
+                            checked
+                            note {
+                                id
+                            }
+                        }
+                    }
+                }`,
+            })
+            .then(res => {
+                console.log(res);
+                if (!res.data.errors) {
+                    const newCheckbox = res.data.data.putCheckbox.checkbox;
+
+                    const checkboxNote = notes.find(
+                        n => n.id === newCheckbox.note.id,
+                    );
+
+                    const checkboxIndex = checkboxNote.checkboxes.findIndex(
+                        c => c.id === newCheckbox.id,
+                    );
+                    checkboxNote.checkboxes[checkboxIndex] = {
+                        id: newCheckbox.id,
+                        text: newCheckbox.text,
+                        checked: newCheckbox.checked,
                     };
 
                     this.setState({ notes });
@@ -210,6 +303,8 @@ class Home extends Component {
                             onCheckboxAdd={this.onCheckboxAdd}
                             onCheckboxDelete={this.onCheckboxDelete}
                             onCheckboxRename={this.onCheckboxRename}
+                            onCheckboxToggle={this.onCheckboxToggle}
+                            onNoteDelete={this.onNoteDelete}
                         />
                     ))}
                 </div>

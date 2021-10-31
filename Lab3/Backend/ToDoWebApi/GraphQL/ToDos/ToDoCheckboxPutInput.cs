@@ -5,5 +5,5 @@ using System.Threading.Tasks;
 
 namespace ToDoWebApi.GraphQL.ToDos
 {
-    public record ToDoCheckboxPutInput(string Id, string Text);
+    public record ToDoCheckboxPutInput(string Id, string Text, bool Checked);
 }

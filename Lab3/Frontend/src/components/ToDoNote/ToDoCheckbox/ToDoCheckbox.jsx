@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { FaCheck, FaTimes, FaTrash } from 'react-icons/fa';
+import { FaCheck, FaCheckSquare, FaSquare, FaTrash } from 'react-icons/fa';
 import Input from '../../Input/Input';
 
 import classes from './ToDoCheckbox.scss';
 
 export default function ToDoCheckbox(props) {
-    const { checkbox, onDelete, onRename } = props;
+    const { checkbox, onDelete, onRename, onCheckToggle } = props;
 
     const [state, setState] = useState({
         isCheckboxRenaming: false,
@@ -33,11 +33,14 @@ export default function ToDoCheckbox(props) {
     const onRenameConfirm = () => {
         const { checkboxText } = state;
 
-        onRename(checkbox.id, checkboxText);
         setState({
             idCheckboxRenaming: false,
             checkboxText,
         });
+
+        if (checkboxText === checkbox.text) return;
+
+        onRename(checkbox.id, checkboxText);
     };
 
     const { isCheckboxRenaming, checkboxText } = state;
@@ -54,13 +57,19 @@ export default function ToDoCheckbox(props) {
                     onChange={onCheckboxTextChange}
                 />
             ) : (
-                <p
-                    className={classes.CheckboxText}
-                    onClick={toggleCheckboxRename}>
-                    {checkboxText}
-                </p>
+                <div
+                    className={classes.CheckboxTextWrapper}
+                    onClick={toggleCheckboxRename}
+                    data-checked={checkbox.checked}>
+                    <span className={classes.CheckboxText}>{checkboxText}</span>
+                </div>
             )}
-            <div className={classes.ToolsWrapper}>
+            <div className={classes.Toolbar}>
+                {checkbox.checked ? (
+                    <FaCheckSquare onClick={() => onCheckToggle(checkbox.id)} />
+                ) : (
+                    <FaSquare onClick={() => onCheckToggle(checkbox.id)} />
+                )}
                 <FaTrash onClick={() => onDelete(checkbox.id)} />
             </div>
         </div>

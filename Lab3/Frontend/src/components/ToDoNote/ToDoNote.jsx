@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
 import ToDoCheckbox from './ToDoCheckbox/ToDoCheckbox';
-import { FaPlus } from 'react-icons/fa';
+import { FaPlus, FaTrash } from 'react-icons/fa';
 
 import classes from './ToDoNote.scss';
 import Input from '../Input/Input';
 import Button from '../Button/Button';
 
 export default function ToDoNote(props) {
-    const { note, onCheckboxAdd, onCheckboxDelete, onCheckboxRename } = props;
+    const {
+        note,
+        onCheckboxAdd,
+        onCheckboxDelete,
+        onCheckboxRename,
+        onCheckboxToggle,
+        onNoteDelete,
+    } = props;
     const [state, setState] = useState({
         newCheckboxText: '',
         showNewCheckbox: false,
@@ -37,19 +44,43 @@ export default function ToDoNote(props) {
             <div className={classes.NoteContentContainer}>
                 <p className={classes.NoteName}>{note.name}</p>
                 <div className={classes.CheckboxesContainer}>
-                    {note.checkboxes.map(c => (
-                        <ToDoCheckbox
-                            key={c.id}
-                            checkbox={c}
-                            onDelete={onCheckboxDelete}
-                            onRename={onCheckboxRename}
-                        />
-                    ))}
+                    {note.checkboxes
+                        .filter(c => !c.checked)
+                        .map(c => (
+                            <ToDoCheckbox
+                                key={c.id}
+                                checkbox={c}
+                                onDelete={onCheckboxDelete}
+                                onRename={onCheckboxRename}
+                                onCheckToggle={onCheckboxToggle}
+                            />
+                        ))}
+                </div>
+                <div className={classes.CheckboxesContainer}>
+                    {note.checkboxes
+                        .filter(c => c.checked)
+                        .map(c => (
+                            <ToDoCheckbox
+                                key={c.id}
+                                checkbox={c}
+                                onDelete={onCheckboxDelete}
+                                onRename={onCheckboxRename}
+                                onCheckToggle={onCheckboxToggle}
+                            />
+                        ))}
                 </div>
                 <div className={classes.Toolbar}>
-                    <FaPlus
-                        className={classes.Add}
-                        onClick={toggleNewCheckboxShow}
+                    <input
+                        id={note.id}
+                        type="checkbox"
+                        className={classes.AddCheckbox}
+                    />
+                    <label htmlFor={note.id} className={classes.Add}>
+                        <FaPlus onClick={toggleNewCheckboxShow} />
+                    </label>
+                    <FaTrash
+                        className={classes.Remove}
+                        onClick={() => onNoteDelete(note.id)}
                     />
                 </div>
                 {showNewCheckbox ? (

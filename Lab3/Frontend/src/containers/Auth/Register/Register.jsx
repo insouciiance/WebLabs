@@ -31,7 +31,8 @@ class Register extends Component {
                     register(input: {
                         userName: "${userName}",
                         email: "${email}",
-                        password: "${password}"
+                        password: "${password}",
+                        passwordConfirm: "${passwordConfirm}"
                     })
                     {
                         jwtToken
