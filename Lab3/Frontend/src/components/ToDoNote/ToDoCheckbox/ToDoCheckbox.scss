@@ -1,19 +1,33 @@
 @use '/Lab3/Frontend/src/shared/scss/shared.scss' as *;
 
 .CheckboxWrapper {
+    border-bottom: 1px solid $main-color;
+    border-top: 1px solid $main-color;
     display: flex;
     justify-content: space-between;
     padding: 0.2rem 0;
-}
 
-.CheckboxText {
-    width: 80%;
+    .CheckboxText,
+    input {
+        background-color: $main-color;
+        color: $main-color-dark;
+        font-size: 1rem;
+        line-height: 1rem;
+        width: 75%;
+    }
+
+    &:hover {
+        border-bottom: 1px solid $main-color-dark;
+        border-top: 1px solid $main-color-dark;
+        cursor: text;
+    }
 }
 
 .ToolsWrapper {
     display: flex;
+    flex-direction: row-reverse;
     justify-content: space-between;
-    width: 15%;
+    width: 20%;
 
     * {
         cursor: pointer;

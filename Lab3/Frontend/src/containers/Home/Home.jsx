@@ -68,7 +68,7 @@ class Home extends Component {
             });
     };
 
-    addCheckbox = (noteId, text) => {
+    onCheckboxAdd = (noteId, text) => {
         const { notes } = this.state;
 
         axios
@@ -106,6 +106,85 @@ class Home extends Component {
             });
     };
 
+    onCheckboxDelete = checkboxId => {
+        const { notes } = this.state;
+
+        axios
+            .post('/', {
+                query: `mutation {
+                    deleteCheckbox(input: {
+                        id: "${checkboxId}"
+                    })
+                    {
+                        isSuccessful
+                    }
+                }`,
+            })
+            .then(res => {
+                console.log(res);
+                if (
+                    !res.data.errors &&
+                    res.data.data.deleteCheckbox.isSuccessful
+                ) {
+                    const checkboxNote = notes.find(n =>
+                        n.checkboxes.some(c => c.id === checkboxId),
+                    );
+
+                    const deletedCheckboxIndex =
+                        checkboxNote.checkboxes.findIndex(
+                            c => c.id === checkboxId,
+                        );
+
+                    checkboxNote.checkboxes.splice(deletedCheckboxIndex, 1);
+
+                    this.setState({ notes });
+                }
+            });
+    };
+
+    onCheckboxRename = (checkboxId, text) => {
+        const { notes } = this.state;
+
+        axios
+            .post('/', {
+                query: `mutation {
+                    putCheckbox(input: {
+                        id: "${checkboxId}",
+                        text: "${text}"
+                    })
+                    {
+                        checkbox {
+                            id
+                            text
+                            note {
+                                id
+                            }
+                        }
+                    }
+                }`,
+            })
+            .then(res => {
+                console.log(res);
+                if (!res.data.errors) {
+                    const newCheckbox = res.data.data.putCheckbox.checkbox;
+
+                    const checkboxNote = notes.find(
+                        n => n.id === newCheckbox.note.id,
+                    );
+
+                    const checkboxIndex = checkboxNote.checkboxes.findIndex(
+                        c => c.id === newCheckbox.id,
+                    );
+                    checkboxNote.checkboxes[checkboxIndex] = {
+                        id: newCheckbox.id,
+                        text: newCheckbox.text,
+                    };
+
+                    this.setState({ notes });
+                }
+            });
+    };
+
     render() {
         const { notes, newNoteName } = this.state;
 
@@ -128,7 +207,9 @@ class Home extends Component {
                         <ToDoNote
                             key={n.id}
                             note={n}
-                            addCheckbox={this.addCheckbox}
+                            onCheckboxAdd={this.onCheckboxAdd}
+                            onCheckboxDelete={this.onCheckboxDelete}
+                            onCheckboxRename={this.onCheckboxRename}
                         />
                     ))}
                 </div>

@@ -7,7 +7,7 @@ import Input from '../Input/Input';
 import Button from '../Button/Button';
 
 export default function ToDoNote(props) {
-    const { note, addCheckbox } = props;
+    const { note, onCheckboxAdd, onCheckboxDelete, onCheckboxRename } = props;
     const [state, setState] = useState({
         newCheckboxText: '',
         showNewCheckbox: false,
@@ -38,7 +38,12 @@ export default function ToDoNote(props) {
                 <p className={classes.NoteName}>{note.name}</p>
                 <div className={classes.CheckboxesContainer}>
                     {note.checkboxes.map(c => (
-                        <ToDoCheckbox key={c.id} checkbox={c} />
+                        <ToDoCheckbox
+                            key={c.id}
+                            checkbox={c}
+                            onDelete={onCheckboxDelete}
+                            onRename={onCheckboxRename}
+                        />
                     ))}
                 </div>
                 <div className={classes.Toolbar}>
@@ -54,10 +59,11 @@ export default function ToDoNote(props) {
                             type="text"
                             value={newCheckboxText}
                             onChange={onNewCheckboxChange}
+                            focused={true}
                         />
                         <Button
                             onClick={() =>
-                                addCheckbox(note.id, newCheckboxText)
+                                onCheckboxAdd(note.id, newCheckboxText)
                             }>
                             Add
                         </Button>

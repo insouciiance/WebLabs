@@ -10,9 +10,16 @@ import { authToken } from './shared/js/authToken';
 export default class App extends Component {
     constructor(props) {
         super(props);
+
+        const isTokenValid = authToken.valid();
+
         this.state = {
-            isAuthenticated: authToken.exists(),
+            isAuthenticated: isTokenValid,
         };
+
+        if (!isTokenValid) {
+            authToken.reset();
+        }
     }
 
     render() {
