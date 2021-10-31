@@ -1,0 +1,37 @@
+@use '/Lab3/Frontend/src/shared/scss/shared.scss' as *;
+
+.AddNoteWrapper {
+    align-items: center;
+    background-color: $secondary-color;
+    display: flex;
+    flex-direction: column;
+    margin: 2rem auto;
+    padding: 1rem;
+    width: 20%;
+
+    .AddNoteCta {
+        color: $main-color-bright;
+        text-align: center;
+    }
+
+    input {
+        background-color: $main-color;
+        color: $main-color-dark;
+        font-weight: bold;
+        margin: 0.5rem 0;
+        width: 100%;
+    }
+
+    button {
+        width: 50%;
+    }
+}
+
+.NotesContainer {
+    display: flex;
+    flex-wrap: wrap;
+
+    > * {
+        width: 20%;
+    }
+}

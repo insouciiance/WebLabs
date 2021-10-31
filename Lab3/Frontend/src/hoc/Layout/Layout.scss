@@ -1,1 +1,10 @@
 @use '/Lab3/Frontend/src/shared/scss/shared.scss' as *;
+
+header {
+    padding-top: 1rem;
+    text-align: center;
+}
+
+.HeaderCta {
+    color: $main-color-bright;
+}

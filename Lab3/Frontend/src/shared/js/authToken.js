@@ -16,4 +16,7 @@ export const authToken = {
         localStorage.setItem('token', token);
         localStorage.setItem('expires', expires);
     },
+    exists() {
+        return !!this.get();
+    },
 };

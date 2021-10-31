@@ -59,14 +59,14 @@ namespace ToDoWebApi.GraphQL
 
             if (user is null)
             {
-                return null;
+                throw new Exception("The specified username was incorrect.");
             }
 
             SignInResult result = await signInManager.PasswordSignInAsync(user, input.Password, false, false);
 
             if (!result.Succeeded)
             {
-                return null;
+                throw new Exception("The specified password was incorrect.");
             }
 
             string jwtToken = tokenCreator.Create(user);
@@ -103,7 +103,8 @@ namespace ToDoWebApi.GraphQL
             {
                 Id = Guid.NewGuid().ToString(),
                 Name = input.Name,
-                UserId = userId
+                UserId = userId,
+                DateCreated = DateTime.Now
             };
 
             context.Notes.Add(newNote);

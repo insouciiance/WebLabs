@@ -7,30 +7,27 @@ import FormField from '../../../components/Form/FormField/FormField';
 import { authToken } from '../../../shared/js/authToken';
 import axios from '../../../shared/js/axiosInstance';
 
-import classes from './Register.scss';
+import classes from './Login.scss';
 
-class Register extends Component {
+class Login extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             userName: '',
-            email: '',
             password: '',
-            passwordConfirm: '',
         };
     }
 
     onFormSubmit = e => {
         e.preventDefault();
-        const { userName, email, password, passwordConfirm } = this.state;
+        const { userName, password } = this.state;
 
         axios
             .post('/', {
                 query: `mutation {
-                    register(input: {
+                    login(input: {
                         userName: "${userName}",
-                        email: "${email}",
                         password: "${password}"
                     })
                     {
@@ -44,7 +41,7 @@ class Register extends Component {
 
                 console.log(res);
                 if (!res.data.errors) {
-                    const { jwtToken, expires } = res.data.data.register;
+                    const { jwtToken, expires } = res.data.data.login;
 
                     authToken.set(jwtToken, expires);
 
@@ -54,12 +51,12 @@ class Register extends Component {
     };
 
     render() {
-        const { userName, email, password, passwordConfirm } = this.state;
+        const { userName, password } = this.state;
 
         return (
             <div className={classes.FormWrapper}>
                 <Form onSubmit={this.onFormSubmit}>
-                    <h3 className={classes.FormCta}>Register</h3>
+                    <h3 className={classes.FormCta}>Login</h3>
                     <FormField
                         name="username"
                         type="text"
@@ -68,17 +65,6 @@ class Register extends Component {
                         onChange={e => {
                             this.setState({
                                 userName: e.target.value,
-                            });
-                        }}
-                    />
-                    <FormField
-                        name="email"
-                        type="text"
-                        label="Enter email:"
-                        value={email}
-                        onChange={e => {
-                            this.setState({
-                                email: e.target.value,
                             });
                         }}
                     />
@@ -93,17 +79,6 @@ class Register extends Component {
                             });
                         }}
                     />
-                    <FormField
-                        name="passwordConfirm"
-                        type="password"
-                        label="Confirm password:"
-                        value={passwordConfirm}
-                        onChange={e => {
-                            this.setState({
-                                passwordConfirm: e.target.value,
-                            });
-                        }}
-                    />
                     <Button>Submit</Button>
                 </Form>
             </div>
@@ -111,4 +86,4 @@ class Register extends Component {
     }
 }
 
-export default withRouter(Register);
+export default withRouter(Login);

@@ -18,6 +18,8 @@ namespace ToDoWebApi.Models
         [Required]
         public string UserId { get; set; }
 
+        public DateTime DateCreated { get; set; }
+
         public ApplicationUser User { get; set; }
 
         public ICollection<ToDoCheckbox> Checkboxes { get; set; } = new List<ToDoCheckbox>();

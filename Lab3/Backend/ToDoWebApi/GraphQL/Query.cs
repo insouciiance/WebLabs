@@ -32,7 +32,9 @@ namespace ToDoWebApi.GraphQL
         {
             string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
 
-            return context.Notes.Where(n => n.UserId == userId);
+            return context.Notes
+                .Where(n => n.UserId == userId)
+                .OrderByDescending(n => n.DateCreated);
         }
     }
 }

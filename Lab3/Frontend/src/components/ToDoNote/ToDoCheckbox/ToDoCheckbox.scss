@@ -1,0 +1,21 @@
+@use '/Lab3/Frontend/src/shared/scss/shared.scss' as *;
+
+.CheckboxWrapper {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.2rem 0;
+}
+
+.CheckboxText {
+    width: 80%;
+}
+
+.ToolsWrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 15%;
+
+    * {
+        cursor: pointer;
+    }
+}
