@@ -47,23 +47,21 @@ export default function ToDoCheckbox(props) {
 
     return (
         <div className={classes.CheckboxWrapper}>
-            {isCheckboxRenaming ? (
-                <Input
-                    name="checkboxrename"
-                    type="text"
-                    value={checkboxText}
-                    focused={true}
-                    onBlur={onRenameConfirm}
-                    onChange={onCheckboxTextChange}
-                />
-            ) : (
-                <div
-                    className={classes.CheckboxTextWrapper}
-                    onClick={toggleCheckboxRename}
-                    data-checked={checkbox.checked}>
-                    <span className={classes.CheckboxText}>{checkboxText}</span>
-                </div>
-            )}
+            <Input
+                name="checkboxrename"
+                type="text"
+                value={checkboxText}
+                focused={isCheckboxRenaming}
+                onBlur={onRenameConfirm}
+                onChange={onCheckboxTextChange}
+                style={
+                    checkbox.checked
+                        ? {
+                              textDecoration: 'line-through',
+                          }
+                        : null
+                }
+            />
             <div className={classes.Toolbar}>
                 {checkbox.checked ? (
                     <FaCheckSquare onClick={() => onCheckToggle(checkbox.id)} />

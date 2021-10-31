@@ -16,21 +16,6 @@
         width: 80%;
     }
 
-    .CheckboxText {
-        position: relative;
-    }
-
-    .CheckboxTextWrapper[data-checked='true'] .CheckboxText::after {
-        background-color: $secondary-color;
-        content: '';
-        height: 1px;
-        left: 0;
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 100%;
-    }
-
     &:hover {
         border-bottom: 1px solid $main-color-dark;
         border-top: 1px solid $main-color-dark;
