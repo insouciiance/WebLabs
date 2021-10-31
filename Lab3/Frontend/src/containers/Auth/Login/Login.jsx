@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { NavLink } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
 
 import Button from '../../../components/Button/Button';
@@ -54,34 +55,39 @@ class Login extends Component {
         const { userName, password } = this.state;
 
         return (
-            <div className={classes.FormWrapper}>
-                <Form onSubmit={this.onFormSubmit}>
-                    <h3 className={classes.FormCta}>Login</h3>
-                    <FormField
-                        name="username"
-                        type="text"
-                        label="Enter username:"
-                        value={userName}
-                        onChange={e => {
-                            this.setState({
-                                userName: e.target.value,
-                            });
-                        }}
-                    />
-                    <FormField
-                        name="password"
-                        type="password"
-                        label="Enter password:"
-                        value={password}
-                        onChange={e => {
-                            this.setState({
-                                password: e.target.value,
-                            });
-                        }}
-                    />
-                    <Button>Submit</Button>
-                </Form>
-            </div>
+            <>
+                <div className={classes.FormWrapper}>
+                    <Form onSubmit={this.onFormSubmit}>
+                        <h3 className={classes.FormCta}>Login</h3>
+                        <FormField
+                            name="username"
+                            type="text"
+                            label="Enter username:"
+                            value={userName}
+                            onChange={e => {
+                                this.setState({
+                                    userName: e.target.value,
+                                });
+                            }}
+                        />
+                        <FormField
+                            name="password"
+                            type="password"
+                            label="Enter password:"
+                            value={password}
+                            onChange={e => {
+                                this.setState({
+                                    password: e.target.value,
+                                });
+                            }}
+                        />
+                        <Button>Submit</Button>
+                    </Form>
+                </div>
+                <div className={classes.AuthRedirectWrapper}>
+                    <NavLink to="/register">Register</NavLink>
+                </div>
+            </>
         );
     }
 }

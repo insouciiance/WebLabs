@@ -10,3 +10,14 @@
     color: $main-color-bright;
     padding-bottom: 1rem;
 }
+
+.AuthRedirectWrapper {
+    padding-top: 2rem;
+    text-align: center;
+
+    a {
+        color: $main-color;
+        font-size: 1.1rem;
+        text-decoration: underline;
+    }
+}

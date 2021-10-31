@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
 
 import Button from '../../../components/Button/Button';
 import Form from '../../../components/Form/Form';
@@ -57,56 +57,61 @@ class Register extends Component {
         const { userName, email, password, passwordConfirm } = this.state;
 
         return (
-            <div className={classes.FormWrapper}>
-                <Form onSubmit={this.onFormSubmit}>
-                    <h3 className={classes.FormCta}>Register</h3>
-                    <FormField
-                        name="username"
-                        type="text"
-                        label="Enter username:"
-                        value={userName}
-                        onChange={e => {
-                            this.setState({
-                                userName: e.target.value,
-                            });
-                        }}
-                    />
-                    <FormField
-                        name="email"
-                        type="text"
-                        label="Enter email:"
-                        value={email}
-                        onChange={e => {
-                            this.setState({
-                                email: e.target.value,
-                            });
-                        }}
-                    />
-                    <FormField
-                        name="password"
-                        type="password"
-                        label="Enter password:"
-                        value={password}
-                        onChange={e => {
-                            this.setState({
-                                password: e.target.value,
-                            });
-                        }}
-                    />
-                    <FormField
-                        name="passwordConfirm"
-                        type="password"
-                        label="Confirm password:"
-                        value={passwordConfirm}
-                        onChange={e => {
-                            this.setState({
-                                passwordConfirm: e.target.value,
-                            });
-                        }}
-                    />
-                    <Button>Submit</Button>
-                </Form>
-            </div>
+            <>
+                <div className={classes.FormWrapper}>
+                    <Form onSubmit={this.onFormSubmit}>
+                        <h3 className={classes.FormCta}>Register</h3>
+                        <FormField
+                            name="username"
+                            type="text"
+                            label="Enter username:"
+                            value={userName}
+                            onChange={e => {
+                                this.setState({
+                                    userName: e.target.value,
+                                });
+                            }}
+                        />
+                        <FormField
+                            name="email"
+                            type="text"
+                            label="Enter email:"
+                            value={email}
+                            onChange={e => {
+                                this.setState({
+                                    email: e.target.value,
+                                });
+                            }}
+                        />
+                        <FormField
+                            name="password"
+                            type="password"
+                            label="Enter password:"
+                            value={password}
+                            onChange={e => {
+                                this.setState({
+                                    password: e.target.value,
+                                });
+                            }}
+                        />
+                        <FormField
+                            name="passwordConfirm"
+                            type="password"
+                            label="Confirm password:"
+                            value={passwordConfirm}
+                            onChange={e => {
+                                this.setState({
+                                    passwordConfirm: e.target.value,
+                                });
+                            }}
+                        />
+                        <Button>Submit</Button>
+                    </Form>
+                </div>
+                <div className={classes.AuthRedirectWrapper}>
+                    <NavLink to="/login">Login</NavLink>
+                </div>
+            </>
         );
     }
 }
