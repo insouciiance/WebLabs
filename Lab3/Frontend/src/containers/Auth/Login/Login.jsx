@@ -7,6 +7,7 @@ import Form from '../../../components/Form/Form';
 import FormField from '../../../components/Form/FormField/FormField';
 import { authToken } from '../../../shared/js/authToken';
 import axios from '../../../shared/js/axiosInstance';
+import graphql from '../../../shared/js/graphql';
 
 import classes from './Login.scss';
 
@@ -26,16 +27,7 @@ class Login extends Component {
 
         axios
             .post('/', {
-                query: `mutation {
-                    login(input: {
-                        userName: "${userName}",
-                        password: "${password}"
-                    })
-                    {
-                        jwtToken
-                        expires
-                    }
-                }`,
+                query: graphql.login(userName, password),
             })
             .then(res => {
                 const { onLogin } = this.props;

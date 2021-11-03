@@ -6,6 +6,7 @@ import Form from '../../../components/Form/Form';
 import FormField from '../../../components/Form/FormField/FormField';
 import { authToken } from '../../../shared/js/authToken';
 import axios from '../../../shared/js/axiosInstance';
+import graphql from '../../../shared/js/graphql';
 
 import classes from './Register.scss';
 
@@ -27,18 +28,12 @@ class Register extends Component {
 
         axios
             .post('/', {
-                query: `mutation {
-                    register(input: {
-                        userName: "${userName}",
-                        email: "${email}",
-                        password: "${password}",
-                        passwordConfirm: "${passwordConfirm}"
-                    })
-                    {
-                        jwtToken
-                        expires
-                    }
-                }`,
+                query: graphql.register(
+                    userName,
+                    email,
+                    password,
+                    passwordConfirm,
+                ),
             })
             .then(res => {
                 const { onLogin } = this.props;

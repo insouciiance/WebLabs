@@ -3,6 +3,7 @@ import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
 import ToDoNote from '../../components/ToDoNote/ToDoNote';
 import axios from '../../shared/js/axiosInstance';
+import graphql from '../../shared/js/graphql';
 
 import classes from './Home.scss';
 
@@ -18,17 +19,7 @@ class Home extends Component {
     componentDidMount() {
         axios
             .post('/', {
-                query: `query {
-                    note {
-                        id
-                        name
-                        checkboxes {
-                            id
-                            text
-                            checked
-                        }
-                    }
-                }`,
+                query: graphql.getNotes,
             })
             .then(res => {
                 console.log(res);
@@ -43,22 +34,7 @@ class Home extends Component {
 
         axios
             .post('/', {
-                query: `mutation {
-                    addNote(input: {
-                        name: "${newNoteName}"
-                    })
-                    {
-                        note {
-                            id
-                            name
-                            checkboxes {
-                                id
-                                text
-                                checked
-                            }
-                        }
-                    }
-                }`,
+                query: graphql.addNote(newNoteName),
             })
             .then(res => {
                 console.log(res);
@@ -74,21 +50,7 @@ class Home extends Component {
 
         axios
             .post('/', {
-                query: `mutation {
-                    addCheckbox(input: {
-                        noteId: "${noteId}",
-                        text: "${text}"
-                    })
-                    {
-                        checkbox {
-                            id
-                            text
-                            note {
-                                id
-                            }
-                        }
-                    }
-                }`,
+                query: graphql.addCheckbox(noteId, text),
             })
             .then(res => {
                 console.log(res);
@@ -112,14 +74,7 @@ class Home extends Component {
 
         axios
             .post('/', {
-                query: `mutation {
-                    deleteCheckbox(input: {
-                        id: "${checkboxId}"
-                    })
-                    {
-                        isSuccessful
-                    }
-                }`,
+                query: graphql.deleteCheckbox(checkboxId),
             })
             .then(res => {
                 console.log(res);
@@ -155,23 +110,7 @@ class Home extends Component {
 
         axios
             .post('/', {
-                query: `mutation {
-                    putCheckbox(input: {
-                        id: "${checkbox.id}",
-                        text: "${text}",
-                        checked: ${checkbox.checked}
-                    })
-                    {
-                        checkbox {
-                            id
-                            text
-                            checked
-                            note {
-                                id
-                            }
-                        }
-                    }
-                }`,
+                query: graphql.putCheckbox(checkboxId, text, checkbox.checked),
             })
             .then(res => {
                 console.log(res);
@@ -201,14 +140,7 @@ class Home extends Component {
 
         axios
             .post('/', {
-                query: `mutation {
-                    deleteNote(input: {
-                        id: "${noteId}"
-                    })
-                    {
-                        isSuccessful
-                    }
-                }`,
+                query: graphql.deleteNote(noteId),
             })
             .then(res => {
                 console.log(res);
@@ -236,23 +168,11 @@ class Home extends Component {
 
         axios
             .post('/', {
-                query: `mutation {
-                    putCheckbox(input: {
-                        id: "${checkbox.id}",
-                        text: "${checkbox.text}",
-                        checked: ${!checkbox.checked}
-                    })
-                    {
-                        checkbox {
-                            id
-                            text
-                            checked
-                            note {
-                                id
-                            }
-                        }
-                    }
-                }`,
+                query: graphql.putCheckbox(
+                    checkbox.id,
+                    checkbox.text,
+                    !checkbox.checked,
+                ),
             })
             .then(res => {
                 console.log(res);
@@ -271,6 +191,27 @@ class Home extends Component {
                         text: newCheckbox.text,
                         checked: newCheckbox.checked,
                     };
+
+                    this.setState({ notes });
+                }
+            });
+    };
+
+    onNoteRename = (noteId, newName) => {
+        const { notes } = this.state;
+
+        axios
+            .post('/', {
+                query: graphql.putNote(noteId, newName),
+            })
+            .then(res => {
+                console.log(res);
+                if (!res.data.errors) {
+                    const newNote = res.data.data.putNote.note;
+
+                    const noteIndex = notes.findIndex(n => n.id === newNote.id);
+
+                    notes[noteIndex] = newNote;
 
                     this.setState({ notes });
                 }
@@ -304,6 +245,7 @@ class Home extends Component {
                             onCheckboxRename={this.onCheckboxRename}
                             onCheckboxToggle={this.onCheckboxToggle}
                             onNoteDelete={this.onNoteDelete}
+                            onNoteRename={this.onNoteRename}
                         />
                     ))}
                 </div>

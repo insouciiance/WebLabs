@@ -13,11 +13,18 @@
     padding: 0.5rem 1rem;
 }
 
-.NoteName {
-    font-weight: bold;
-    overflow: hidden;
+.NoteNameWrapper {
     padding-bottom: 0.5rem;
     position: relative;
+
+    .NoteName {
+        background-color: $main-color;
+        color: $main-color-dark;
+        font-weight: bold;
+        overflow: hidden;
+        position: relative;
+        width: 100%;
+    }
 
     &::after {
         background-color: $secondary-color;

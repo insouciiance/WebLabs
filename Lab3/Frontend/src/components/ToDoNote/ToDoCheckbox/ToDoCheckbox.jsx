@@ -8,24 +8,11 @@ export default function ToDoCheckbox(props) {
     const { checkbox, onDelete, onRename, onCheckToggle } = props;
 
     const [state, setState] = useState({
-        isCheckboxRenaming: false,
         checkboxText: checkbox.text,
     });
 
-    const toggleCheckboxRename = () => {
-        const { isCheckboxRenaming, checkboxText } = state;
-
-        setState({
-            isCheckboxRenaming: !isCheckboxRenaming,
-            checkboxText,
-        });
-    };
-
     const onCheckboxTextChange = e => {
-        const { isCheckboxRenaming } = state;
-
         setState({
-            isCheckboxRenaming: isCheckboxRenaming,
             checkboxText: e.target.value,
         });
     };
@@ -34,7 +21,6 @@ export default function ToDoCheckbox(props) {
         const { checkboxText } = state;
 
         setState({
-            idCheckboxRenaming: false,
             checkboxText,
         });
 
@@ -43,7 +29,7 @@ export default function ToDoCheckbox(props) {
         onRename(checkbox.id, checkboxText);
     };
 
-    const { isCheckboxRenaming, checkboxText } = state;
+    const { checkboxText } = state;
 
     return (
         <div className={classes.CheckboxWrapper}>
@@ -51,7 +37,6 @@ export default function ToDoCheckbox(props) {
                 name="checkboxrename"
                 type="text"
                 value={checkboxText}
-                focused={isCheckboxRenaming}
                 onBlur={onRenameConfirm}
                 onChange={onCheckboxTextChange}
                 style={

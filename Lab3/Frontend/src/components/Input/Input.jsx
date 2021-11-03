@@ -3,7 +3,8 @@ import React from 'react';
 import './Input.scss';
 
 export default function Input(props) {
-    const { value, onChange, type, name, focused, onBlur, style } = props;
+    const { value, onChange, type, name, focused, onBlur, style, className } =
+        props;
 
     return (
         <input
@@ -15,6 +16,7 @@ export default function Input(props) {
             autoFocus={focused}
             onBlur={onBlur}
             style={style}
+            className={className}
         />
     );
 }

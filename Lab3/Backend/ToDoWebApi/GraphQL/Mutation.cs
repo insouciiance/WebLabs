@@ -104,6 +104,12 @@ namespace ToDoWebApi.GraphQL
             [ScopedService] ToDosDbContext context)
         {
             string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
+
+            if (input.Name is null or "")
+            {
+                throw new Exception("Provide a name for the note.");
+            }
+
             ToDoNote newNote = new()
             {
                 Id = Guid.NewGuid().ToString(),
