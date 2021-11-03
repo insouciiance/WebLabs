@@ -3,8 +3,8 @@ import ToDoCheckbox from './ToDoCheckbox/ToDoCheckbox';
 import { FaPlus, FaTrash } from 'react-icons/fa';
 
 import classes from './ToDoNote.scss';
-import Input from '../Input/Input';
-import Button from '../Button/Button';
+import Input from '../../components/Input/Input';
+import Button from '../../components/Button/Button';
 
 export default class ToDoNote extends Component {
     constructor(props) {

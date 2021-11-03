@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FaCheckSquare, FaSquare, FaTrash } from 'react-icons/fa';
-import Input from '../../Input/Input';
+import Input from '../../../components/Input/Input';
 
 import classes from './ToDoCheckbox.scss';
 

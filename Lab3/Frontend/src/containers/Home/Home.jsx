@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
-import ToDoNote from '../../components/ToDoNote/ToDoNote';
+import ToDoNote from '../ToDoNote/ToDoNote';
 import axios from '../../shared/js/axiosInstance';
 import graphql from '../../shared/js/graphql';
 
