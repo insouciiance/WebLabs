@@ -2,9 +2,18 @@
 
 header {
     padding-top: 1rem;
+    position: relative;
     text-align: center;
 }
 
 .HeaderCta {
     color: $main-color-bright;
+}
+
+.Logout {
+    color: $main-color-bright;
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
 }

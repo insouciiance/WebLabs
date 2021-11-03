@@ -23,6 +23,12 @@ const graphql = {
                 expires
             }
         }`,
+    logout: `mutation {
+        logout()
+        {
+            isSuccessful
+        }
+    }`,
     getNotes: `query {
         note {
             id
