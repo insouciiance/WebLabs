@@ -121,7 +121,7 @@ namespace ToDoWebApi
                 .AddType<ToDoCheckboxDeletePayloadType>()
                 .AddAuthorization();
 
-            services.AddErrorFilter<AuthErrorFilter>();
+            //services.AddErrorFilter<GraphQLErrorFilter>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

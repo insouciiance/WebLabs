@@ -14,6 +14,8 @@ using ToDoWebApi.GraphQL.ToDos;
 using ToDoWebApi.GraphQL.Users;
 using ToDoWebApi.Models;
 using ToDoWebApi.Services;
+using ToDoWebApi.Services.Extensions;
+using ToDoWebApi.Services.Validators;
 
 namespace ToDoWebApi.GraphQL
 {
@@ -26,11 +28,9 @@ namespace ToDoWebApi.GraphQL
             [Service] SignInManager<ApplicationUser> signInManager,
             [Service] JwtTokenCreator tokenCreator)
         {
-            if (input.Password != input.PasswordConfirm)
-            {
-                throw new Exception("Passwords do not match.");
-            }
-
+            RegisterUserInputValidator validator = new();
+            await validator.ValidateAndThrowGraphQLExceptionAsync(input);
+            
             ApplicationUser user = new()
             {
                 UserName = input.UserName,
@@ -41,7 +41,7 @@ namespace ToDoWebApi.GraphQL
 
             if (!result.Succeeded)
             {
-                throw new Exception($"There was a problem with authenticating {input.UserName}.");
+                throw new GraphQLException(ErrorMessages.CantCreateUser);
             }
 
             await signInManager.SignInAsync(user, false);
@@ -59,19 +59,17 @@ namespace ToDoWebApi.GraphQL
             [Service] JwtTokenCreator tokenCreator,
             [ScopedService] ToDosDbContext context)
         {
+            LoginUserInputValidator validator = new ();
+            await validator.ValidateAndThrowGraphQLExceptionAsync(input);
+
             string userName = input.UserName;
             ApplicationUser user = context.Users.FirstOrDefault(u => u.UserName == userName);
-
-            if (user is null)
-            {
-                throw new Exception("The specified username was incorrect.");
-            }
 
             SignInResult result = await signInManager.PasswordSignInAsync(user, input.Password, false, false);
 
             if (!result.Succeeded)
             {
-                throw new Exception("The specified password was incorrect.");
+                throw new GraphQLException(ErrorMessages.InvalidCredentials);
             }
 
             string jwtToken = tokenCreator.Create(user);
@@ -103,12 +101,10 @@ namespace ToDoWebApi.GraphQL
             [Service] IHttpContextAccessor contextAccessor,
             [ScopedService] ToDosDbContext context)
         {
-            string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
+            ToDoNoteInputValidator validator = new();
+            await validator.ValidateAndThrowGraphQLExceptionAsync(input);
 
-            if (input.Name is null or "")
-            {
-                throw new Exception("Provide a name for the note.");
-            }
+            string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
 
             ToDoNote newNote = new()
             {
@@ -132,13 +128,16 @@ namespace ToDoWebApi.GraphQL
             [Service] IHttpContextAccessor contextAccessor,
             [ScopedService] ToDosDbContext context)
         {
+            ToDoNotePutInputValidator validator = new();
+            await validator.ValidateAndThrowGraphQLExceptionAsync(input);
+
             string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
 
             ToDoNote noteToPut = context.Notes.FirstOrDefault(n => n.Id == input.Id);
 
             if (noteToPut is null || noteToPut.UserId != userId)
             {
-                return null;
+                throw new GraphQLException(ErrorMessages.CantUpdateNote);
             }
 
             noteToPut.Name = input.Name;
@@ -155,13 +154,16 @@ namespace ToDoWebApi.GraphQL
             [Service] IHttpContextAccessor contextAccessor,
             [ScopedService] ToDosDbContext context)
         {
+            ToDoNoteDeleteInputValidator validator = new();
+            await validator.ValidateAndThrowGraphQLExceptionAsync(input);
+
             string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
 
             ToDoNote noteToDelete = context.Notes.FirstOrDefault(n => n.Id == input.Id);
 
             if (noteToDelete is null || noteToDelete.UserId != userId)
             {
-                return new ToDoNoteDeletePayload(false);
+                throw new GraphQLException(ErrorMessages.CantDeleteNote);
             }
 
             context.Notes.Remove(noteToDelete);
@@ -178,12 +180,15 @@ namespace ToDoWebApi.GraphQL
             [Service] IHttpContextAccessor contextAccessor,
             [ScopedService] ToDosDbContext context)
         {
+            ToDoCheckboxInputValidator validator = new();
+            await validator.ValidateAndThrowGraphQLExceptionAsync(input);
+
             string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
             ToDoNote checkboxNote = context.Notes.FirstOrDefault(n => n.Id == input.NoteId);
 
             if (checkboxNote is null || checkboxNote.UserId != userId)
             {
-                return null;
+                throw new GraphQLException(ErrorMessages.CantAddCheckbox);
             }
 
             ToDoCheckbox checkbox = new()
@@ -208,20 +213,23 @@ namespace ToDoWebApi.GraphQL
             [Service] IHttpContextAccessor contextAccessor,
             [ScopedService] ToDosDbContext context)
         {
+            ToDoCheckboxPutInputValidator validator = new();
+            await validator.ValidateAndThrowGraphQLExceptionAsync(input);
+
             string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
 
             ToDoCheckbox checkboxToPut = context.Checkboxes.FirstOrDefault(c => c.Id == input.Id);
 
             if (checkboxToPut is null)
             {
-                return null;
+                throw new GraphQLException(ErrorMessages.CantUpdateCheckbox);
             }
 
             await context.Entry(checkboxToPut).Navigation("Note").LoadAsync();
 
             if (checkboxToPut.Note.UserId != userId)
             {
-                return null;
+                throw new GraphQLException(ErrorMessages.CantUpdateCheckbox);
             }
 
             checkboxToPut.Text = input.Text;
@@ -239,20 +247,23 @@ namespace ToDoWebApi.GraphQL
             [Service] IHttpContextAccessor contextAccessor,
             [ScopedService] ToDosDbContext context)
         {
+            ToDoCheckboxDeleteInputValidator validator = new();
+            await validator.ValidateAndThrowGraphQLExceptionAsync(input);
+
             string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
 
             ToDoCheckbox checkboxToDelete = context.Checkboxes.FirstOrDefault(c => c.Id == input.Id);
 
             if (checkboxToDelete is null)
             {
-                return new ToDoCheckboxDeletePayload(false);
+                throw new GraphQLException(ErrorMessages.CantDeleteCheckbox);
             }
 
             await context.Entry(checkboxToDelete).Navigation("Note").LoadAsync();
 
             if (checkboxToDelete.Note.UserId != userId)
             {
-                return new ToDoCheckboxDeletePayload(false);
+                throw new GraphQLException(ErrorMessages.CantDeleteCheckbox);
             }
 
             context.Checkboxes.Remove(checkboxToDelete);

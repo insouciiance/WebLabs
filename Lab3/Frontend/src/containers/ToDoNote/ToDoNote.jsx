@@ -55,7 +55,6 @@ export default class ToDoNote extends Component {
             onCheckboxRename,
             onCheckboxToggle,
             onNoteDelete,
-            onNoteRename,
         } = this.props;
 
         const { newCheckboxText, showNewCheckbox, currentNoteName } =

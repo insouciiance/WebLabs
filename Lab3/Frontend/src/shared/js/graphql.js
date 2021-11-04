@@ -94,6 +94,7 @@ const graphql = {
                 checkbox {
                     id
                     text
+                    checked
                     note {
                         id
                     }

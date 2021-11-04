@@ -6,6 +6,8 @@ import axios from '../../shared/js/axiosInstance';
 import graphql from '../../shared/js/graphql';
 
 import classes from './Home.scss';
+import Popup from '../../components/Popup/Popup';
+import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
 
 class Home extends Component {
     constructor(props) {
@@ -13,6 +15,7 @@ class Home extends Component {
         this.state = {
             notes: [],
             newNoteName: '',
+            errors: null,
         };
     }
 
@@ -23,13 +26,21 @@ class Home extends Component {
             })
             .then(res => {
                 console.log(res);
-                if (!res.data.errors) {
-                    this.setState({ notes: res.data.data.note });
+
+                if (res.data.errors) {
+                    this.setState({
+                        errors: res.data.errors,
+                    });
+                    return;
                 }
+
+                this.setState({
+                    notes: res.data.data.note,
+                });
             });
     }
 
-    addNote = () => {
+    onNoteAdd = () => {
         const { newNoteName, notes } = this.state;
 
         axios
@@ -38,10 +49,40 @@ class Home extends Component {
             })
             .then(res => {
                 console.log(res);
-                if (!res.data.errors) {
-                    notes.unshift(res.data.data.addNote.note);
-                    this.setState({ notes });
+                if (res.data.errors) {
+                    this.setState({
+                        errors: res.data.errors,
+                    });
+                    return;
                 }
+
+                notes.unshift(res.data.data.addNote.note);
+                this.setState({ notes });
+            });
+    };
+
+    onNoteDelete = noteId => {
+        const { notes } = this.state;
+
+        axios
+            .post('/', {
+                query: graphql.deleteNote(noteId),
+            })
+            .then(res => {
+                console.log(res);
+
+                if (res.data.errors) {
+                    this.setState({
+                        errors: res.data.errors,
+                    });
+                    return;
+                }
+
+                const deletedNoteIndex = notes.findIndex(n => n.id === noteId);
+
+                notes.splice(deletedNoteIndex, 1);
+
+                this.setState({ notes });
             });
     };
 
@@ -54,47 +95,23 @@ class Home extends Component {
             })
             .then(res => {
                 console.log(res);
-                if (!res.data.errors) {
-                    const checkbox = res.data.data.addCheckbox.checkbox;
-                    const checkboxNote = notes.find(
-                        n => n.id === checkbox.note.id,
-                    );
-                    checkboxNote.checkboxes.push({
-                        id: checkbox.id,
-                        text: checkbox.text,
+
+                if (res.data.errors) {
+                    this.setState({
+                        errors: res.data.errors,
                     });
-
-                    this.setState({ notes });
+                    return;
                 }
-            });
-    };
 
-    onCheckboxDelete = checkboxId => {
-        const { notes } = this.state;
+                const checkbox = res.data.data.addCheckbox.checkbox;
+                const checkboxNote = notes.find(n => n.id === checkbox.note.id);
+                checkboxNote.checkboxes.push({
+                    id: checkbox.id,
+                    text: checkbox.text,
+                    checked: checkbox.checked,
+                });
 
-        axios
-            .post('/', {
-                query: graphql.deleteCheckbox(checkboxId),
-            })
-            .then(res => {
-                console.log(res);
-                if (
-                    !res.data.errors &&
-                    res.data.data.deleteCheckbox.isSuccessful
-                ) {
-                    const checkboxNote = notes.find(n =>
-                        n.checkboxes.some(c => c.id === checkboxId),
-                    );
-
-                    const deletedCheckboxIndex =
-                        checkboxNote.checkboxes.findIndex(
-                            c => c.id === checkboxId,
-                        );
-
-                    checkboxNote.checkboxes.splice(deletedCheckboxIndex, 1);
-
-                    this.setState({ notes });
-                }
+                this.setState({ notes });
             });
     };
 
@@ -108,51 +125,38 @@ class Home extends Component {
             )
             .find(c => c.id === checkboxId);
 
+        console.log(checkbox);
+
         axios
             .post('/', {
                 query: graphql.putCheckbox(checkboxId, text, checkbox.checked),
             })
             .then(res => {
                 console.log(res);
-                if (!res.data.errors) {
-                    const newCheckbox = res.data.data.putCheckbox.checkbox;
 
-                    const checkboxNote = notes.find(
-                        n => n.id === newCheckbox.note.id,
-                    );
-
-                    const checkboxIndex = checkboxNote.checkboxes.findIndex(
-                        c => c.id === newCheckbox.id,
-                    );
-                    checkboxNote.checkboxes[checkboxIndex] = {
-                        id: newCheckbox.id,
-                        text: newCheckbox.text,
-                        checked: newCheckbox.checked,
-                    };
-
-                    this.setState({ notes });
+                if (res.data.errors) {
+                    this.setState({
+                        errors: res.data.errors,
+                    });
+                    return;
                 }
-            });
-    };
 
-    onNoteDelete = noteId => {
-        const { notes } = this.state;
+                const newCheckbox = res.data.data.putCheckbox.checkbox;
 
-        axios
-            .post('/', {
-                query: graphql.deleteNote(noteId),
-            })
-            .then(res => {
-                console.log(res);
-                if (!res.data.errors && res.data.data.deleteNote.isSuccessful) {
-                    const deletedNoteIndex = notes.findIndex(
-                        n => n.id === noteId,
-                    );
+                const checkboxNote = notes.find(
+                    n => n.id === newCheckbox.note.id,
+                );
 
-                    notes.splice(deletedNoteIndex, 1);
+                const checkboxIndex = checkboxNote.checkboxes.findIndex(
+                    c => c.id === newCheckbox.id,
+                );
+                checkboxNote.checkboxes[checkboxIndex] = {
+                    id: newCheckbox.id,
+                    text: newCheckbox.text,
+                    checked: newCheckbox.checked,
+                };
 
-                    this.setState({ notes });
-                }
+                this.setState({ notes });
             });
     };
 
@@ -176,24 +180,61 @@ class Home extends Component {
             })
             .then(res => {
                 console.log(res);
-                if (!res.data.errors) {
-                    const newCheckbox = res.data.data.putCheckbox.checkbox;
 
-                    const checkboxNote = notes.find(
-                        n => n.id === newCheckbox.note.id,
-                    );
-
-                    const checkboxIndex = checkboxNote.checkboxes.findIndex(
-                        c => c.id === newCheckbox.id,
-                    );
-                    checkboxNote.checkboxes[checkboxIndex] = {
-                        id: newCheckbox.id,
-                        text: newCheckbox.text,
-                        checked: newCheckbox.checked,
-                    };
-
-                    this.setState({ notes });
+                if (res.data.errors) {
+                    this.setState({
+                        errors: res.data.errors,
+                    });
+                    return;
                 }
+
+                const newCheckbox = res.data.data.putCheckbox.checkbox;
+
+                const checkboxNote = notes.find(
+                    n => n.id === newCheckbox.note.id,
+                );
+
+                const checkboxIndex = checkboxNote.checkboxes.findIndex(
+                    c => c.id === newCheckbox.id,
+                );
+                checkboxNote.checkboxes[checkboxIndex] = {
+                    id: newCheckbox.id,
+                    text: newCheckbox.text,
+                    checked: newCheckbox.checked,
+                };
+
+                this.setState({ notes });
+            });
+    };
+
+    onCheckboxDelete = checkboxId => {
+        const { notes } = this.state;
+
+        axios
+            .post('/', {
+                query: graphql.deleteCheckbox(checkboxId),
+            })
+            .then(res => {
+                console.log(res);
+
+                if (res.data.errors) {
+                    this.setState({
+                        errors: res.data.errors,
+                    });
+                    return;
+                }
+
+                const checkboxNote = notes.find(n =>
+                    n.checkboxes.some(c => c.id === checkboxId),
+                );
+
+                const deletedCheckboxIndex = checkboxNote.checkboxes.findIndex(
+                    c => c.id === checkboxId,
+                );
+
+                checkboxNote.checkboxes.splice(deletedCheckboxIndex, 1);
+
+                this.setState({ notes });
             });
     };
 
@@ -206,20 +247,39 @@ class Home extends Component {
             })
             .then(res => {
                 console.log(res);
-                if (!res.data.errors) {
-                    const newNote = res.data.data.putNote.note;
 
-                    const noteIndex = notes.findIndex(n => n.id === newNote.id);
-
-                    notes[noteIndex] = newNote;
-
-                    this.setState({ notes });
+                if (res.data.errors) {
+                    this.setState({
+                        errors: res.data.errors,
+                    });
+                    return;
                 }
+
+                const newNote = res.data.data.putNote.note;
+
+                const noteIndex = notes.findIndex(n => n.id === newNote.id);
+
+                notes[noteIndex] = newNote;
+
+                this.setState({ notes });
             });
     };
 
+    onErrorDismiss = () =>
+        this.setState({
+            errors: null,
+        });
+
     render() {
-        const { notes, newNoteName } = this.state;
+        const { notes, newNoteName, errors } = this.state;
+
+        const errorsPopup = errors ? (
+            <Popup onDismiss={this.onErrorDismiss} dismissText="Dismiss">
+                {errors.map(e => (
+                    <ErrorMessage key={e.message}>{e.message}</ErrorMessage>
+                ))}
+            </Popup>
+        ) : null;
 
         return (
             <>
@@ -233,7 +293,7 @@ class Home extends Component {
                             this.setState({ newNoteName: e.target.value })
                         }
                     />
-                    <Button onClick={this.addNote}>Add</Button>
+                    <Button onClick={this.onNoteAdd}>Add</Button>
                 </div>
                 <div className={classes.NotesContainer}>
                     {notes.map(n => (
@@ -249,6 +309,7 @@ class Home extends Component {
                         />
                     ))}
                 </div>
+                {errorsPopup}
             </>
         );
     }
