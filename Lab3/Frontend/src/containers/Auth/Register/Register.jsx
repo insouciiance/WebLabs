@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
+import Backdrop from '../../../components/Backdrop/Backdrop';
 
 import Button from '../../../components/Button/Button';
+import ErrorMessage from '../../../components/ErrorMessage/ErrorMessage';
 import Form from '../../../components/Form/Form';
 import FormField from '../../../components/Form/FormField/FormField';
+import Popup from '../../../components/Popup/Popup';
+import Spinner from '../../../components/Spinner/Spinner';
 import { authToken } from '../../../shared/js/authToken';
 import axios from '../../../shared/js/axiosInstance';
 import graphql from '../../../shared/js/graphql';
@@ -19,12 +23,17 @@ class Register extends Component {
             email: '',
             password: '',
             passwordConfirm: '',
+            isLoading: false,
         };
     }
 
     onFormSubmit = e => {
         e.preventDefault();
         const { userName, email, password, passwordConfirm } = this.state;
+
+        this.setState({
+            isLoading: true,
+        });
 
         axios
             .post('/', {
@@ -38,19 +47,54 @@ class Register extends Component {
             .then(res => {
                 const { onLogin } = this.props;
 
+                this.setState({
+                    isLoading: false,
+                });
+
                 console.log(res);
-                if (!res.data.errors) {
-                    const { jwtToken, expires } = res.data.data.register;
-
-                    authToken.set(jwtToken, expires);
-
-                    onLogin();
+                if (res.data.errors) {
+                    this.setState({
+                        errors: res.data.errors,
+                    });
+                    return;
                 }
+
+                const { jwtToken, expires } = res.data.data.register;
+
+                authToken.set(jwtToken, expires);
+
+                onLogin();
             });
     };
 
+    onErrorDismiss = () =>
+        this.setState({
+            errors: null,
+        });
+
     render() {
-        const { userName, email, password, passwordConfirm } = this.state;
+        const {
+            userName,
+            email,
+            password,
+            passwordConfirm,
+            isLoading,
+            errors,
+        } = this.state;
+
+        const spinner = isLoading ? (
+            <Backdrop>
+                <Spinner />
+            </Backdrop>
+        ) : null;
+
+        const errorsPopup = errors ? (
+            <Popup onDismiss={this.onErrorDismiss} dismissText="Dismiss">
+                {errors.map(e => (
+                    <ErrorMessage key={e.message}>{e.message}</ErrorMessage>
+                ))}
+            </Popup>
+        ) : null;
 
         return (
             <>
@@ -107,6 +151,8 @@ class Register extends Component {
                 <div className={classes.AuthRedirectWrapper}>
                     <NavLink to="/login">Login</NavLink>
                 </div>
+                {spinner}
+                {errorsPopup}
             </>
         );
     }

@@ -1,0 +1,78 @@
+@use '/Lab3/Frontend/src/shared/scss/shared.scss' as *;
+
+$spinner-color: $main-color;
+
+:root {
+    --loader-width: 70px;
+    --loader-height: 70px;
+    --line-width: 3px;
+    --animation-duration: 2s;
+    --loader-initial-scale: 0.1;
+}
+
+.Loader,
+.Loader::before,
+.Loader::after {
+    box-sizing: border-box;
+    flex-grow: 0;
+    flex-shrink: 0;
+    margin: auto;
+}
+
+@keyframes momentum {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(-360deg);
+    }
+}
+
+.Loader.QuantumSpinner {
+    --primary-circle-offset: calc(
+        ((var(--loader-width, 100px) * 0.2) / 2) - var(--line-width, 4px)
+    );
+    --secondary-circle-offset: calc(
+        ((var(--loader-width, 100px) * 0.4) / 2) - var(--line-width, 4px)
+    ); /*- (var(--line-width,4px) * 2)*/
+    animation: momentum var(--animation-duration, 1s) linear infinite;
+    border: var(--line-width, 4px) solid rgba(0, 0, 0, 0);
+    border-radius: 50%;
+    border-top-color: $spinner-color;
+    height: var(--loader-height, 100px);
+    position: relative;
+    transform-origin: center center;
+    width: var(--loader-width, 100px);
+}
+
+.QuantumSpinner::before {
+    animation: momentum calc(var(--animation-duration, 1s) * 2) linear infinite;
+    border: var(--line-width, 4px) solid rgba(0, 0, 0, 0);
+    border-radius: 50%;
+    border-top-color: $spinner-color;
+    content: '';
+    filter: hue-rotate(3eg);
+    height: calc(var(--loader-height, 100px) * 0.8);
+    left: var(--primary-circle-offset, 10px);
+    opacity: 0.7;
+    position: absolute;
+    top: var(--primary-circle-offset, 10px);
+    transform-origin: center center;
+    width: calc(var(--loader-width, 100px) * 0.8);
+}
+
+.QuantumSpinner::after {
+    animation: momentum var(--animation-duration, 1s) linear infinite;
+    border: var(--line-width, 4px) solid rgba(0, 0, 0, 0);
+    border-radius: 50%;
+    border-top-color: $spinner-color;
+    content: '';
+    filter: hue-rotate(6eg);
+    height: calc(var(--loader-height, 100px) * 0.6);
+    left: var(--secondary-circle-offset, 20px);
+    opacity: 0.3;
+    position: absolute;
+    top: var(--secondary-circle-offset, 20px);
+    transform-origin: center center;
+    width: calc(var(--loader-width, 100px) * 0.6);
+}

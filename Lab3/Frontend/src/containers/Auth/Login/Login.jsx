@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
+import Backdrop from '../../../components/Backdrop/Backdrop';
 
 import Button from '../../../components/Button/Button';
+import ErrorMessage from '../../../components/ErrorMessage/ErrorMessage';
 import Form from '../../../components/Form/Form';
 import FormField from '../../../components/Form/FormField/FormField';
+import Popup from '../../../components/Popup/Popup';
+import Spinner from '../../../components/Spinner/Spinner';
 import { authToken } from '../../../shared/js/authToken';
 import axios from '../../../shared/js/axiosInstance';
 import graphql from '../../../shared/js/graphql';
@@ -18,12 +22,18 @@ class Login extends Component {
         this.state = {
             userName: '',
             password: '',
+            isLoading: false,
+            errors: null,
         };
     }
 
     onFormSubmit = e => {
         e.preventDefault();
         const { userName, password } = this.state;
+
+        this.setState({
+            isLoading: true,
+        });
 
         axios
             .post('/', {
@@ -32,19 +42,49 @@ class Login extends Component {
             .then(res => {
                 const { onLogin } = this.props;
 
+                this.setState({
+                    isLoading: false,
+                });
+
                 console.log(res);
-                if (!res.data.errors) {
-                    const { jwtToken, expires } = res.data.data.login;
 
-                    authToken.set(jwtToken, expires);
+                if (res.data.errors) {
+                    this.setState({
+                        errors: res.data.errors,
+                    });
 
-                    onLogin();
+                    return;
                 }
+
+                const { jwtToken, expires } = res.data.data.login;
+
+                authToken.set(jwtToken, expires);
+
+                onLogin();
             });
     };
 
+    onErrorDismiss = () =>
+        this.setState({
+            errors: null,
+        });
+
     render() {
-        const { userName, password } = this.state;
+        const { userName, password, isLoading, errors } = this.state;
+
+        const spinner = isLoading ? (
+            <Backdrop>
+                <Spinner />
+            </Backdrop>
+        ) : null;
+
+        const errorsPopup = errors ? (
+            <Popup onDismiss={this.onErrorDismiss} dismissText="Dismiss">
+                {errors.map(e => (
+                    <ErrorMessage key={e.message}>{e.message}</ErrorMessage>
+                ))}
+            </Popup>
+        ) : null;
 
         return (
             <>
@@ -79,6 +119,8 @@ class Login extends Component {
                 <div className={classes.AuthRedirectWrapper}>
                     <NavLink to="/register">Register</NavLink>
                 </div>
+                {spinner}
+                {errorsPopup}
             </>
         );
     }

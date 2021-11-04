@@ -1,0 +1,6 @@
+@use '/Lab3/Frontend/src/shared/scss/shared.scss' as *;
+
+.ErrorMessage {
+    color: $error-color;
+    font-weight: bold;
+}

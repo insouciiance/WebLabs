@@ -1,0 +1,20 @@
+@use '/Lab3/Frontend/src/shared/scss/shared.scss' as *;
+
+$backdrop-bg-transparent: #0006;
+
+.Backdrop {
+    background-color: $backdrop-bg-transparent;
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 50;
+}
+
+.ItemsContainer {
+    left: 50%;
+    position: fixed;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
