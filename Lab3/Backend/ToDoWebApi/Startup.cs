@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using ToDoWebApi.Data.DbContexts;
 using ToDoWebApi.GraphQL;
+using ToDoWebApi.GraphQL.ErrorFilters;
 using ToDoWebApi.GraphQL.ToDos;
 using ToDoWebApi.GraphQL.Users;
 using ToDoWebApi.Models;
@@ -119,6 +120,8 @@ namespace ToDoWebApi
                 .AddType<ToDoCheckboxDeleteInputType>()
                 .AddType<ToDoCheckboxDeletePayloadType>()
                 .AddAuthorization();
+
+            services.AddErrorFilter<AuthErrorFilter>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
