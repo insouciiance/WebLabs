@@ -115,7 +115,7 @@ class Home extends Component {
             });
     };
 
-    onCheckboxRename = (checkboxId, text) => {
+    onCheckboxRename = (checkboxId, text, onReset) => {
         const { notes } = this.state;
 
         const checkbox = notes
@@ -138,6 +138,7 @@ class Home extends Component {
                     this.setState({
                         errors: res.data.errors,
                     });
+                    onReset();
                     return;
                 }
 
@@ -238,7 +239,7 @@ class Home extends Component {
             });
     };
 
-    onNoteRename = (noteId, newName) => {
+    onNoteRename = (noteId, newName, onReset) => {
         const { notes } = this.state;
 
         axios
@@ -252,6 +253,7 @@ class Home extends Component {
                     this.setState({
                         errors: res.data.errors,
                     });
+                    onReset();
                     return;
                 }
 

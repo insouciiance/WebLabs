@@ -26,7 +26,13 @@ export default function ToDoCheckbox(props) {
 
         if (checkboxText === checkbox.text) return;
 
-        onRename(checkbox.id, checkboxText);
+        onRename(checkbox.id, checkboxText, onTextReset);
+    };
+
+    const onTextReset = () => {
+        setState({
+            checkboxText: checkbox.text,
+        });
     };
 
     const { checkboxText } = state;

@@ -44,5 +44,7 @@ namespace ToDoWebApi.Services
         public const string CantUpdateCheckbox = "There was a problem with updating the checkbox.";
 
         public const string CantDeleteCheckbox = "There was a problem with deleting the note.";
+
+        public const string UserExists = "A user with this username or password already exists.";
     }
 }

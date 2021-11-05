@@ -27,22 +27,27 @@ namespace ToDoWebApi.Services.Validators
 
             RuleFor(input => input.Password)
                 .Matches("[A-Z]")
+                .Unless(input => string.IsNullOrWhiteSpace(input.Password))
                 .WithMessage(ErrorMessages.PasswordUppercaseLetter);
 
             RuleFor(input => input.Password)
                 .Matches("[a-z]")
+                .Unless(input => string.IsNullOrWhiteSpace(input.Password))
                 .WithMessage(ErrorMessages.PasswordLowercaseLetter);
 
             RuleFor(input => input.Password)
                 .Matches("[0-9]")
+                .Unless(input => string.IsNullOrWhiteSpace(input.Password))
                 .WithMessage(ErrorMessages.PasswordDigit);
 
             RuleFor(input => input.Password)
                 .MinimumLength(6)
+                .Unless(input => string.IsNullOrWhiteSpace(input.Password))
                 .WithMessage(ErrorMessages.PasswordLength);
 
             RuleFor(input => new {input.Password, input.PasswordConfirm})
                 .Must(passwords => passwords.Password.Equals(passwords.PasswordConfirm))
+                .Unless(input => string.IsNullOrWhiteSpace(input.PasswordConfirm))
                 .WithMessage(ErrorMessages.PasswordsMatch);
         }
     }

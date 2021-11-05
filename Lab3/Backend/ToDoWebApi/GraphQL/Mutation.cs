@@ -37,6 +37,11 @@ namespace ToDoWebApi.GraphQL
                 Email = input.Email
             };
 
+            if (userManager.Users.Any(u => u.UserName == input.UserName || u.Email == input.Email))
+            {
+                throw new GraphQLException(ErrorMessages.UserExists);
+            }
+
             IdentityResult result = await userManager.CreateAsync(user, input.Password);
 
             if (!result.Succeeded)
@@ -64,6 +69,11 @@ namespace ToDoWebApi.GraphQL
 
             string userName = input.UserName;
             ApplicationUser user = context.Users.FirstOrDefault(u => u.UserName == userName);
+
+            if (user is null)
+            {
+                throw new GraphQLException(ErrorMessages.InvalidCredentials);
+            }
 
             SignInResult result = await signInManager.PasswordSignInAsync(user, input.Password, false, false);
 

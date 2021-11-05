@@ -44,7 +44,15 @@ export default class ToDoNote extends Component {
 
         if (note.name === currentNoteName) return;
 
-        onNoteRename(note.id, currentNoteName);
+        onNoteRename(note.id, currentNoteName, this.onNameReset);
+    };
+
+    onNameReset = () => {
+        const { note } = this.props;
+
+        this.setState({
+            currentNoteName: note.name,
+        });
     };
 
     render() {
