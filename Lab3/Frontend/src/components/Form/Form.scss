@@ -1,12 +1,22 @@
 @use '/Lab3/Frontend/src/shared/scss/shared.scss' as *;
 
 .FormWrapper {
+    width: 35rem;
+
     form {
         align-items: center;
         border: 1px solid $main-color-bright;
         display: flex;
         flex-direction: column;
         padding: 1rem;
-        width: 35rem;
+    }
+
+    @media screen and (max-width: 38rem) {
+        width: 100%;
+
+        form {
+            border-left: 0;
+            border-right: 0;
+        }
     }
 }

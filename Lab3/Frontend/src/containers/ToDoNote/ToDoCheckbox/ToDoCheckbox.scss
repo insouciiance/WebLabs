@@ -14,22 +14,30 @@
         font-size: 1rem;
         line-height: 1rem;
         width: 80%;
+
+        @media screen and (min-width: 28rem) and (max-width: 37.5rem) {
+            width: 85%;
+        }
+    }
+
+    .Toolbar {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+        width: 15%;
+
+        @media screen and (min-width: 28rem) and (max-width: 37.5rem) {
+            width: 10%;
+        }
+
+        * {
+            cursor: pointer;
+        }
     }
 
     &:hover {
         border-bottom: 1px solid $main-color-dark;
         border-top: 1px solid $main-color-dark;
         cursor: text;
-    }
-}
-
-.Toolbar {
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
-    width: 15%;
-
-    * {
-        cursor: pointer;
     }
 }

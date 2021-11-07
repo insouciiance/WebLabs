@@ -2,7 +2,27 @@
 
 .NoteWrapper {
     padding: 1rem;
-    width: 20rem;
+    width: 20%;
+
+    @media screen and (max-width: 93.75rem) {
+        width: 25%;
+    }
+
+    @media screen and (max-width: 75rem) {
+        width: 33%;
+    }
+
+    @media screen and (max-width: 56.25rem) {
+        width: 50%;
+    }
+
+    @media screen and (max-width: 56.25rem) {
+        width: 50%;
+    }
+
+    @media screen and (max-width: 37.5rem) {
+        width: 100%;
+    }
 }
 
 .NoteContentContainer {
