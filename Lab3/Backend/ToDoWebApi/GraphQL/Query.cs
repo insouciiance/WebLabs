@@ -20,24 +20,31 @@ namespace ToDoWebApi.GraphQL
     {
         [Authorize]
         [GraphQLDescription("Gets current user's data.")]
-        public IQueryable<ApplicationUser> GetUser([Service] ToDosDbContext context)
+        [UseDbContext(typeof(ToDosDbContext))]
+        [UseFiltering]
+        [UseSorting]
+        public IQueryable<ApplicationUser> GetUser(
+            [Service] IHttpContextAccessor contextAccessor,
+            [ScopedService] ToDosDbContext context)
         {
-            return context.Users;
+            string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
+
+            return context.Users.Where(u => u.Id == userId);
         }
 
         [Authorize]
+        [GraphQLDescription("Gets current user's notes.")]
         [UseDbContext(typeof(ToDosDbContext))]
+        [UseFiltering]
+        [UseSorting]
         public IQueryable<ToDoNote> GetNote(
             [Service] IHttpContextAccessor contextAccessor,
             [ScopedService] ToDosDbContext context)
         {
             string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
 
-            Thread.Sleep(3000);
-
             return context.Notes
-                .Where(n => n.UserId == userId)
-                .OrderByDescending(n => n.DateCreated);
+                .Where(n => n.UserId == userId);
         }
     }
 }

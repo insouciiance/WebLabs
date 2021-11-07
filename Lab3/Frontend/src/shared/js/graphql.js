@@ -30,7 +30,7 @@ const graphql = {
         }
     }`,
     getNotes: `query {
-        note {
+        note(order: { dateCreated: DESC }) {
             id
             name
             checkboxes {

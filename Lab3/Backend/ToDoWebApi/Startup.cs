@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AspNetCoreRateLimit;
 using GraphQL.Server.Ui.Voyager;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -119,9 +120,21 @@ namespace ToDoWebApi
                 .AddType<ToDoCheckboxPutPayloadType>()
                 .AddType<ToDoCheckboxDeleteInputType>()
                 .AddType<ToDoCheckboxDeletePayloadType>()
+                .AddFiltering()
+                .AddSorting()
                 .AddAuthorization();
 
-            //services.AddErrorFilter<GraphQLErrorFilter>();
+            services.AddErrorFilter<GraphQLErrorFilter>();
+
+            services.AddOptions();
+
+            services.AddMemoryCache();
+
+            services.AddInMemoryRateLimiting();
+
+            services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+
+            services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -139,6 +152,8 @@ namespace ToDoWebApi
             app.UseCors("Default");
 
             app.UseRouting();
+
+            app.UseIpRateLimiting();
 
             app.UseAuthentication();
 

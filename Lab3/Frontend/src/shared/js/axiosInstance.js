@@ -32,13 +32,19 @@ axiosInstance.interceptors.response.use(null, error => {
         return error.response;
     }
 
-    const errors = [
-        {
-            message: `Error ${response.status}`,
-        },
-    ];
+    const errors = [];
 
-    response.data.errors = errors;
+    if (response.status === 429) {
+        errors.push({
+            message: `Please wait until you can continue working...`,
+        });
+    } else {
+        errors.push({
+            message: `Error ${response.status}`,
+        });
+    }
+
+    response.data = { errors };
 
     return response;
 });
