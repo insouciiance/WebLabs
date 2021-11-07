@@ -47,16 +47,6 @@ class Home extends Component {
                 this.setState({
                     notes: res.data.data.note,
                 });
-            })
-            .catch(err => {
-                console.log(err);
-
-                const { errors } = err.response.data;
-
-                this.setState({
-                    notesLoading: false,
-                    errors,
-                });
             });
     }
 
@@ -78,16 +68,6 @@ class Home extends Component {
 
                 notes.unshift(res.data.data.addNote.note);
                 this.setState({ notes });
-            })
-            .catch(err => {
-                console.log(err);
-
-                const { errors } = err.response.data;
-
-                this.setState({
-                    notesLoading: false,
-                    errors,
-                });
             });
     };
 
@@ -113,16 +93,6 @@ class Home extends Component {
                 notes.splice(deletedNoteIndex, 1);
 
                 this.setState({ notes });
-            })
-            .catch(err => {
-                console.log(err);
-
-                const { errors } = err.response.data;
-
-                this.setState({
-                    notesLoading: false,
-                    errors,
-                });
             });
     };
 
@@ -152,16 +122,6 @@ class Home extends Component {
                 });
 
                 this.setState({ notes });
-            })
-            .catch(err => {
-                console.log(err);
-
-                const { errors } = err.response.data;
-
-                this.setState({
-                    notesLoading: false,
-                    errors,
-                });
             });
     };
 
@@ -208,16 +168,6 @@ class Home extends Component {
                 };
 
                 this.setState({ notes });
-            })
-            .catch(err => {
-                console.log(err);
-
-                const { errors } = err.response.data;
-
-                this.setState({
-                    notesLoading: false,
-                    errors,
-                });
             });
     };
 
@@ -265,16 +215,6 @@ class Home extends Component {
                 };
 
                 this.setState({ notes });
-            })
-            .catch(err => {
-                console.log(err);
-
-                const { errors } = err.response.data;
-
-                this.setState({
-                    notesLoading: false,
-                    errors,
-                });
             });
     };
 
@@ -306,16 +246,6 @@ class Home extends Component {
                 checkboxNote.checkboxes.splice(deletedCheckboxIndex, 1);
 
                 this.setState({ notes });
-            })
-            .catch(err => {
-                console.log(err);
-
-                const { errors } = err.response.data;
-
-                this.setState({
-                    notesLoading: false,
-                    errors,
-                });
             });
     };
 
@@ -344,16 +274,6 @@ class Home extends Component {
                 notes[noteIndex] = newNote;
 
                 this.setState({ notes });
-            })
-            .catch(err => {
-                console.log(err);
-
-                const { errors } = err.response.data;
-
-                this.setState({
-                    notesLoading: false,
-                    errors,
-                });
             });
     };
 

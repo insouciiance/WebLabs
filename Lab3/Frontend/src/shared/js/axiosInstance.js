@@ -29,7 +29,7 @@ axiosInstance.interceptors.response.use(null, error => {
             data: { errors },
         };
 
-        return Promise.reject(error);
+        return error.response;
     }
 
     const errors = [
@@ -40,7 +40,7 @@ axiosInstance.interceptors.response.use(null, error => {
 
     response.data.errors = errors;
 
-    return Promise.reject(error);
+    return response;
 });
 
 export default axiosInstance;

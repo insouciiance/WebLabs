@@ -31,7 +31,7 @@ const graphql = {
     }`,
     getNotes: `query {
         note {
-            id
+            ids
             name
             checkboxes {
                 id
