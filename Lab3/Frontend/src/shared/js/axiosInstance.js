@@ -15,4 +15,32 @@ axiosInstance.interceptors.request.use(req => {
     return req;
 });
 
+axiosInstance.interceptors.response.use(null, error => {
+    const { response } = error;
+
+    if (!response) {
+        const errors = [
+            {
+                message: 'Unexpected network error',
+            },
+        ];
+
+        error.response = {
+            data: { errors },
+        };
+
+        return Promise.reject(error);
+    }
+
+    const errors = [
+        {
+            message: `Error ${response.status}`,
+        },
+    ];
+
+    response.data.errors = errors;
+
+    return Promise.reject(error);
+});
+
 export default axiosInstance;
