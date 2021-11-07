@@ -17,6 +17,8 @@ namespace ToDoWebApi.Services
 
         public const string PasswordLowercaseLetter = "Password should have at least one lowercase letter.";
 
+        public const string PasswordNonAlphanumeric = "Password should have at least non-alphanumeric symbol.";
+
         public const string PasswordDigit = "Password should have at least one digit.";
 
         public const string PasswordLength = "Password should be at least 6 characters long.";
@@ -45,6 +47,6 @@ namespace ToDoWebApi.Services
 
         public const string CantDeleteCheckbox = "There was a problem with deleting the note.";
 
-        public const string UserExists = "A user with this username or password already exists.";
+        public const string UserExists = "A user with this username or email already exists.";
     }
 }

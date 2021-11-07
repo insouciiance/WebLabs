@@ -41,6 +41,11 @@ namespace ToDoWebApi.Services.Validators
                 .WithMessage(ErrorMessages.PasswordDigit);
 
             RuleFor(input => input.Password)
+                .Matches(@"\W|_")
+                .Unless(input => string.IsNullOrWhiteSpace(input.Password))
+                .WithMessage(ErrorMessages.PasswordNonAlphanumeric);
+
+            RuleFor(input => input.Password)
                 .MinimumLength(6)
                 .Unless(input => string.IsNullOrWhiteSpace(input.Password))
                 .WithMessage(ErrorMessages.PasswordLength);

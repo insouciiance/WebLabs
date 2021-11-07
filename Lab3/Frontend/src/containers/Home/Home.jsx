@@ -8,6 +8,7 @@ import graphql from '../../shared/js/graphql';
 import classes from './Home.scss';
 import Popup from '../../components/Popup/Popup';
 import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
+import Spinner from '../../components/Spinner/Spinner';
 
 class Home extends Component {
     constructor(props) {
@@ -16,16 +17,25 @@ class Home extends Component {
             notes: [],
             newNoteName: '',
             errors: null,
+            notesLoading: false,
         };
     }
 
     componentDidMount() {
+        this.setState({
+            notesLoading: true,
+        });
+
         axios
             .post('/', {
                 query: graphql.getNotes,
             })
             .then(res => {
                 console.log(res);
+
+                this.setState({
+                    notesLoading: false,
+                });
 
                 if (res.data.errors) {
                     this.setState({
@@ -273,7 +283,7 @@ class Home extends Component {
         });
 
     render() {
-        const { notes, newNoteName, errors } = this.state;
+        const { notes, newNoteName, errors, notesLoading } = this.state;
 
         const errorsPopup = errors ? (
             <Popup onDismiss={this.onErrorDismiss} dismissText="Dismiss">
@@ -282,6 +292,8 @@ class Home extends Component {
                 ))}
             </Popup>
         ) : null;
+
+        const spinner = notesLoading ? <Spinner /> : null;
 
         return (
             <>
@@ -312,6 +324,7 @@ class Home extends Component {
                     ))}
                 </div>
                 {errorsPopup}
+                {spinner}
             </>
         );
     }

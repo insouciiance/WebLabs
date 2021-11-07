@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using HotChocolate;
 using HotChocolate.AspNetCore.Authorization;
@@ -31,6 +32,8 @@ namespace ToDoWebApi.GraphQL
             [ScopedService] ToDosDbContext context)
         {
             string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
+
+            Thread.Sleep(3000);
 
             return context.Notes
                 .Where(n => n.UserId == userId)
