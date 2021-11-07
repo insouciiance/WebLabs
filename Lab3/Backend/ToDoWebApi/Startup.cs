@@ -101,6 +101,7 @@ namespace ToDoWebApi
                 .AddGraphQLServer()
                 .AddQueryType<Query>()
                 .AddMutationType<Mutation>()
+                .AddSubscriptionType<Subscription>()
                 .AddType<ApplicationUserType>()
                 .AddType<RegisterUserInputType>()
                 .AddType<LoginUserPayloadType>()
@@ -122,6 +123,7 @@ namespace ToDoWebApi
                 .AddType<ToDoCheckboxDeletePayloadType>()
                 .AddFiltering()
                 .AddSorting()
+                .AddInMemorySubscriptions()
                 .AddAuthorization();
 
             services.AddErrorFilter<GraphQLErrorFilter>();
@@ -148,6 +150,8 @@ namespace ToDoWebApi
                     GraphQLEndPoint = "/graphql"
                 }, "/graphql-voyager");
             }
+
+            app.UseWebSockets();
 
             app.UseCors("Default");
 

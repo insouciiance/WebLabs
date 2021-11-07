@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using HotChocolate;
 using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Data;
-using HotChocolate.Execution;
+using HotChocolate.Subscriptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +27,9 @@ namespace ToDoWebApi.GraphQL
             RegisterUserInput input,
             [Service] UserManager<ApplicationUser> userManager,
             [Service] SignInManager<ApplicationUser> signInManager,
-            [Service] JwtTokenCreator tokenCreator)
+            [Service] JwtTokenCreator tokenCreator,
+            [Service] ITopicEventSender eventSender,
+            CancellationToken cancellationToken)
         {
             RegisterUserInputValidator validator = new();
             await validator.ValidateAndThrowGraphQLExceptionAsync(input);
@@ -54,7 +57,11 @@ namespace ToDoWebApi.GraphQL
             string jwtToken = tokenCreator.Create(user);
             DateTime expires = DateTime.Now.AddHours(1);
 
-            return new LoginUserPayload(user, jwtToken, expires);
+            LoginUserPayload payload = new(user, jwtToken, expires);
+
+            await eventSender.SendAsync(nameof(Subscription.OnUserLogin), payload, cancellationToken);
+
+            return payload;
         }
 
         [UseDbContext(typeof(ToDosDbContext))]
@@ -62,7 +69,9 @@ namespace ToDoWebApi.GraphQL
             LoginUserInput input,
             [Service] SignInManager<ApplicationUser> signInManager,
             [Service] JwtTokenCreator tokenCreator,
-            [ScopedService] ToDosDbContext context)
+            [ScopedService] ToDosDbContext context,
+            [Service] ITopicEventSender eventSender,
+            CancellationToken cancellationToken)
         {
             LoginUserInputValidator validator = new ();
             await validator.ValidateAndThrowGraphQLExceptionAsync(input);
@@ -85,7 +94,11 @@ namespace ToDoWebApi.GraphQL
             string jwtToken = tokenCreator.Create(user);
             DateTime expires = DateTime.Now.AddHours(1);
 
-            return new LoginUserPayload(user, jwtToken, expires);
+            LoginUserPayload payload = new(user, jwtToken, expires);
+
+            await eventSender.SendAsync(nameof(Subscription.OnUserLogin), payload, cancellationToken);
+
+            return payload;
         }
 
         [Authorize]

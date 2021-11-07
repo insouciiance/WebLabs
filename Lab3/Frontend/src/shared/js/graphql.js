@@ -128,6 +128,13 @@ const graphql = {
                 }
             }
         }`,
+    onUserLoginSubscription: `subscription {
+        onUserLogin()
+        {
+            jwtToken
+            expires
+        }
+    }`,
 };
 
 export default graphql;
