@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import ToDoCheckbox from './ToDoCheckbox/ToDoCheckbox';
 import { FaPlus, FaTrash } from 'react-icons/fa';
 
@@ -6,138 +6,141 @@ import classes from './ToDoNote.scss';
 import Input from '../../components/Input/Input';
 import Button from '../../components/Button/Button';
 
-export default class ToDoNote extends Component {
-    constructor(props) {
-        super(props);
+function ToDoNote(props) {
+    const { note } = props;
 
-        const { note } = props;
+    const [state, setState] = useState({
+        currentNoteName: note.name,
+        newCheckboxText: '',
+        showNewCheckbox: false,
+    });
 
-        this.state = {
+    useEffect(() => {
+        setState(prev => ({
+            ...prev,
             currentNoteName: note.name,
-            newCheckboxText: '',
-            showNewCheckbox: false,
-        };
-    }
+        }));
+    }, [note]);
 
-    toggleNewCheckboxShow = () => {
-        const { showNewCheckbox } = this.state;
-        this.setState({
+    const toggleNewCheckboxShow = () => {
+        const { showNewCheckbox } = state;
+        setState(prev => ({
+            ...prev,
             showNewCheckbox: !showNewCheckbox,
-        });
+        }));
     };
 
-    onNewCheckboxChange = e => {
-        this.setState({
+    const onNewCheckboxChange = e => {
+        setState(prev => ({
+            ...prev,
             newCheckboxText: e.target.value,
-        });
+        }));
     };
 
-    onCurrentNoteNameChange = e => {
-        this.setState({
+    const onCurrentNoteNameChange = e => {
+        setState(prev => ({
+            ...prev,
             currentNoteName: e.target.value,
-        });
+        }));
     };
 
-    onNoteRenameConfirm = () => {
-        const { note, onNoteRename } = this.props;
-        const { currentNoteName } = this.state;
+    const onNoteRenameConfirm = () => {
+        const { onNoteRename } = props;
+        const { currentNoteName } = state;
 
         if (note.name === currentNoteName) return;
 
-        onNoteRename(note.id, currentNoteName, this.onNameReset);
+        onNoteRename(note.id, currentNoteName, onNameReset);
     };
 
-    onNameReset = () => {
-        const { note } = this.props;
-
-        this.setState({
+    const onNameReset = () => {
+        setState(prev => ({
+            ...prev,
             currentNoteName: note.name,
-        });
+        }));
     };
 
-    render() {
-        const {
-            note,
-            onCheckboxAdd,
-            onCheckboxDelete,
-            onCheckboxRename,
-            onCheckboxToggle,
-            onNoteDelete,
-        } = this.props;
+    const {
+        onCheckboxAdd,
+        onCheckboxDelete,
+        onCheckboxRename,
+        onCheckboxToggle,
+        onNoteDelete,
+    } = props;
 
-        const { newCheckboxText, showNewCheckbox, currentNoteName } =
-            this.state;
+    const { newCheckboxText, showNewCheckbox, currentNoteName } = state;
 
-        const newCheckbox = showNewCheckbox ? (
-            <div className={classes.AddCheckboxWrapper}>
-                <Input
-                    name="newcheckbox"
-                    type="text"
-                    value={newCheckboxText}
-                    onChange={this.onNewCheckboxChange}
-                    focused={true}
-                />
-                <Button onClick={() => onCheckboxAdd(note.id, newCheckboxText)}>
-                    Add
-                </Button>
-            </div>
-        ) : null;
+    const newCheckbox = showNewCheckbox ? (
+        <div className={classes.AddCheckboxWrapper}>
+            <Input
+                name="newcheckbox"
+                type="text"
+                value={newCheckboxText}
+                onChange={onNewCheckboxChange}
+                focused={true}
+            />
+            <Button onClick={() => onCheckboxAdd(note.id, newCheckboxText)}>
+                Add
+            </Button>
+        </div>
+    ) : null;
 
-        return (
-            <div className={classes.NoteWrapper}>
-                <div className={classes.NoteContentContainer}>
-                    <div className={classes.NoteNameWrapper}>
-                        <Input
-                            className={classes.NoteName}
-                            value={currentNoteName}
-                            onChange={this.onCurrentNoteNameChange}
-                            onBlur={this.onNoteRenameConfirm}>
-                            {note.name}
-                        </Input>
-                    </div>
-                    <div className={classes.CheckboxesContainer}>
-                        {note.checkboxes
-                            .filter(c => !c.checked)
-                            .map(c => (
-                                <ToDoCheckbox
-                                    key={c.id}
-                                    checkbox={c}
-                                    onDelete={onCheckboxDelete}
-                                    onRename={onCheckboxRename}
-                                    onCheckToggle={onCheckboxToggle}
-                                />
-                            ))}
-                    </div>
-                    <div className={classes.CheckboxesContainer}>
-                        {note.checkboxes
-                            .filter(c => c.checked)
-                            .map(c => (
-                                <ToDoCheckbox
-                                    key={c.id}
-                                    checkbox={c}
-                                    onDelete={onCheckboxDelete}
-                                    onRename={onCheckboxRename}
-                                    onCheckToggle={onCheckboxToggle}
-                                />
-                            ))}
-                    </div>
-                    <div className={classes.Toolbar}>
-                        <input
-                            id={note.id}
-                            type="checkbox"
-                            className={classes.AddCheckbox}
-                        />
-                        <label htmlFor={note.id} className={classes.Add}>
-                            <FaPlus onClick={this.toggleNewCheckboxShow} />
-                        </label>
-                        <FaTrash
-                            className={classes.Remove}
-                            onClick={() => onNoteDelete(note.id)}
-                        />
-                    </div>
-                    {newCheckbox}
+    return (
+        <div className={classes.NoteWrapper}>
+            <div className={classes.NoteContentContainer}>
+                <div className={classes.NoteNameWrapper}>
+                    <Input
+                        className={classes.NoteName}
+                        value={currentNoteName}
+                        onChange={onCurrentNoteNameChange}
+                        onBlur={onNoteRenameConfirm}>
+                        {note.name}
+                    </Input>
                 </div>
+                <div className={classes.CheckboxesContainer}>
+                    {note.checkboxes
+                        .filter(c => !c.checked)
+                        .map(c => (
+                            <ToDoCheckbox
+                                key={c.id}
+                                checkbox={c}
+                                onDelete={onCheckboxDelete}
+                                onRename={onCheckboxRename}
+                                onCheckToggle={onCheckboxToggle}
+                            />
+                        ))}
+                </div>
+                <div className={classes.CheckboxesContainer}>
+                    {note.checkboxes
+                        .filter(c => c.checked)
+                        .map(c => (
+                            <ToDoCheckbox
+                                key={c.id}
+                                checkbox={c}
+                                onDelete={onCheckboxDelete}
+                                onRename={onCheckboxRename}
+                                onCheckToggle={onCheckboxToggle}
+                            />
+                        ))}
+                </div>
+                <div className={classes.Toolbar}>
+                    <input
+                        id={note.id}
+                        type="checkbox"
+                        className={classes.AddCheckbox}
+                    />
+                    <label htmlFor={note.id} className={classes.Add}>
+                        <FaPlus onClick={toggleNewCheckboxShow} />
+                    </label>
+                    <FaTrash
+                        className={classes.Remove}
+                        onClick={() => onNoteDelete(note.id)}
+                    />
+                </div>
+                {newCheckbox}
             </div>
-        );
-    }
+        </div>
+    );
 }
+
+export default ToDoNote;

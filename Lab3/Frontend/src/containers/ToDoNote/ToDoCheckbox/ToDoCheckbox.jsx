@@ -1,15 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaCheckSquare, FaSquare, FaTrash } from 'react-icons/fa';
 import Input from '../../../components/Input/Input';
 
 import classes from './ToDoCheckbox.scss';
 
-export default function ToDoCheckbox(props) {
+function ToDoCheckbox(props) {
     const { checkbox, onDelete, onRename, onCheckToggle } = props;
 
     const [state, setState] = useState({
         checkboxText: checkbox.text,
     });
+
+    useEffect(() => {
+        setState(prev => ({
+            ...prev,
+            checkboxText: checkbox.text,
+        }));
+    }, [checkbox]);
 
     const onCheckboxTextChange = e => {
         setState({
@@ -64,3 +71,5 @@ export default function ToDoCheckbox(props) {
         </div>
     );
 }
+
+export default ToDoCheckbox;
