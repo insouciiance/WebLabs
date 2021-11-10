@@ -12,8 +12,10 @@ header {
 
 .Logout {
     color: $main-color-bright;
+    cursor: pointer;
     position: absolute;
     right: 1rem;
+    text-decoration: underline;
     top: 50%;
     transform: translateY(-50%);
 }

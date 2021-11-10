@@ -25,12 +25,19 @@ export default class App extends Component {
     }
 
     onLogout = () => {
+        if (!authToken.exists()) {
+            this.setState({ isAuthenticated: false });
+            return;
+        }
+
         axios
             .post('/', {
                 query: graphql.logout,
             })
             .then(res => {
-                if (!res.data.errors && res.data.data.logout.isSuccessful) {
+                const { data, errors } = res.data;
+
+                if (!errors && data.logout.isSuccessful) {
                     authToken.reset();
                     this.setState({ isAuthenticated: false });
                 }
@@ -41,7 +48,7 @@ export default class App extends Component {
         const { isAuthenticated } = this.state;
 
         return (
-            <Layout onLogout={this.onLogout}>
+            <Layout onLogout={isAuthenticated ? this.onLogout : null}>
                 {isAuthenticated ? (
                     <Switch>
                         <Route path="/home" exact>

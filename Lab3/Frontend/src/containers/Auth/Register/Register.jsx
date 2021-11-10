@@ -11,7 +11,6 @@ import Spinner from '../../../components/Spinner/Spinner';
 import { authToken } from '../../../shared/js/authToken';
 import axios from '../../../shared/js/axiosInstance';
 import graphql from '../../../shared/js/graphql';
-
 import classes from './Register.scss';
 
 class Register extends Component {

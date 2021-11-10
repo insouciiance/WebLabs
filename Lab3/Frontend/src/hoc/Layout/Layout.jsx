@@ -1,16 +1,15 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { authToken } from '../../shared/js/authToken';
 
+import { authToken } from '../../shared/js/authToken';
 import classes from './Layout.scss';
 
-export default function Layout(props) {
+function Layout(props) {
     const { children, onLogout } = props;
 
     const logoutLink = authToken.exists() ? (
-        <NavLink className={classes.Logout} onClick={onLogout} to="/">
+        <p className={classes.Logout} onClick={onLogout}>
             Logout
-        </NavLink>
+        </p>
     ) : null;
 
     return (
@@ -23,3 +22,5 @@ export default function Layout(props) {
         </div>
     );
 }
+
+export default Layout;

@@ -12,7 +12,6 @@ import Spinner from '../../../components/Spinner/Spinner';
 import { authToken } from '../../../shared/js/authToken';
 import axios from '../../../shared/js/axiosInstance';
 import graphql from '../../../shared/js/graphql';
-
 import classes from './Login.scss';
 
 class Login extends Component {
