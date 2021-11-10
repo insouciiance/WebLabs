@@ -27,9 +27,7 @@ namespace ToDoWebApi.GraphQL
             RegisterUserInput input,
             [Service] UserManager<ApplicationUser> userManager,
             [Service] SignInManager<ApplicationUser> signInManager,
-            [Service] JwtTokenCreator tokenCreator,
-            [Service] ITopicEventSender eventSender,
-            CancellationToken cancellationToken)
+            [Service] JwtTokenCreator tokenCreator)
         {
             RegisterUserInputValidator validator = new();
             await validator.ValidateAndThrowGraphQLExceptionAsync(input);
@@ -59,8 +57,6 @@ namespace ToDoWebApi.GraphQL
 
             LoginUserPayload payload = new(user, jwtToken, expires);
 
-            await eventSender.SendAsync(nameof(Subscription.OnUserLogin), payload, cancellationToken);
-
             return payload;
         }
 
@@ -69,9 +65,7 @@ namespace ToDoWebApi.GraphQL
             LoginUserInput input,
             [Service] SignInManager<ApplicationUser> signInManager,
             [Service] JwtTokenCreator tokenCreator,
-            [ScopedService] ToDosDbContext context,
-            [Service] ITopicEventSender eventSender,
-            CancellationToken cancellationToken)
+            [ScopedService] ToDosDbContext context)
         {
             LoginUserInputValidator validator = new ();
             await validator.ValidateAndThrowGraphQLExceptionAsync(input);
@@ -95,8 +89,6 @@ namespace ToDoWebApi.GraphQL
             DateTime expires = DateTime.Now.AddHours(1);
 
             LoginUserPayload payload = new(user, jwtToken, expires);
-
-            await eventSender.SendAsync(nameof(Subscription.OnUserLogin), payload, cancellationToken);
 
             return payload;
         }
@@ -122,7 +114,9 @@ namespace ToDoWebApi.GraphQL
         public async Task<ToDoNotePayload> AddNote(
             ToDoNoteInput input,
             [Service] IHttpContextAccessor contextAccessor,
-            [ScopedService] ToDosDbContext context)
+            [ScopedService] ToDosDbContext context,
+            [Service] ITopicEventSender eventSender,
+            CancellationToken cancellationToken)
         {
             ToDoNoteInputValidator validator = new();
             await validator.ValidateAndThrowGraphQLExceptionAsync(input);
@@ -139,7 +133,13 @@ namespace ToDoWebApi.GraphQL
 
             context.Notes.Add(newNote);
 
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(cancellationToken);
+
+            await SubscriptionMessageEmitter.EmitOnNotesUpdate(
+                contextAccessor,
+                context,
+                eventSender,
+                cancellationToken);
 
             return new ToDoNotePayload(newNote);
         }
@@ -149,7 +149,9 @@ namespace ToDoWebApi.GraphQL
         public async Task<ToDoNotePutPayload> PutNote(
             ToDoNotePutInput input,
             [Service] IHttpContextAccessor contextAccessor,
-            [ScopedService] ToDosDbContext context)
+            [ScopedService] ToDosDbContext context,
+            [Service] ITopicEventSender eventSender,
+            CancellationToken cancellationToken)
         {
             ToDoNotePutInputValidator validator = new();
             await validator.ValidateAndThrowGraphQLExceptionAsync(input);
@@ -165,7 +167,13 @@ namespace ToDoWebApi.GraphQL
 
             noteToPut.Name = input.Name;
 
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(cancellationToken);
+
+            await SubscriptionMessageEmitter.EmitOnNotesUpdate(
+                contextAccessor,
+                context,
+                eventSender,
+                cancellationToken);
 
             return new ToDoNotePutPayload(noteToPut);
         }
@@ -175,7 +183,9 @@ namespace ToDoWebApi.GraphQL
         public async Task<ToDoNoteDeletePayload> DeleteNote(
             ToDoNoteDeleteInput input,
             [Service] IHttpContextAccessor contextAccessor,
-            [ScopedService] ToDosDbContext context)
+            [ScopedService] ToDosDbContext context,
+            [Service] ITopicEventSender eventSender,
+            CancellationToken cancellationToken)
         {
             ToDoNoteDeleteInputValidator validator = new();
             await validator.ValidateAndThrowGraphQLExceptionAsync(input);
@@ -191,7 +201,13 @@ namespace ToDoWebApi.GraphQL
 
             context.Notes.Remove(noteToDelete);
 
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(cancellationToken);
+
+            await SubscriptionMessageEmitter.EmitOnNotesUpdate(
+                contextAccessor,
+                context,
+                eventSender,
+                cancellationToken);
 
             return new ToDoNoteDeletePayload(true);
         }
@@ -201,7 +217,9 @@ namespace ToDoWebApi.GraphQL
         public async Task<ToDoCheckboxPayload> AddCheckbox(
             ToDoCheckboxInput input,
             [Service] IHttpContextAccessor contextAccessor,
-            [ScopedService] ToDosDbContext context)
+            [ScopedService] ToDosDbContext context,
+            [Service] ITopicEventSender eventSender,
+            CancellationToken cancellationToken)
         {
             ToDoCheckboxInputValidator validator = new();
             await validator.ValidateAndThrowGraphQLExceptionAsync(input);
@@ -224,7 +242,13 @@ namespace ToDoWebApi.GraphQL
 
             context.Checkboxes.Add(checkbox);
 
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(cancellationToken);
+
+            await SubscriptionMessageEmitter.EmitOnNotesUpdate(
+                contextAccessor,
+                context,
+                eventSender,
+                cancellationToken);
 
             return new ToDoCheckboxPayload(checkbox);
         }
@@ -234,7 +258,9 @@ namespace ToDoWebApi.GraphQL
         public async Task<ToDoCheckboxPutPayload> PutCheckbox(
             ToDoCheckboxPutInput input,
             [Service] IHttpContextAccessor contextAccessor,
-            [ScopedService] ToDosDbContext context)
+            [ScopedService] ToDosDbContext context,
+            [Service] ITopicEventSender eventSender,
+            CancellationToken cancellationToken)
         {
             ToDoCheckboxPutInputValidator validator = new();
             await validator.ValidateAndThrowGraphQLExceptionAsync(input);
@@ -248,7 +274,7 @@ namespace ToDoWebApi.GraphQL
                 throw new GraphQLException(ErrorMessages.CantUpdateCheckbox);
             }
 
-            await context.Entry(checkboxToPut).Navigation("Note").LoadAsync();
+            await context.Entry(checkboxToPut).Navigation("Note").LoadAsync(cancellationToken);
 
             if (checkboxToPut.Note.UserId != userId)
             {
@@ -258,7 +284,13 @@ namespace ToDoWebApi.GraphQL
             checkboxToPut.Text = input.Text;
             checkboxToPut.Checked = input.Checked;
 
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(cancellationToken);
+
+            await SubscriptionMessageEmitter.EmitOnNotesUpdate(
+                contextAccessor,
+                context,
+                eventSender,
+                cancellationToken);
 
             return new ToDoCheckboxPutPayload(checkboxToPut);
         }
@@ -268,7 +300,9 @@ namespace ToDoWebApi.GraphQL
         public async Task<ToDoCheckboxDeletePayload> DeleteCheckbox(
             ToDoCheckboxDeleteInput input,
             [Service] IHttpContextAccessor contextAccessor,
-            [ScopedService] ToDosDbContext context)
+            [ScopedService] ToDosDbContext context,
+            [Service] ITopicEventSender eventSender,
+            CancellationToken cancellationToken)
         {
             ToDoCheckboxDeleteInputValidator validator = new();
             await validator.ValidateAndThrowGraphQLExceptionAsync(input);
@@ -282,7 +316,7 @@ namespace ToDoWebApi.GraphQL
                 throw new GraphQLException(ErrorMessages.CantDeleteCheckbox);
             }
 
-            await context.Entry(checkboxToDelete).Navigation("Note").LoadAsync();
+            await context.Entry(checkboxToDelete).Navigation("Note").LoadAsync(cancellationToken);
 
             if (checkboxToDelete.Note.UserId != userId)
             {
@@ -291,7 +325,13 @@ namespace ToDoWebApi.GraphQL
 
             context.Checkboxes.Remove(checkboxToDelete);
 
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(cancellationToken);
+
+            await SubscriptionMessageEmitter.EmitOnNotesUpdate(
+                contextAccessor,
+                context,
+                eventSender,
+                cancellationToken);
 
             return new ToDoCheckboxDeletePayload(true);
         }

@@ -121,6 +121,7 @@ namespace ToDoWebApi
                 .AddType<ToDoCheckboxPutPayloadType>()
                 .AddType<ToDoCheckboxDeleteInputType>()
                 .AddType<ToDoCheckboxDeletePayloadType>()
+                .AddType<OnNotesUpdateMessageType>()
                 .AddFiltering()
                 .AddSorting()
                 .AddInMemorySubscriptions()

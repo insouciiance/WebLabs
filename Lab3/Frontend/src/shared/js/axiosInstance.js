@@ -1,9 +1,5 @@
 import axios from 'axios';
-
-const baseURL =
-    process.env.NODE_ENV.toLowerCase() === 'development'
-        ? 'https://localhost:5001/graphql'
-        : null;
+import { baseURL } from './config';
 
 const axiosInstance = axios.create({
     baseURL,

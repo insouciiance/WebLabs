@@ -1,20 +1,34 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using HotChocolate;
+using HotChocolate.Data;
+using HotChocolate.Execution;
+using HotChocolate.Subscriptions;
 using HotChocolate.Types;
+using Microsoft.AspNetCore.Http;
+using ToDoWebApi.GraphQL.ToDos;
 using ToDoWebApi.GraphQL.Users;
 
 namespace ToDoWebApi.GraphQL
 {
     public class Subscription
     {
-        [Subscribe]
+        [Subscribe(With = nameof(SubscribeToOnNotesUpdateAsync))]
         [Topic]
-        public LoginUserPayload OnUserLogin([EventMessage] LoginUserPayload payload)
+        public OnNotesUpdateMessage OnNotesUpdate(string jwtToken, [EventMessage] OnNotesUpdateMessage message)
         {
-            return payload;
+            return message;
+        }
+
+        public async ValueTask<ISourceStream<OnNotesUpdateMessage>> SubscribeToOnNotesUpdateAsync(
+            string jwtToken,
+            [Service] ITopicEventReceiver eventReceiver,
+            CancellationToken cancellationToken)
+        {
+            return await eventReceiver.SubscribeAsync<string, OnNotesUpdateMessage>("OnNotesUpdate_" + jwtToken, cancellationToken);
         }
     }
 }

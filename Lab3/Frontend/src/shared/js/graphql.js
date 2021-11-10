@@ -128,11 +128,18 @@ const graphql = {
                 }
             }
         }`,
-    onUserLoginSubscription: `subscription {
-        onUserLogin()
+    onNotesChangeSubscription: jwtToken => `subscription {
+        onNotesUpdate(jwtToken: "${jwtToken}")
         {
-            jwtToken
-            expires
+            notes {
+                id
+                name
+                checkboxes {
+                    id
+                    text
+                    checked
+                }
+            }
         }
     }`,
 };

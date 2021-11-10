@@ -45,11 +45,7 @@ export default class App extends Component {
                 {isAuthenticated ? (
                     <Switch>
                         <Route path="/home" exact>
-                            <Home
-                                onLogout={() =>
-                                    this.setState({ isAuthenticated: false })
-                                }
-                            />
+                            <Home />
                         </Route>
                         <Redirect to="/home" />
                     </Switch>

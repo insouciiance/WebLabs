@@ -1,30 +1,92 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
 import ToDoNote from '../ToDoNote/ToDoNote';
 import axios from '../../shared/js/axiosInstance';
 import graphql from '../../shared/js/graphql';
+import {
+    ApolloClient,
+    ApolloProvider,
+    InMemoryCache,
+    useSubscription,
+    gql,
+    createHttpLink,
+    split,
+} from '@apollo/client';
+import { withRouter } from 'react-router';
+import { WebSocketLink } from '@apollo/client/link/ws';
+import { setContext } from '@apollo/client/link/context';
+import { getMainDefinition } from '@apollo/client/utilities';
 
 import classes from './Home.scss';
 import Popup from '../../components/Popup/Popup';
 import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
 import Spinner from '../../components/Spinner/Spinner';
+import { baseURL, baseURLWSS } from '../../shared/js/config';
+import { authToken } from '../../shared/js/authToken';
 
-class Home extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            notes: [],
-            newNoteName: '',
-            errors: null,
-            notesLoading: false,
-        };
+const wsLink = new WebSocketLink({
+    uri: baseURLWSS,
+    options: {
+        reconnect: true,
+    },
+});
+
+const httpLink = createHttpLink({
+    uri: baseURL,
+});
+
+const authLink = setContext((_, { headers }) => {
+    const { token } = authToken.get();
+    return {
+        headers: {
+            ...headers,
+            authorization: token ? `Bearer ${token}` : '',
+        },
+    };
+});
+
+const link = split(
+    ({ query }) => {
+        const { kind, operation } = getMainDefinition(query);
+        return kind === 'OperationDefinition' && operation === 'subscription';
+    },
+    wsLink,
+    authLink.concat(httpLink),
+);
+
+const client = new ApolloClient({
+    link,
+    cache: new InMemoryCache(),
+});
+
+function Home() {
+    const [state, setState] = useState({
+        notes: [],
+        newNoteName: '',
+        errors: null,
+        notesLoading: false,
+    });
+
+    const { token } = authToken.get();
+    const { data } = useSubscription(
+        gql`
+            ${graphql.onNotesChangeSubscription(token)}
+        `,
+    );
+
+    if (data && data.onNotesUpdate.notes != state.notes) {
+        setState(prev => ({
+            ...prev,
+            notes: data.onNotesUpdate.notes,
+        }));
     }
 
-    componentDidMount() {
-        this.setState({
+    useEffect(() => {
+        setState(prev => ({
+            ...prev,
             notesLoading: true,
-        });
+        }));
 
         axios
             .post('/', {
@@ -33,25 +95,28 @@ class Home extends Component {
             .then(res => {
                 console.log(res);
 
-                this.setState({
+                setState(prev => ({
+                    ...prev,
                     notesLoading: false,
-                });
+                }));
 
                 if (res.data.errors) {
-                    this.setState({
+                    setState(prev => ({
+                        ...prev,
                         errors: res.data.errors,
-                    });
+                    }));
                     return;
                 }
 
-                this.setState({
+                setState(prev => ({
+                    ...prev,
                     notes: res.data.data.note,
-                });
+                }));
             });
-    }
+    }, []);
 
-    onNoteAdd = () => {
-        const { newNoteName, notes } = this.state;
+    const onNoteAdd = () => {
+        const { newNoteName, notes } = state;
 
         axios
             .post('/', {
@@ -60,19 +125,23 @@ class Home extends Component {
             .then(res => {
                 console.log(res);
                 if (res.data.errors) {
-                    this.setState({
+                    setState(prev => ({
+                        ...prev,
                         errors: res.data.errors,
-                    });
+                    }));
                     return;
                 }
 
                 notes.unshift(res.data.data.addNote.note);
-                this.setState({ notes });
+                setState(prev => ({
+                    ...prev,
+                    notes,
+                }));
             });
     };
 
-    onNoteDelete = noteId => {
-        const { notes } = this.state;
+    const onNoteDelete = noteId => {
+        const { notes } = state;
 
         axios
             .post('/', {
@@ -82,9 +151,10 @@ class Home extends Component {
                 console.log(res);
 
                 if (res.data.errors) {
-                    this.setState({
+                    setState(prev => ({
+                        ...prev,
                         errors: res.data.errors,
-                    });
+                    }));
                     return;
                 }
 
@@ -92,12 +162,15 @@ class Home extends Component {
 
                 notes.splice(deletedNoteIndex, 1);
 
-                this.setState({ notes });
+                setState(prev => ({
+                    ...prev,
+                    notes,
+                }));
             });
     };
 
-    onCheckboxAdd = (noteId, text) => {
-        const { notes } = this.state;
+    const onCheckboxAdd = (noteId, text) => {
+        const { notes } = state;
 
         axios
             .post('/', {
@@ -107,9 +180,10 @@ class Home extends Component {
                 console.log(res);
 
                 if (res.data.errors) {
-                    this.setState({
+                    setState(prev => ({
+                        ...prev,
                         errors: res.data.errors,
-                    });
+                    }));
                     return;
                 }
 
@@ -121,12 +195,15 @@ class Home extends Component {
                     checked: checkbox.checked,
                 });
 
-                this.setState({ notes });
+                setState(prev => ({
+                    ...prev,
+                    notes,
+                }));
             });
     };
 
-    onCheckboxRename = (checkboxId, text, onReset) => {
-        const { notes } = this.state;
+    const onCheckboxRename = (checkboxId, text, onReset) => {
+        const { notes } = state;
 
         const checkbox = notes
             .reduce(
@@ -145,9 +222,10 @@ class Home extends Component {
                 console.log(res);
 
                 if (res.data.errors) {
-                    this.setState({
+                    setState(prev => ({
+                        ...prev,
                         errors: res.data.errors,
-                    });
+                    }));
                     onReset();
                     return;
                 }
@@ -167,12 +245,15 @@ class Home extends Component {
                     checked: newCheckbox.checked,
                 };
 
-                this.setState({ notes });
+                setState(prev => ({
+                    ...prev,
+                    notes,
+                }));
             });
     };
 
-    onCheckboxToggle = checkboxId => {
-        const { notes } = this.state;
+    const onCheckboxToggle = checkboxId => {
+        const { notes } = state;
 
         const checkbox = notes
             .reduce(
@@ -193,9 +274,10 @@ class Home extends Component {
                 console.log(res);
 
                 if (res.data.errors) {
-                    this.setState({
+                    setState(prev => ({
+                        ...prev,
                         errors: res.data.errors,
-                    });
+                    }));
                     return;
                 }
 
@@ -214,12 +296,15 @@ class Home extends Component {
                     checked: newCheckbox.checked,
                 };
 
-                this.setState({ notes });
+                setState(prev => ({
+                    notes,
+                    ...prev,
+                }));
             });
     };
 
-    onCheckboxDelete = checkboxId => {
-        const { notes } = this.state;
+    const onCheckboxDelete = checkboxId => {
+        const { notes } = state;
 
         axios
             .post('/', {
@@ -229,9 +314,10 @@ class Home extends Component {
                 console.log(res);
 
                 if (res.data.errors) {
-                    this.setState({
+                    setState(prev => ({
+                        ...prev,
                         errors: res.data.errors,
-                    });
+                    }));
                     return;
                 }
 
@@ -245,12 +331,15 @@ class Home extends Component {
 
                 checkboxNote.checkboxes.splice(deletedCheckboxIndex, 1);
 
-                this.setState({ notes });
+                setState(prev => ({
+                    ...prev,
+                    notes,
+                }));
             });
     };
 
-    onNoteRename = (noteId, newName, onReset) => {
-        const { notes } = this.state;
+    const onNoteRename = (noteId, newName, onReset) => {
+        const { notes } = state;
 
         axios
             .post('/', {
@@ -260,9 +349,10 @@ class Home extends Component {
                 console.log(res);
 
                 if (res.data.errors) {
-                    this.setState({
+                    setState(prev => ({
+                        ...prev,
                         errors: res.data.errors,
-                    });
+                    }));
                     onReset();
                     return;
                 }
@@ -273,61 +363,70 @@ class Home extends Component {
 
                 notes[noteIndex] = newNote;
 
-                this.setState({ notes });
+                setState(prev => ({
+                    ...prev,
+                    notes,
+                }));
             });
     };
 
-    onErrorDismiss = () =>
-        this.setState({
+    const onErrorDismiss = () =>
+        setState(prev => ({
+            ...prev,
             errors: null,
-        });
+        }));
 
-    render() {
-        const { notes, newNoteName, errors, notesLoading } = this.state;
+    const { notes, newNoteName, errors, notesLoading } = state;
 
-        const errorsPopup = errors ? (
-            <Popup onDismiss={this.onErrorDismiss} dismissText="Dismiss">
-                {errors.map(e => (
-                    <ErrorMessage key={e.message}>{e.message}</ErrorMessage>
-                ))}
-            </Popup>
-        ) : null;
+    const errorsPopup = errors ? (
+        <Popup onDismiss={onErrorDismiss} dismissText="Dismiss">
+            {errors.map(e => (
+                <ErrorMessage key={e.message}>{e.message}</ErrorMessage>
+            ))}
+        </Popup>
+    ) : null;
 
-        const spinner = notesLoading ? <Spinner /> : null;
+    const spinner = notesLoading ? <Spinner /> : null;
 
-        return (
-            <>
-                <div className={classes.AddNoteWrapper}>
-                    <h3 className={classes.AddNoteCta}>Add new</h3>
-                    <Input
-                        name="addnote"
-                        value={newNoteName}
-                        type="text"
-                        onChange={e =>
-                            this.setState({ newNoteName: e.target.value })
-                        }
+    return (
+        <>
+            <div className={classes.AddNoteWrapper}>
+                <h3 className={classes.AddNoteCta}>Add new</h3>
+                <Input
+                    name="addnote"
+                    value={newNoteName}
+                    type="text"
+                    onChange={e =>
+                        setState(prev => ({
+                            ...prev,
+                            newNoteName: e.target.value,
+                        }))
+                    }
+                />
+                <Button onClick={onNoteAdd}>Add</Button>
+            </div>
+            <div className={classes.NotesContainer}>
+                {notes.map(n => (
+                    <ToDoNote
+                        key={n.id}
+                        note={n}
+                        onCheckboxAdd={onCheckboxAdd}
+                        onCheckboxDelete={onCheckboxDelete}
+                        onCheckboxRename={onCheckboxRename}
+                        onCheckboxToggle={onCheckboxToggle}
+                        onNoteDelete={onNoteDelete}
+                        onNoteRename={onNoteRename}
                     />
-                    <Button onClick={this.onNoteAdd}>Add</Button>
-                </div>
-                <div className={classes.NotesContainer}>
-                    {notes.map(n => (
-                        <ToDoNote
-                            key={n.id}
-                            note={n}
-                            onCheckboxAdd={this.onCheckboxAdd}
-                            onCheckboxDelete={this.onCheckboxDelete}
-                            onCheckboxRename={this.onCheckboxRename}
-                            onCheckboxToggle={this.onCheckboxToggle}
-                            onNoteDelete={this.onNoteDelete}
-                            onNoteRename={this.onNoteRename}
-                        />
-                    ))}
-                </div>
-                {errorsPopup}
-                {spinner}
-            </>
-        );
-    }
+                ))}
+            </div>
+            {errorsPopup}
+            {spinner}
+        </>
+    );
 }
 
-export default Home;
+export default withRouter(() => (
+    <ApolloProvider client={client}>
+        <Home />
+    </ApolloProvider>
+));
