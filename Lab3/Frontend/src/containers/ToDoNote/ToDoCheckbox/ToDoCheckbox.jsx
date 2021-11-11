@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { FaCheckSquare, FaSquare, FaTrash } from 'react-icons/fa';
+import {
+    FaCheckSquare,
+    FaCross,
+    FaSquare,
+    FaTimes,
+    FaTrash,
+} from 'react-icons/fa';
 import Input from '../../../components/Input/Input';
 
 import classes from './ToDoCheckbox.scss';
@@ -66,7 +72,10 @@ function ToDoCheckbox(props) {
                 ) : (
                     <FaSquare onClick={() => onCheckToggle(checkbox.id)} />
                 )}
-                <FaTrash onClick={() => onDelete(checkbox.id)} />
+                <FaTimes
+                    className={classes.DeleteButton}
+                    onClick={() => onDelete(checkbox.id)}
+                />
             </div>
         </div>
     );

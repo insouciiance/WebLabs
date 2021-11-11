@@ -72,16 +72,18 @@ function ToDoNote(props) {
 
     const newCheckbox = showNewCheckbox ? (
         <div className={classes.AddCheckboxWrapper}>
-            <Input
-                name="newcheckbox"
-                type="text"
-                value={newCheckboxText}
-                onChange={onNewCheckboxChange}
-                focused={true}
-            />
-            <Button onClick={() => onCheckboxAdd(note.id, newCheckboxText)}>
-                Add
-            </Button>
+            <form onSubmit={e => e.preventDefault()}>
+                <Input
+                    name="newcheckbox"
+                    type="text"
+                    value={newCheckboxText}
+                    onChange={onNewCheckboxChange}
+                    focused={true}
+                />
+                <Button onClick={() => onCheckboxAdd(note.id, newCheckboxText)}>
+                    Add
+                </Button>
+            </form>
         </div>
     ) : null;
 

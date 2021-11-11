@@ -20,7 +20,7 @@ export const authToken = {
     },
     reset() {
         localStorage.removeItem('token');
-        localStorage.removeItem('exists');
+        localStorage.removeItem('expires');
     },
     exists() {
         return !!this.get();

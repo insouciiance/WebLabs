@@ -392,18 +392,20 @@ function Home() {
         <>
             <div className={classes.AddNoteWrapper}>
                 <h3 className={classes.AddNoteCta}>Add new</h3>
-                <Input
-                    name="addnote"
-                    value={newNoteName}
-                    type="text"
-                    onChange={e =>
-                        setState(prev => ({
-                            ...prev,
-                            newNoteName: e.target.value,
-                        }))
-                    }
-                />
-                <Button onClick={onNoteAdd}>Add</Button>
+                <form onSubmit={e => e.preventDefault()}>
+                    <Input
+                        name="addnote"
+                        value={newNoteName}
+                        type="text"
+                        onChange={e =>
+                            setState(prev => ({
+                                ...prev,
+                                newNoteName: e.target.value,
+                            }))
+                        }
+                    />
+                    <Button onClick={onNoteAdd}>Add</Button>
+                </form>
             </div>
             <div className={classes.NotesContainer}>
                 {notes.map(n => (

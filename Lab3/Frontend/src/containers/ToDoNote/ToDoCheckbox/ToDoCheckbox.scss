@@ -1,11 +1,11 @@
 @use '/Lab3/Frontend/src/shared/scss/shared.scss' as *;
 
 .CheckboxWrapper {
-    border-bottom: 1px solid $main-color;
-    border-top: 1px solid $main-color;
+    border-radius: 3px;
     display: flex;
     justify-content: space-between;
-    padding: 0.2rem 0;
+    padding: 0.2rem;
+    transition: background-color 0.075s;
 
     .CheckboxTextWrapper,
     input {
@@ -13,31 +13,33 @@
         color: $main-color-dark;
         font-size: 1rem;
         line-height: 1rem;
-        width: 80%;
-
-        @media screen and (min-width: 28rem) and (max-width: 37.5rem) {
-            width: 85%;
-        }
+        transition: inherit;
+        width: calc(100% - 3rem);
     }
 
     .Toolbar {
         align-items: center;
+        cursor: default;
         display: flex;
         justify-content: space-between;
-        width: 15%;
-
-        @media screen and (min-width: 28rem) and (max-width: 37.5rem) {
-            width: 10%;
-        }
+        width: 2.5rem;
 
         * {
             cursor: pointer;
         }
     }
 
-    &:hover {
-        border-bottom: 1px solid $main-color-dark;
-        border-top: 1px solid $main-color-dark;
+    &:hover,
+    &:hover input {
+        background-color: $main-color-brighter;
         cursor: text;
+    }
+}
+
+.DeleteButton {
+    transition: 0.2s;
+
+    &:hover {
+        color: $warning-color;
     }
 }

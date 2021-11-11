@@ -14,6 +14,10 @@ namespace ToDoWebApi.Services.Validators
             RuleFor(input => input.NoteId)
                 .NotEmpty()
                 .WithMessage(ErrorMessages.NoteIdEmpty);
+
+            RuleFor(input => input.Text)
+                .NotEmpty()
+                .WithMessage(ErrorMessages.CheckboxTextEmpty);
         }
     }
 }
