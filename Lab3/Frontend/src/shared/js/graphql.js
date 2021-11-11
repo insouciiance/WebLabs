@@ -8,6 +8,9 @@ const graphql = {
             {
                 jwtToken
                 expires
+                user {
+                    userName
+                }
             }
         }`,
     register: (userName, email, password, passwordConfirm) =>
@@ -21,6 +24,10 @@ const graphql = {
             {
                 jwtToken
                 expires
+                user {
+                    userName
+                    email
+                }
             }
         }`,
     logout: `mutation {

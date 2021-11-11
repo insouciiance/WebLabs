@@ -27,14 +27,20 @@
 
 .NoteContentContainer {
     background-color: $main-color;
+    border: 2px solid $main-color-dark;
     border-radius: 5px;
     color: $main-color-dark;
     height: fit-content;
     padding: 0.5rem 1rem;
+    transition: border-color 0.15s;
 
-    &:hover .Remove {
-        opacity: 1;
-        visibility: visible;
+    &:hover {
+        border-color: $main-accent-color;
+
+        .Remove {
+            opacity: 1;
+            visibility: visible;
+        }
     }
 }
 
@@ -44,11 +50,17 @@
 
     .NoteName {
         background-color: $main-color;
+        border-radius: 3px;
         color: $main-color-dark;
         font-weight: bold;
         overflow: hidden;
         position: relative;
+        transition: background-color 0.075s;
         width: 100%;
+
+        &:hover {
+            background-color: $main-color-bright;
+        }
     }
 
     &::after {
@@ -121,7 +133,13 @@
 
     button {
         background-color: $secondary-color;
+        border: 1px solid $secondary-color;
         color: $main-color;
         width: 50%;
+
+        &:hover {
+            background-color: $main-color;
+            color: $secondary-color;
+        }
     }
 }

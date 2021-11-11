@@ -11,6 +11,7 @@ import Popup from '../../../components/Popup/Popup';
 import Spinner from '../../../components/Spinner/Spinner';
 import { authToken } from '../../../shared/js/authToken';
 import axios from '../../../shared/js/axiosInstance';
+import { credentials } from '../../../shared/js/credentials';
 import graphql from '../../../shared/js/graphql';
 import classes from './Login.scss';
 
@@ -55,9 +56,10 @@ class Login extends Component {
                     return;
                 }
 
-                const { jwtToken, expires } = res.data.data.login;
+                const { jwtToken, expires, user } = res.data.data.login;
 
                 authToken.set(jwtToken, expires);
+                credentials.set(user.userName);
 
                 onLogin();
             });

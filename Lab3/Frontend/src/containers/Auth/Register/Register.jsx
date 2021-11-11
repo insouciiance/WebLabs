@@ -10,6 +10,7 @@ import Popup from '../../../components/Popup/Popup';
 import Spinner from '../../../components/Spinner/Spinner';
 import { authToken } from '../../../shared/js/authToken';
 import axios from '../../../shared/js/axiosInstance';
+import { credentials } from '../../../shared/js/credentials';
 import graphql from '../../../shared/js/graphql';
 import classes from './Register.scss';
 
@@ -58,9 +59,10 @@ class Register extends Component {
                     return;
                 }
 
-                const { jwtToken, expires } = res.data.data.register;
+                const { jwtToken, expires, user } = res.data.data.register;
 
                 authToken.set(jwtToken, expires);
+                credentials.set(user.userName);
 
                 onLogin();
             });

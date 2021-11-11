@@ -7,6 +7,7 @@ import Home from './containers/Home/Home';
 import Layout from './hoc/Layout/Layout';
 import { authToken } from './shared/js/authToken';
 import axios from './shared/js/axiosInstance';
+import { credentials } from './shared/js/credentials';
 import graphql from './shared/js/graphql';
 
 export default class App extends Component {
@@ -21,6 +22,7 @@ export default class App extends Component {
 
         if (!isTokenValid) {
             authToken.reset();
+            credentials.reset();
         }
     }
 
@@ -39,6 +41,7 @@ export default class App extends Component {
 
                 if (!errors && data.logout.isSuccessful) {
                     authToken.reset();
+                    credentials.reset();
                     this.setState({ isAuthenticated: false });
                 }
             });
