@@ -53,9 +53,9 @@ namespace ToDoWebApi
 
             services.AddPooledDbContextFactory<ToDosDbContext>(options =>
             {
-                string connectionString = Environment.IsDevelopment()
-                    ? Configuration["LocalConnection"]
-                    : Configuration["DefaultConnection"];
+                string connectionString = Environment.IsDevelopment() ?
+                    Configuration["LocalConnection"] :
+                    Configuration["DefaultConnection"];
                 options.UseSqlServer(connectionString);
             });
 
@@ -73,7 +73,7 @@ namespace ToDoWebApi
                     options.Password.RequireNonAlphanumeric = true;
                 })
                 .AddEntityFrameworkStores<ToDosDbContext>();
-            
+
             string signingKeyPhrase = Configuration["SigningKeyPhrase"];
             SymmetricSecurityKey signingKey = new(Encoding.UTF8.GetBytes(signingKeyPhrase));
 
