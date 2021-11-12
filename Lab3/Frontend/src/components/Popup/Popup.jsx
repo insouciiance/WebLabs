@@ -2,11 +2,10 @@ import React from 'react';
 
 import Backdrop from '../Backdrop/Backdrop';
 import Button from '../Button/Button';
+
 import classes from './Popup.scss';
 
-export default function Popup(props) {
-    const { children, onDismiss, dismissText } = props;
-
+const Popup = ({ children, onDismiss, dismissText }) => {
     const dismissButton = dismissText ? (
         <div className={classes.DismissButtonWrapper}>
             <Button onClick={onDismiss}>{dismissText}</Button>
@@ -23,4 +22,6 @@ export default function Popup(props) {
             </div>
         </Backdrop>
     );
-}
+};
+
+export default Popup;

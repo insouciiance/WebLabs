@@ -1,9 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Button from '../../components/Button/Button';
-import Input from '../../components/Input/Input';
-import ToDoNote from '../ToDoNote/ToDoNote';
-import axios from '../../shared/js/axiosInstance';
-import graphql from '../../shared/js/graphql';
 import {
     ApolloClient,
     ApolloProvider,
@@ -18,12 +13,18 @@ import { WebSocketLink } from '@apollo/client/link/ws';
 import { setContext } from '@apollo/client/link/context';
 import { getMainDefinition } from '@apollo/client/utilities';
 
-import classes from './Home.scss';
 import Popup from '../../components/Popup/Popup';
 import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
 import Spinner from '../../components/Spinner/Spinner';
 import { baseURL, baseURLWSS } from '../../shared/js/config';
 import { authToken } from '../../shared/js/authToken';
+import Button from '../../components/Button/Button';
+import Input from '../../components/Input/Input';
+import ToDoNote from '../ToDoNote/ToDoNote';
+import axios from '../../shared/js/axiosInstance';
+import graphql from '../../shared/js/graphql';
+
+import classes from './Home.scss';
 
 const wsLink = new WebSocketLink({
     uri: baseURLWSS,
@@ -60,7 +61,7 @@ const client = new ApolloClient({
     cache: new InMemoryCache(),
 });
 
-function Home() {
+const Home = () => {
     const [state, setState] = useState({
         notes: [],
         newNoteName: '',
@@ -425,7 +426,7 @@ function Home() {
             {spinner}
         </>
     );
-}
+};
 
 export default withRouter(() => (
     <ApolloProvider client={client}>

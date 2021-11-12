@@ -2,8 +2,8 @@ import React from 'react';
 
 import classes from './ErrorMessage.scss';
 
-export default function ErrorMessage(props) {
-    const { children } = props;
-
+const ErrorMessage = ({ children }) => {
     return <p className={classes.ErrorMessage}>{children}</p>;
-}
+};
+
+export default ErrorMessage;

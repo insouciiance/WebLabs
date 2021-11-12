@@ -1,9 +1,13 @@
 import React from 'react';
 
-import './Button.scss';
+import classes from './Button.scss';
 
-export default function Button(props) {
-    const { children, onClick } = props;
+const Button = ({ onClick, children }) => {
+    return (
+        <button className={classes.Button} onClick={onClick}>
+            {children}
+        </button>
+    );
+};
 
-    return <button onClick={onClick}>{children}</button>;
-}
+export default Button;

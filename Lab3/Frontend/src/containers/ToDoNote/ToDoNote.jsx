@@ -6,7 +6,7 @@ import classes from './ToDoNote.scss';
 import Input from '../../components/Input/Input';
 import Button from '../../components/Button/Button';
 
-function ToDoNote(props) {
+const ToDoNote = props => {
     const { note } = props;
 
     const [state, setState] = useState({
@@ -143,6 +143,6 @@ function ToDoNote(props) {
             </div>
         </div>
     );
-}
+};
 
 export default ToDoNote;

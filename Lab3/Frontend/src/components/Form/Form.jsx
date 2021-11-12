@@ -1,15 +1,13 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 import classes from './Form.scss';
 
-export default class Form extends Component {
-    render() {
-        const { children, onSubmit } = this.props;
+const Form = ({ children, onSubmit }) => {
+    return (
+        <div className={classes.FormWrapper}>
+            <form onSubmit={onSubmit}>{children}</form>
+        </div>
+    );
+};
 
-        return (
-            <div className={classes.FormWrapper}>
-                <form onSubmit={onSubmit}>{children}</form>
-            </div>
-        );
-    }
-}
+export default Form;

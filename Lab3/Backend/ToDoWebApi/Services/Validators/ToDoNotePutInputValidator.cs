@@ -18,6 +18,10 @@ namespace ToDoWebApi.Services.Validators
             RuleFor(input => input.Name)
                 .NotEmpty()
                 .WithMessage(ErrorMessages.NoteNameEmpty);
+
+            RuleFor(input => input.Name)
+                .MaximumLength(128)
+                .WithMessage(ErrorMessages.NoteNameSize);
         }
     }
 }

@@ -18,6 +18,10 @@ namespace ToDoWebApi.Services.Validators
             RuleFor(input => input.Text)
                 .NotEmpty()
                 .WithMessage(ErrorMessages.CheckboxTextEmpty);
+
+            RuleFor(input => input.Text)
+                .MaximumLength(128)
+                .WithMessage(ErrorMessages.CheckboxTextSize);
         }
     }
 }

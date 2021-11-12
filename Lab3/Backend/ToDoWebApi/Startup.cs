@@ -99,8 +99,13 @@ namespace ToDoWebApi
 
             services
                 .AddGraphQLServer()
-                .AddQueryType<Query>()
-                .AddMutationType<Mutation>()
+                .AddQueryType(d => d.Name("Query"))
+                    .AddTypeExtension<UserQuery>()
+                    .AddTypeExtension<ToDoNoteQuery>()
+                .AddMutationType(d => d.Name("Mutation"))
+                    .AddTypeExtension<UserMutation>()
+                    .AddTypeExtension<ToDoNoteMutation>()
+                    .AddTypeExtension<ToDoCheckboxMutation>()
                 .AddSubscriptionType<Subscription>()
                 .AddType<ApplicationUserType>()
                 .AddType<RegisterUserInputType>()

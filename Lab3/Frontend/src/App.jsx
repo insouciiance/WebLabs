@@ -10,7 +10,7 @@ import axios from './shared/js/axiosInstance';
 import { credentials } from './shared/js/credentials';
 import graphql from './shared/js/graphql';
 
-export default class App extends Component {
+class App extends Component {
     constructor(props) {
         super(props);
 
@@ -82,3 +82,5 @@ export default class App extends Component {
         );
     }
 }
+
+export default App;

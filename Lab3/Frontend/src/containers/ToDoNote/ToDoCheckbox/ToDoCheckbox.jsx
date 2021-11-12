@@ -4,9 +4,7 @@ import Input from '../../../components/Input/Input';
 
 import classes from './ToDoCheckbox.scss';
 
-function ToDoCheckbox(props) {
-    const { checkbox, onDelete, onRename, onCheckToggle } = props;
-
+const ToDoCheckbox = ({ checkbox, onDelete, onRename, onCheckToggle }) => {
     const [state, setState] = useState({
         checkboxText: checkbox.text,
     });
@@ -73,6 +71,6 @@ function ToDoCheckbox(props) {
             </div>
         </div>
     );
-}
+};
 
 export default ToDoCheckbox;

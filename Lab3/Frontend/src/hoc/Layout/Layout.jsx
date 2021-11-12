@@ -2,9 +2,10 @@ import React from 'react';
 
 import { authToken } from '../../shared/js/authToken';
 import { credentials } from '../../shared/js/credentials';
+
 import classes from './Layout.scss';
 
-function Layout(props) {
+const Layout = props => {
     const { children, onLogout } = props;
 
     const headerText = credentials.exists()
@@ -26,6 +27,6 @@ function Layout(props) {
             {children}
         </div>
     );
-}
+};
 
 export default Layout;

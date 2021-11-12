@@ -12,6 +12,7 @@ namespace ToDoWebApi.Models
         public string Id { get; set; }
 
         [Required]
+        [MaxLength(128)]
         public string Text { get; set; }
 
         [Required]

@@ -31,7 +31,11 @@ namespace ToDoWebApi.Services
 
         public const string CheckboxTextEmpty = "The checkbox text can not be empty.";
 
-        public const string NoteNameEmpty = "The note text can not be empty.";
+        public const string CheckboxTextSize = "The checkbox text can be 128 characters at most.";
+
+        public const string NoteNameEmpty = "The note name can not be empty.";
+
+        public const string NoteNameSize = "The note name can be 128 characters at most.";
 
         public const string CantCreateUser = "There was a problem with creating the user.";
 

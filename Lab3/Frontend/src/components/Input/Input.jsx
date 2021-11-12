@@ -2,7 +2,7 @@ import React from 'react';
 
 import './Input.scss';
 
-export default function Input(props) {
+const Input = props => {
     const { value, onChange, type, name, focused, onBlur, style, className } =
         props;
 
@@ -19,4 +19,6 @@ export default function Input(props) {
             className={className}
         />
     );
-}
+};
+
+export default Input;
