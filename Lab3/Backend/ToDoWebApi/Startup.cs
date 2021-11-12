@@ -53,7 +53,9 @@ namespace ToDoWebApi
 
             services.AddPooledDbContextFactory<ToDosDbContext>(options =>
             {
-                string connectionString = Configuration["DefaultConnection"];
+                string connectionString = Environment.IsDevelopment()
+                    ? Configuration["LocalConnection"]
+                    : Configuration["DefaultConnection"];
                 options.UseSqlServer(connectionString);
             });
 

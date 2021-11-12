@@ -1,4 +1,4 @@
-﻿{
+{
     "iisSettings": {
         "windowsAuthentication": false,
         "anonymousAuthentication": true,
@@ -12,7 +12,12 @@
             "commandName": "IISExpress",
             "launchBrowser": true,
             "environmentVariables": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "VaultUri": "https://insouciiance-todos-vault.vault.azure.net/",
+                "AZURE_USERNAME": "nikkv.ottf@gmail.com",
+                "AZURE_CLIENT_ID": "4de45338-7e8f-4269-90e8-a465dadfe02c",
+                "AZURE_TENANT_ID": "93679d72-dcdb-4707-9176-d0451342e510",
+                "AZURE_CLIENT_SECRET": "h3e7Q~kPJWpf2G3YBbFC2ljHv0mmHyNF8rK2n"
             }
         },
         "ToDoWebApi": {
@@ -21,7 +26,12 @@
             "launchBrowser": true,
             "applicationUrl": "https://localhost:5001;http://localhost:5000",
             "environmentVariables": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "VaultUri": "https://insouciiance-todos-vault.vault.azure.net/",
+                "AZURE_USERNAME": "nikkv.ottf@gmail.com",
+                "AZURE_CLIENT_ID": "4de45338-7e8f-4269-90e8-a465dadfe02c",
+                "AZURE_TENANT_ID": "93679d72-dcdb-4707-9176-d0451342e510",
+                "AZURE_CLIENT_SECRET": "h3e7Q~kPJWpf2G3YBbFC2ljHv0mmHyNF8rK2n"
             }
         }
     }
