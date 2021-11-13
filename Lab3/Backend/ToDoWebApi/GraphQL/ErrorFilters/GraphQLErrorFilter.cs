@@ -14,7 +14,7 @@ namespace ToDoWebApi.GraphQL.ErrorFilters
         {
             if (error.Exception is not null and not GraphQLException)
             {
-                return error.WithMessage("Something went wrong while processing the request.");
+                return error.WithMessage(error.Exception.Message);
             }
 
             return error;
