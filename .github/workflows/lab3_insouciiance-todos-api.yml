@@ -23,7 +23,7 @@ jobs:
                   include-prerelease: true
 
             - name: Build with dotnet
-              run: dotnet build --configuration Release
+              run: dotnet build Lab3/Backend/ToDoWebApi --configuration Release
 
             - name: dotnet publish
               run: dotnet publish Lab3/Backend/ToDoWebApi -c Release -o ${{env.DOTNET_ROOT}}/myapp
