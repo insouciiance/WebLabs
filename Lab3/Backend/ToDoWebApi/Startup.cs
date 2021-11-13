@@ -40,7 +40,7 @@ namespace ToDoWebApi
         {
             string corsOrigin = Environment.IsDevelopment()
                 ? @"http://localhost:8080"
-                : null;
+                : @"https://insouciiance-todos.azurewebsites.net";
 
             services.AddCors(options =>
             {
