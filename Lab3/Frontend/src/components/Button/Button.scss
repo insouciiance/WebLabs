@@ -15,4 +15,10 @@
     &:hover {
         background-color: $main-color-brighter;
     }
+
+    &[disabled] {
+        background-color: $disabled-bg-color;
+        color: $disabled-color;
+        cursor: not-allowed;
+    }
 }

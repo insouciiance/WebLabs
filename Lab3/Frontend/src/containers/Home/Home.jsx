@@ -26,6 +26,7 @@ import graphql from '../../shared/js/graphql';
 
 import classes from './Home.scss';
 import { session } from '../../shared/js/session';
+import Backdrop from '../../components/Backdrop/Backdrop';
 
 const wsLink = new WebSocketLink({
     uri: baseURLWSS,
@@ -123,6 +124,11 @@ const Home = () => {
     const onNoteAdd = () => {
         const { newNoteName, notes } = state;
 
+        setState(prev => ({
+            ...prev,
+            notesLoading: true,
+        }));
+
         axios
             .post('/', {
                 query: graphql.addNote(newNoteName),
@@ -133,6 +139,7 @@ const Home = () => {
                     setState(prev => ({
                         ...prev,
                         errors: res.data.errors,
+                        notesLoading: false,
                     }));
                     return;
                 }
@@ -142,6 +149,7 @@ const Home = () => {
                     ...prev,
                     notes,
                     newNoteName: '',
+                    notesLoading: false,
                 }));
             });
     };
@@ -412,7 +420,9 @@ const Home = () => {
                             }))
                         }
                     />
-                    <Button onClick={onNoteAdd}>Add</Button>
+                    <Button onClick={onNoteAdd} disabled={notesLoading}>
+                        Add
+                    </Button>
                 </form>
             </div>
             <div className={classes.NotesContainer}>
