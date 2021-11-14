@@ -38,7 +38,7 @@ namespace ToDoWebApi.GraphQL.ToDos
             [UseDbContext(typeof(ToDosDbContext))]
             public IQueryable<ToDoCheckbox> GetCheckboxes(ToDoNote note, [ScopedService] ToDosDbContext context)
             {
-                return context.Checkboxes.Where(n => n.NoteId == note.Id);
+                return context.Checkboxes.Where(n => n.NoteId == note.Id).OrderBy(c => c.DateCreated);
             }
 
             public ApplicationUser GetUser(ToDoNote note, [Service] ToDosDbContext context)

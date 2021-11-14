@@ -45,9 +45,10 @@ namespace ToDoWebApi.GraphQL
             ToDoCheckbox checkbox = new()
             {
                 Id = Guid.NewGuid().ToString(),
-                NoteId = checkboxNote.Id,
                 Text = input.Text,
-                Checked = false
+                Checked = false,
+                DateCreated = DateTime.Now,
+                NoteId = checkboxNote.Id
             };
 
             context.Checkboxes.Add(checkbox);

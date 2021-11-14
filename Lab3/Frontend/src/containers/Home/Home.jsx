@@ -234,21 +234,6 @@ const Home = () => {
                     return;
                 }
 
-                const newCheckbox = res.data.data.putCheckbox.checkbox;
-
-                const checkboxNote = notes.find(
-                    n => n.id === newCheckbox.note.id,
-                );
-
-                const checkboxIndex = checkboxNote.checkboxes.findIndex(
-                    c => c.id === newCheckbox.id,
-                );
-                checkboxNote.checkboxes[checkboxIndex] = {
-                    id: newCheckbox.id,
-                    text: newCheckbox.text,
-                    checked: newCheckbox.checked,
-                };
-
                 setState(prev => ({
                     ...prev,
                     notes,
@@ -285,21 +270,6 @@ const Home = () => {
                     return;
                 }
 
-                const newCheckbox = res.data.data.putCheckbox.checkbox;
-
-                const checkboxNote = notes.find(
-                    n => n.id === newCheckbox.note.id,
-                );
-
-                const checkboxIndex = checkboxNote.checkboxes.findIndex(
-                    c => c.id === newCheckbox.id,
-                );
-                checkboxNote.checkboxes[checkboxIndex] = {
-                    id: newCheckbox.id,
-                    text: newCheckbox.text,
-                    checked: newCheckbox.checked,
-                };
-
                 setState(prev => ({
                     notes,
                     ...prev,
@@ -317,7 +287,7 @@ const Home = () => {
             .then(res => {
                 console.log(res);
 
-                if (res.data.errors) {
+                if (res.data.errors || !res.data.data.isSuccessful) {
                     setState(prev => ({
                         ...prev,
                         errors: res.data.errors,

@@ -19,6 +19,7 @@ namespace ToDoWebApi.Models
         [Required]
         public string UserId { get; set; }
 
+        [Required]
         public DateTime DateCreated { get; set; }
 
         public ApplicationUser User { get; set; }

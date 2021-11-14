@@ -19,6 +19,9 @@ namespace ToDoWebApi.Models
         public bool Checked { get; set; }
 
         [Required]
+        public DateTime DateCreated { get; set; }
+
+        [Required]
         public string NoteId { get; set; }
 
         public ToDoNote Note { get; set; }
