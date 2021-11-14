@@ -9,6 +9,7 @@ import { authToken } from './shared/js/authToken';
 import axios from './shared/js/axiosInstance';
 import { credentials } from './shared/js/credentials';
 import graphql from './shared/js/graphql';
+import { session } from './shared/js/session';
 
 class App extends Component {
     constructor(props) {
@@ -23,7 +24,11 @@ class App extends Component {
         if (!isTokenValid) {
             authToken.reset();
             credentials.reset();
+            session.reset();
+            return;
         }
+
+        session.set();
     }
 
     onLogout = () => {
@@ -42,6 +47,7 @@ class App extends Component {
                 if (!errors && data.logout.isSuccessful) {
                     authToken.reset();
                     credentials.reset();
+                    session.reset();
                     this.setState({ isAuthenticated: false });
                 }
             });

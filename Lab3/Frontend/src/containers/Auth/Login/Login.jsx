@@ -13,6 +13,7 @@ import { authToken } from '../../../shared/js/authToken';
 import axios from '../../../shared/js/axiosInstance';
 import { credentials } from '../../../shared/js/credentials';
 import graphql from '../../../shared/js/graphql';
+import { session } from '../../../shared/js/session';
 import classes from './Login.scss';
 
 class Login extends Component {
@@ -60,6 +61,7 @@ class Login extends Component {
 
                 authToken.set(jwtToken, expires);
                 credentials.set(user.userName);
+                session.set();
 
                 onLogin();
             });

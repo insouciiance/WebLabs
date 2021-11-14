@@ -27,7 +27,9 @@ namespace ToDoWebApi.Services
                     orderby note.DateCreated descending
                     select note).ToArray();
 
-            OnNotesUpdateMessage message = new(messageNotes);
+            string sessionId = contextAccessor.HttpContext.Request.Headers["sessionId"].ToString();
+
+            OnNotesUpdateMessage message = new(messageNotes, sessionId);
 
             string tokenHeader = contextAccessor.HttpContext.Request.Headers["Authorization"].ToString();
             string jwtToken = tokenHeader.Split(' ')[1];

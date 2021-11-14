@@ -25,6 +25,7 @@ import axios from '../../shared/js/axiosInstance';
 import graphql from '../../shared/js/graphql';
 
 import classes from './Home.scss';
+import { session } from '../../shared/js/session';
 
 const wsLink = new WebSocketLink({
     uri: baseURLWSS,
@@ -69,14 +70,17 @@ const Home = () => {
         notesLoading: false,
     });
 
-    const { token } = authToken.get();
     const { data } = useSubscription(
         gql`
-            ${graphql.onNotesChangeSubscription(token)}
+            ${graphql.onNotesChangeSubscription()}
         `,
     );
 
-    if (data && data.onNotesUpdate.notes != state.notes) {
+    if (
+        data &&
+        data.onNotesUpdate.notes != state.notes &&
+        data.onNotesUpdate.sessionId != session.get()
+    ) {
         setState(prev => ({
             ...prev,
             notes: data.onNotesUpdate.notes,
@@ -234,6 +238,21 @@ const Home = () => {
                     return;
                 }
 
+                const newCheckbox = res.data.data.putCheckbox.checkbox;
+
+                const checkboxNote = notes.find(
+                    n => n.id === newCheckbox.note.id,
+                );
+
+                const checkboxIndex = checkboxNote.checkboxes.findIndex(
+                    c => c.id === newCheckbox.id,
+                );
+                checkboxNote.checkboxes[checkboxIndex] = {
+                    id: newCheckbox.id,
+                    text: newCheckbox.text,
+                    checked: newCheckbox.checked,
+                };
+
                 setState(prev => ({
                     ...prev,
                     notes,
@@ -270,9 +289,24 @@ const Home = () => {
                     return;
                 }
 
+                const newCheckbox = res.data.data.putCheckbox.checkbox;
+
+                const checkboxNote = notes.find(
+                    n => n.id === newCheckbox.note.id,
+                );
+
+                const checkboxIndex = checkboxNote.checkboxes.findIndex(
+                    c => c.id === newCheckbox.id,
+                );
+                checkboxNote.checkboxes[checkboxIndex] = {
+                    id: newCheckbox.id,
+                    text: newCheckbox.text,
+                    checked: newCheckbox.checked,
+                };
+
                 setState(prev => ({
-                    notes,
                     ...prev,
+                    notes,
                 }));
             });
     };
@@ -287,7 +321,7 @@ const Home = () => {
             .then(res => {
                 console.log(res);
 
-                if (res.data.errors || !res.data.data.isSuccessful) {
+                if (res.data.errors) {
                     setState(prev => ({
                         ...prev,
                         errors: res.data.errors,

@@ -1,12 +1,17 @@
 import axios from 'axios';
+import { authToken } from './authToken';
 import { baseURL } from './config';
+import { session } from './session';
 
 const axiosInstance = axios.create({
     baseURL,
 });
 
 axiosInstance.interceptors.request.use(req => {
-    req.headers.authorization = `Bearer ${localStorage.getItem('token')}`;
+    const token = authToken.get();
+    const sessionId = session.get();
+    req.headers.authorization = `Bearer ${token?.token}`;
+    req.headers.sessionId = sessionId;
 
     return req;
 });

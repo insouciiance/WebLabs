@@ -1,3 +1,5 @@
+import { authToken } from './authToken';
+
 const graphql = {
     login: (userName, password) =>
         `mutation {
@@ -44,6 +46,9 @@ const graphql = {
                 id
                 text
                 checked
+                note {
+                    id
+                }
             }
         }
     }`,
@@ -78,6 +83,9 @@ const graphql = {
                         id
                         text
                         checked
+                        note {
+                            id
+                        }
                     }
                 }
             }
@@ -135,8 +143,10 @@ const graphql = {
                 }
             }
         }`,
-    onNotesChangeSubscription: jwtToken => `subscription {
-        onNotesUpdate(jwtToken: "${jwtToken}")
+    onNotesChangeSubscription: () => {
+        const { token } = authToken.get();
+        return `subscription {
+        onNotesUpdate(jwtToken: "${token}")
         {
             notes {
                 id
@@ -145,10 +155,15 @@ const graphql = {
                     id
                     text
                     checked
+                    note {
+                        id
+                    }
                 }
             }
+            sessionId
         }
-    }`,
+    }`;
+    },
 };
 
 export default graphql;

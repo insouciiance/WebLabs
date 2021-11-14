@@ -6,5 +6,5 @@ using ToDoWebApi.Models;
 
 namespace ToDoWebApi.GraphQL.ToDos
 {
-    public record OnNotesUpdateMessage(IEnumerable<ToDoNote> Notes);
+    public record OnNotesUpdateMessage(IEnumerable<ToDoNote> Notes, string SessionId);
 }
