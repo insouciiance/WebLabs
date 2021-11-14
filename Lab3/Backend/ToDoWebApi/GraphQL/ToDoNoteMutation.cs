@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Ganss.XSS;
 using HotChocolate;
 using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Data;
@@ -31,15 +32,19 @@ namespace ToDoWebApi.GraphQL
             [Service] ITopicEventSender eventSender,
             CancellationToken cancellationToken)
         {
+            HtmlSanitizer sanitizer = new();
+            ToDoNoteInput sanitizedInput = new(
+                sanitizer.Sanitize(input.Name));
+
             ToDoNoteInputValidator validator = new();
-            await validator.ValidateAndThrowGraphQLExceptionAsync(input);
+            await validator.ValidateAndThrowGraphQLExceptionAsync(sanitizedInput);
 
             string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
 
             ToDoNote newNote = new()
             {
                 Id = Guid.NewGuid().ToString(),
-                Name = input.Name,
+                Name = sanitizedInput.Name,
                 UserId = userId,
                 DateCreated = DateTime.Now
             };
@@ -66,19 +71,24 @@ namespace ToDoWebApi.GraphQL
             [Service] ITopicEventSender eventSender,
             CancellationToken cancellationToken)
         {
+            HtmlSanitizer sanitizer = new();
+            ToDoNotePutInput sanitizedInput = new(
+                sanitizer.Sanitize(input.Id),
+                sanitizer.Sanitize(input.Name));
+
             ToDoNotePutInputValidator validator = new();
-            await validator.ValidateAndThrowGraphQLExceptionAsync(input);
+            await validator.ValidateAndThrowGraphQLExceptionAsync(sanitizedInput);
 
             string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
 
-            ToDoNote noteToPut = context.Notes.FirstOrDefault(n => n.Id == input.Id);
+            ToDoNote noteToPut = context.Notes.FirstOrDefault(n => n.Id == sanitizedInput.Id);
 
             if (noteToPut is null || noteToPut.UserId != userId)
             {
                 throw new GraphQLException(ErrorMessages.CantUpdateNote);
             }
 
-            noteToPut.Name = input.Name;
+            noteToPut.Name = sanitizedInput.Name;
 
             await context.SaveChangesAsync(cancellationToken);
 
@@ -100,12 +110,16 @@ namespace ToDoWebApi.GraphQL
             [Service] ITopicEventSender eventSender,
             CancellationToken cancellationToken)
         {
+            HtmlSanitizer sanitizer = new();
+            ToDoNoteDeleteInput sanitizedInput = new(
+                sanitizer.Sanitize(input.Id));
+
             ToDoNoteDeleteInputValidator validator = new();
-            await validator.ValidateAndThrowGraphQLExceptionAsync(input);
+            await validator.ValidateAndThrowGraphQLExceptionAsync(sanitizedInput);
 
             string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
 
-            ToDoNote noteToDelete = context.Notes.FirstOrDefault(n => n.Id == input.Id);
+            ToDoNote noteToDelete = context.Notes.FirstOrDefault(n => n.Id == sanitizedInput.Id);
 
             if (noteToDelete is null || noteToDelete.UserId != userId)
             {

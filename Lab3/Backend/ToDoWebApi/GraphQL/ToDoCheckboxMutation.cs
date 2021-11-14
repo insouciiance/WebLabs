@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Ganss.XSS;
 using HotChocolate;
 using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Data;
@@ -31,11 +32,16 @@ namespace ToDoWebApi.GraphQL
             [Service] ITopicEventSender eventSender,
             CancellationToken cancellationToken)
         {
+            HtmlSanitizer sanitizer = new();
+            ToDoCheckboxInput sanitizedInput = new(
+                sanitizer.Sanitize(input.Text),
+                sanitizer.Sanitize(input.NoteId));
+
             ToDoCheckboxInputValidator validator = new();
-            await validator.ValidateAndThrowGraphQLExceptionAsync(input);
+            await validator.ValidateAndThrowGraphQLExceptionAsync(sanitizedInput);
 
             string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
-            ToDoNote checkboxNote = context.Notes.FirstOrDefault(n => n.Id == input.NoteId);
+            ToDoNote checkboxNote = context.Notes.FirstOrDefault(n => n.Id == sanitizedInput.NoteId);
 
             if (checkboxNote is null || checkboxNote.UserId != userId)
             {
@@ -45,7 +51,7 @@ namespace ToDoWebApi.GraphQL
             ToDoCheckbox checkbox = new()
             {
                 Id = Guid.NewGuid().ToString(),
-                Text = input.Text,
+                Text = sanitizedInput.Text,
                 Checked = false,
                 DateCreated = DateTime.Now,
                 NoteId = checkboxNote.Id
@@ -73,12 +79,18 @@ namespace ToDoWebApi.GraphQL
             [Service] ITopicEventSender eventSender,
             CancellationToken cancellationToken)
         {
+            HtmlSanitizer sanitizer = new();
+            ToDoCheckboxPutInput sanitizedInput = new(
+                sanitizer.Sanitize(input.Id),
+                sanitizer.Sanitize(input.Text),
+                input.Checked);
+
             ToDoCheckboxPutInputValidator validator = new();
-            await validator.ValidateAndThrowGraphQLExceptionAsync(input);
+            await validator.ValidateAndThrowGraphQLExceptionAsync(sanitizedInput);
 
             string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
 
-            ToDoCheckbox checkboxToPut = context.Checkboxes.FirstOrDefault(c => c.Id == input.Id);
+            ToDoCheckbox checkboxToPut = context.Checkboxes.FirstOrDefault(c => c.Id == sanitizedInput.Id);
 
             if (checkboxToPut is null)
             {
@@ -92,8 +104,8 @@ namespace ToDoWebApi.GraphQL
                 throw new GraphQLException(ErrorMessages.CantUpdateCheckbox);
             }
 
-            checkboxToPut.Text = input.Text;
-            checkboxToPut.Checked = input.Checked;
+            checkboxToPut.Text = sanitizedInput.Text;
+            checkboxToPut.Checked = sanitizedInput.Checked;
 
             await context.SaveChangesAsync(cancellationToken);
 
@@ -115,12 +127,16 @@ namespace ToDoWebApi.GraphQL
             [Service] ITopicEventSender eventSender,
             CancellationToken cancellationToken)
         {
+            HtmlSanitizer sanitizer = new();
+            ToDoCheckboxDeleteInput sanitizedInput = new(
+                sanitizer.Sanitize(input.Id));
+
             ToDoCheckboxDeleteInputValidator validator = new();
-            await validator.ValidateAndThrowGraphQLExceptionAsync(input);
+            await validator.ValidateAndThrowGraphQLExceptionAsync(sanitizedInput);
 
             string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
 
-            ToDoCheckbox checkboxToDelete = context.Checkboxes.FirstOrDefault(c => c.Id == input.Id);
+            ToDoCheckbox checkboxToDelete = context.Checkboxes.FirstOrDefault(c => c.Id == sanitizedInput.Id);
 
             if (checkboxToDelete is null)
             {
