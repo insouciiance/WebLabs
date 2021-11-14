@@ -228,8 +228,6 @@ const Home = () => {
             )
             .find(c => c.id === checkboxId);
 
-        console.log(checkbox);
-
         axios
             .post('/', {
                 query: graphql.putCheckbox(checkboxId, text, checkbox.checked),
@@ -278,6 +276,26 @@ const Home = () => {
             )
             .find(c => c.id === checkboxId);
 
+        const checkboxNote = notes.find(n => n.id === checkbox.note.id);
+
+        const checkboxIndex = checkboxNote.checkboxes.findIndex(
+            c => c.id === checkbox.id,
+        );
+
+        checkboxNote.checkboxes[checkboxIndex] = {
+            id: checkbox.id,
+            text: checkbox.text,
+            checked: !checkbox.checked,
+            note: {
+                id: checkboxNote.id,
+            },
+        };
+
+        setState(prev => ({
+            ...prev,
+            notes,
+        }));
+
         axios
             .post('/', {
                 query: graphql.putCheckbox(
@@ -290,32 +308,16 @@ const Home = () => {
                 console.log(res);
 
                 if (res.data.errors) {
+                    checkboxNote.checkboxes[checkboxIndex].checked =
+                        checkbox.checked;
+
                     setState(prev => ({
                         ...prev,
                         errors: res.data.errors,
+                        notes,
                     }));
                     return;
                 }
-
-                const newCheckbox = res.data.data.putCheckbox.checkbox;
-
-                const checkboxNote = notes.find(
-                    n => n.id === newCheckbox.note.id,
-                );
-
-                const checkboxIndex = checkboxNote.checkboxes.findIndex(
-                    c => c.id === newCheckbox.id,
-                );
-                checkboxNote.checkboxes[checkboxIndex] = {
-                    id: newCheckbox.id,
-                    text: newCheckbox.text,
-                    checked: newCheckbox.checked,
-                };
-
-                setState(prev => ({
-                    ...prev,
-                    notes,
-                }));
             });
     };
 
