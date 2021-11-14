@@ -10,6 +10,7 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             template: './Lab3/Frontend/src/index.html',
+            favicon: './Lab3/Frontend/src/favicon.png',
         }),
     ],
     resolve: {
