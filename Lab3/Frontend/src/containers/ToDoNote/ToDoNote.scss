@@ -31,8 +31,22 @@
     border-radius: 5px;
     color: $main-color-dark;
     height: fit-content;
+    max-height: 35rem;
+    overflow-y: auto;
     padding: 0.5rem;
     transition: border-color 0.15s;
+
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: $secondary-color;
+    }
 
     &:hover {
         border-color: $main-accent-color;
@@ -84,15 +98,12 @@
     display: flex;
     font-size: 1.2rem;
     justify-content: space-between;
-    padding: 0.5rem 0;
+    padding: 0.5rem 0.2rem;
 
     .Add,
     .Remove {
         cursor: pointer;
-        height: 1.4rem;
-        line-height: 1.4rem;
         text-align: center;
-        width: 1.4rem;
 
         svg {
             vertical-align: middle;
@@ -100,50 +111,24 @@
     }
 
     .Add {
-        color: $success-color;
+        font-size: 1rem;
         transition: 0.2s;
+
+        &:hover {
+            color: $success-color;
+        }
     }
 
     .Remove {
         color: $warning-color;
+        height: 1.4rem;
+        line-height: 1.4rem;
         transition: 0.1s;
+        width: 1.4rem;
 
         @media screen and (min-width: 37.5rem) {
             opacity: 0;
             visibility: hidden;
-        }
-    }
-
-    .AddCheckbox {
-        display: none;
-
-        &:checked + .Add {
-            color: $warning-color;
-            transform: rotate(45deg);
-            transform-origin: center;
-        }
-    }
-}
-
-.AddCheckboxWrapper {
-    padding: 0.5rem;
-    text-align: center;
-
-    input {
-        font-size: 1rem;
-        margin-bottom: 0.5rem;
-        width: 100%;
-    }
-
-    button {
-        background-color: $secondary-color;
-        border: 1px solid $secondary-color;
-        color: $main-color;
-        width: 50%;
-
-        &:hover {
-            background-color: $main-color;
-            color: $secondary-color;
         }
     }
 }

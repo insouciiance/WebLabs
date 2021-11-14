@@ -11,8 +11,8 @@ const ToDoNote = props => {
 
     const [state, setState] = useState({
         currentNoteName: note.name,
-        newCheckboxText: '',
         showNewCheckbox: false,
+        newCheckboxText: '',
     });
 
     useEffect(() => {
@@ -27,13 +27,6 @@ const ToDoNote = props => {
         setState(prev => ({
             ...prev,
             showNewCheckbox: !showNewCheckbox,
-        }));
-    };
-
-    const onNewCheckboxChange = e => {
-        setState(prev => ({
-            ...prev,
-            newCheckboxText: e.target.value,
         }));
     };
 
@@ -60,44 +53,51 @@ const ToDoNote = props => {
         }));
     };
 
-    const newCheckboxTextReset = () => {
+    const onNewCheckboxBlur = (_, text) => {
+        const { onCheckboxAdd } = props;
+
+        setState(prev => ({
+            ...prev,
+            newCheckboxText: text,
+        }));
+
+        if (text) {
+            onCheckboxAdd(note.id, text, newCheckboxReset);
+
+            return;
+        }
+
+        setState(prev => ({
+            ...prev,
+            showNewCheckbox: false,
+        }));
+    };
+
+    const newCheckboxReset = () => {
         setState(prev => ({
             ...prev,
             newCheckboxText: '',
+            showNewCheckbox: false,
         }));
     };
 
     const {
-        onCheckboxAdd,
         onCheckboxDelete,
         onCheckboxRename,
         onCheckboxToggle,
         onNoteDelete,
     } = props;
 
-    const { newCheckboxText, showNewCheckbox, currentNoteName } = state;
+    const { showNewCheckbox, currentNoteName, newCheckboxText } = state;
 
     const newCheckbox = showNewCheckbox ? (
         <div className={classes.AddCheckboxWrapper}>
-            <form onSubmit={e => e.preventDefault()}>
-                <Input
-                    name="newcheckbox"
-                    type="text"
-                    value={newCheckboxText}
-                    onChange={onNewCheckboxChange}
-                    focused={true}
-                />
-                <Button
-                    onClick={() =>
-                        onCheckboxAdd(
-                            note.id,
-                            newCheckboxText,
-                            newCheckboxTextReset,
-                        )
-                    }>
-                    Add
-                </Button>
-            </form>
+            <ToDoCheckbox
+                checkbox={{ text: newCheckboxText }}
+                onRename={onNewCheckboxBlur}
+                focused={true}
+                alwaysRename={true}
+            />
         </div>
     ) : null;
 
@@ -138,22 +138,18 @@ const ToDoNote = props => {
                                 onCheckToggle={onCheckboxToggle}
                             />
                         ))}
+                    {newCheckbox}
                 </div>
                 <div className={classes.Toolbar}>
-                    <input
-                        id={note.id}
-                        type="checkbox"
-                        className={classes.AddCheckbox}
+                    <FaPlus
+                        className={classes.Add}
+                        onClick={toggleNewCheckboxShow}
                     />
-                    <label htmlFor={note.id} className={classes.Add}>
-                        <FaPlus onClick={toggleNewCheckboxShow} />
-                    </label>
                     <FaTrash
                         className={classes.Remove}
                         onClick={() => onNoteDelete(note.id)}
                     />
                 </div>
-                {newCheckbox}
             </div>
         </div>
     );

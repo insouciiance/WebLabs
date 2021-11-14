@@ -4,7 +4,14 @@ import Input from '../../../components/Input/Input';
 
 import classes from './ToDoCheckbox.scss';
 
-const ToDoCheckbox = ({ checkbox, onDelete, onRename, onCheckToggle }) => {
+const ToDoCheckbox = ({
+    checkbox,
+    onDelete,
+    onRename,
+    onCheckToggle,
+    focused,
+    alwaysRename,
+}) => {
     const [state, setState] = useState({
         checkboxText: checkbox.text,
     });
@@ -25,11 +32,9 @@ const ToDoCheckbox = ({ checkbox, onDelete, onRename, onCheckToggle }) => {
     const onRenameConfirm = () => {
         const { checkboxText } = state;
 
-        setState({
-            checkboxText,
-        });
-
-        if (checkboxText === checkbox.text) return;
+        if (checkboxText == checkbox.text && !alwaysRename) {
+            return;
+        }
 
         onRename(checkbox.id, checkboxText, onTextReset);
     };
@@ -61,6 +66,7 @@ const ToDoCheckbox = ({ checkbox, onDelete, onRename, onCheckToggle }) => {
                 value={checkboxText}
                 onBlur={onRenameConfirm}
                 onChange={onCheckboxTextChange}
+                focused={focused}
                 style={
                     checkbox.checked
                         ? {
