@@ -12,7 +12,7 @@ const Layout = props => {
 
     const headerText = credentials.exists()
         ? `Hello, ${credentials.get().username}`
-        : 'Keep notes';
+        : 'To-do notes';
 
     const logoutLink = userAuthenticated ? (
         <p className={classes.Logout} onClick={onLogout}>
@@ -24,9 +24,11 @@ const Layout = props => {
         <div>
             <header>
                 <h2
-                    className={`${classes.HeaderCta} ${
-                        userAuthenticated ? classes.CtaLeft : null
-                    }`}>
+                    className={
+                        userAuthenticated
+                            ? `${classes.HeaderCta} ${classes.CtaLeft}`
+                            : classes.HeaderCta
+                    }>
                     {headerText}
                 </h2>
                 {logoutLink}
