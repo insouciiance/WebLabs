@@ -60,21 +60,27 @@ const ToDoCheckbox = ({
                     onClick={() => onCheckToggle(checkbox.id)}
                 />
             )}
-            <Input
-                name="checkboxrename"
-                type="text"
-                value={checkboxText}
-                onBlur={onRenameConfirm}
-                onChange={onCheckboxTextChange}
-                focused={focused}
-                style={
-                    checkbox.checked
-                        ? {
-                              textDecoration: 'line-through',
-                          }
-                        : null
-                }
-            />
+            <form
+                onSubmit={e => {
+                    e.preventDefault();
+                    onRenameConfirm();
+                }}>
+                <Input
+                    name="checkboxrename"
+                    type="text"
+                    value={checkboxText}
+                    onBlur={onRenameConfirm}
+                    onChange={onCheckboxTextChange}
+                    focused={focused}
+                    style={
+                        checkbox.checked
+                            ? {
+                                  textDecoration: 'line-through',
+                              }
+                            : null
+                    }
+                />
+            </form>
             <FaTimes
                 className={classes.DeleteButton}
                 onClick={() => onDelete(checkbox.id)}

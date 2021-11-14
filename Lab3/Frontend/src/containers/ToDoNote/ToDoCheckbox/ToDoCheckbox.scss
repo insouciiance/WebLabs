@@ -9,18 +9,26 @@
     transition: background-color 0.075s;
 
     .CheckboxTextWrapper,
-    input {
+    input,
+    form {
         background-color: $main-color;
         color: $main-color-dark;
         font-size: 0.875rem;
         height: 100%;
         line-height: 1rem;
         transition: inherit;
-        width: calc(100% - 3rem);
 
         &:hover {
             cursor: text;
         }
+    }
+
+    form {
+        width: calc(100% - 3rem);
+    }
+
+    input {
+        width: 100%;
     }
 
     &:hover,
