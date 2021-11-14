@@ -105,13 +105,19 @@ const ToDoNote = props => {
         <div className={classes.NoteWrapper}>
             <div className={classes.NoteContentContainer}>
                 <div className={classes.NoteNameWrapper}>
-                    <Input
-                        className={classes.NoteName}
-                        value={currentNoteName}
-                        onChange={onCurrentNoteNameChange}
-                        onBlur={onNoteRenameConfirm}>
-                        {note.name}
-                    </Input>
+                    <form
+                        onSubmit={e => {
+                            e.preventDefault();
+                            onNoteRenameConfirm();
+                        }}>
+                        <Input
+                            className={classes.NoteName}
+                            value={currentNoteName}
+                            onChange={onCurrentNoteNameChange}
+                            onBlur={onNoteRenameConfirm}>
+                            {note.name}
+                        </Input>
+                    </form>
                 </div>
                 <div className={classes.CheckboxesContainer}>
                     {note.checkboxes
