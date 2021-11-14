@@ -60,6 +60,13 @@ const ToDoNote = props => {
         }));
     };
 
+    const newCheckboxTextReset = () => {
+        setState(prev => ({
+            ...prev,
+            newCheckboxText: '',
+        }));
+    };
+
     const {
         onCheckboxAdd,
         onCheckboxDelete,
@@ -80,7 +87,14 @@ const ToDoNote = props => {
                     onChange={onNewCheckboxChange}
                     focused={true}
                 />
-                <Button onClick={() => onCheckboxAdd(note.id, newCheckboxText)}>
+                <Button
+                    onClick={() =>
+                        onCheckboxAdd(
+                            note.id,
+                            newCheckboxText,
+                            newCheckboxTextReset,
+                        )
+                    }>
                     Add
                 </Button>
             </form>

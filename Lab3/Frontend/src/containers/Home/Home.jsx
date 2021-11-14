@@ -137,6 +137,7 @@ const Home = () => {
                 setState(prev => ({
                     ...prev,
                     notes,
+                    newNoteName: '',
                 }));
             });
     };
@@ -170,7 +171,7 @@ const Home = () => {
             });
     };
 
-    const onCheckboxAdd = (noteId, text) => {
+    const onCheckboxAdd = (noteId, text, onReset) => {
         const { notes } = state;
 
         axios
@@ -200,6 +201,8 @@ const Home = () => {
                     ...prev,
                     notes,
                 }));
+
+                onReset();
             });
     };
 

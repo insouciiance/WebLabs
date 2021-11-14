@@ -3,8 +3,17 @@ import React from 'react';
 import './Input.scss';
 
 const Input = props => {
-    const { value, onChange, type, name, focused, onBlur, style, className } =
-        props;
+    const {
+        value,
+        onChange,
+        type,
+        name,
+        focused,
+        onBlur,
+        style,
+        className,
+        placeholder,
+    } = props;
 
     return (
         <input
@@ -17,6 +26,8 @@ const Input = props => {
             onBlur={onBlur}
             style={style}
             className={className}
+            placeholder={placeholder}
+            autoComplete="on"
         />
     );
 };

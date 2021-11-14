@@ -34,7 +34,7 @@ namespace ToDoWebApi.Services
             JwtSecurityToken jwt = new(
                 signingCredentials: signingCredentials,
                 claims: claims,
-                expires: DateTime.Now.AddHours(1)
+                expires: DateTime.Now.AddHours(12)
                 );
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }

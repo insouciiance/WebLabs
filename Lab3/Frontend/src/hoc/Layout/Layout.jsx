@@ -8,11 +8,13 @@ import classes from './Layout.scss';
 const Layout = props => {
     const { children, onLogout } = props;
 
+    const userAuthenticated = authToken.exists();
+
     const headerText = credentials.exists()
         ? `Hello, ${credentials.get().username}`
         : 'Keep notes';
 
-    const logoutLink = authToken.exists() ? (
+    const logoutLink = userAuthenticated ? (
         <p className={classes.Logout} onClick={onLogout}>
             Logout
         </p>
@@ -21,7 +23,12 @@ const Layout = props => {
     return (
         <div>
             <header>
-                <h2 className={classes.HeaderCta}>{headerText}</h2>
+                <h2
+                    className={`${classes.HeaderCta} ${
+                        userAuthenticated ? classes.CtaLeft : null
+                    }`}>
+                    {headerText}
+                </h2>
                 {logoutLink}
             </header>
             {children}

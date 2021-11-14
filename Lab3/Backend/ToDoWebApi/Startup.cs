@@ -56,6 +56,7 @@ namespace ToDoWebApi
                 string connectionString = Environment.IsDevelopment() ?
                     Configuration["LocalConnection"] :
                     Configuration["DefaultConnection"];
+
                 options.UseSqlServer(connectionString);
             });
 

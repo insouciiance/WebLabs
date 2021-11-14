@@ -88,7 +88,7 @@ namespace ToDoWebApi.GraphQL
             }
 
             string jwtToken = tokenCreator.Create(user);
-            DateTime expires = DateTime.Now.AddHours(1);
+            DateTime expires = DateTime.Now.AddHours(12);
 
             LoginUserPayload payload = new(user, jwtToken, expires);
 

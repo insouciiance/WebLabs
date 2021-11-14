@@ -44,6 +44,17 @@ const ToDoCheckbox = ({ checkbox, onDelete, onRename, onCheckToggle }) => {
 
     return (
         <div className={classes.CheckboxWrapper}>
+            {checkbox.checked ? (
+                <FaCheckSquare
+                    className={classes.CheckSquare}
+                    onClick={() => onCheckToggle(checkbox.id)}
+                />
+            ) : (
+                <FaSquare
+                    className={classes.CheckSquare}
+                    onClick={() => onCheckToggle(checkbox.id)}
+                />
+            )}
             <Input
                 name="checkboxrename"
                 type="text"
@@ -58,17 +69,10 @@ const ToDoCheckbox = ({ checkbox, onDelete, onRename, onCheckToggle }) => {
                         : null
                 }
             />
-            <div className={classes.Toolbar}>
-                {checkbox.checked ? (
-                    <FaCheckSquare onClick={() => onCheckToggle(checkbox.id)} />
-                ) : (
-                    <FaSquare onClick={() => onCheckToggle(checkbox.id)} />
-                )}
-                <FaTimes
-                    className={classes.DeleteButton}
-                    onClick={() => onDelete(checkbox.id)}
-                />
-            </div>
+            <FaTimes
+                className={classes.DeleteButton}
+                onClick={() => onDelete(checkbox.id)}
+            />
         </div>
     );
 };

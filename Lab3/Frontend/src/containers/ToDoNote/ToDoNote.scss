@@ -31,7 +31,7 @@
     border-radius: 5px;
     color: $main-color-dark;
     height: fit-content;
-    padding: 0.5rem 1rem;
+    padding: 0.5rem;
     transition: border-color 0.15s;
 
     &:hover {
@@ -105,9 +105,12 @@
 
     .Remove {
         color: $warning-color;
-        opacity: 0;
         transition: 0.1s;
-        visibility: hidden;
+
+        @media screen and (min-width: 37.5rem) {
+            opacity: 0;
+            visibility: hidden;
+        }
     }
 
     .AddCheckbox {
