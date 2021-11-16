@@ -47,8 +47,6 @@ class Login extends Component {
                     isLoading: false,
                 });
 
-                console.log(res);
-
                 if (res.data.errors) {
                     this.setState({
                         errors: res.data.errors,

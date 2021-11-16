@@ -26,7 +26,6 @@ import graphql from '../../shared/js/graphql';
 
 import classes from './Home.scss';
 import { session } from '../../shared/js/session';
-import Backdrop from '../../components/Backdrop/Backdrop';
 
 const wsLink = new WebSocketLink({
     uri: baseURLWSS,
@@ -99,8 +98,6 @@ const Home = () => {
                 query: graphql.getNotes,
             })
             .then(res => {
-                console.log(res);
-
                 setState(prev => ({
                     ...prev,
                     notesLoading: false,
@@ -134,7 +131,6 @@ const Home = () => {
                 query: graphql.addNote(newNoteName),
             })
             .then(res => {
-                console.log(res);
                 if (res.data.errors) {
                     setState(prev => ({
                         ...prev,
@@ -162,8 +158,6 @@ const Home = () => {
                 query: graphql.deleteNote(noteId),
             })
             .then(res => {
-                console.log(res);
-
                 if (res.data.errors) {
                     setState(prev => ({
                         ...prev,
@@ -191,8 +185,6 @@ const Home = () => {
                 query: graphql.addCheckbox(noteId, text),
             })
             .then(res => {
-                console.log(res);
-
                 if (res.data.errors) {
                     setState(prev => ({
                         ...prev,
@@ -207,6 +199,9 @@ const Home = () => {
                     id: checkbox.id,
                     text: checkbox.text,
                     checked: checkbox.checked,
+                    note: {
+                        id: checkboxNote.id,
+                    },
                 });
 
                 setState(prev => ({
@@ -233,8 +228,6 @@ const Home = () => {
                 query: graphql.putCheckbox(checkboxId, text, checkbox.checked),
             })
             .then(res => {
-                console.log(res);
-
                 if (res.data.errors) {
                     setState(prev => ({
                         ...prev,
@@ -257,6 +250,9 @@ const Home = () => {
                     id: newCheckbox.id,
                     text: newCheckbox.text,
                     checked: newCheckbox.checked,
+                    note: {
+                        id: checkboxNote.id,
+                    },
                 };
 
                 setState(prev => ({
@@ -305,8 +301,6 @@ const Home = () => {
                 ),
             })
             .then(res => {
-                console.log(res);
-
                 if (res.data.errors) {
                     checkboxNote.checkboxes[checkboxIndex].checked =
                         checkbox.checked;
@@ -329,8 +323,6 @@ const Home = () => {
                 query: graphql.deleteCheckbox(checkboxId),
             })
             .then(res => {
-                console.log(res);
-
                 if (res.data.errors) {
                     setState(prev => ({
                         ...prev,
@@ -364,8 +356,6 @@ const Home = () => {
                 query: graphql.putNote(noteId, newName),
             })
             .then(res => {
-                console.log(res);
-
                 if (res.data.errors) {
                     setState(prev => ({
                         ...prev,
