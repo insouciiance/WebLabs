@@ -4,6 +4,7 @@
         "es6": true
     },
     "extends": ["metarhia", "plugin:sonarjs/recommended"],
+    "parser": "@babel/eslint-parser",
     "parserOptions": {
         "ecmaVersion": "latest",
         "jsx": true,
@@ -30,6 +31,7 @@
             "error",
             "after",
             { "overrides": { "?": "before", ":": "before" } }
-        ]
+        ],
+        "no-console": ["warn"]
     }
 }
