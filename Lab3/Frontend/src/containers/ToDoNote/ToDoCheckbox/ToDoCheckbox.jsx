@@ -72,13 +72,7 @@ const ToDoCheckbox = ({
                     onBlur={onRenameConfirm}
                     onChange={onCheckboxTextChange}
                     focused={focused}
-                    style={
-                        checkbox.checked
-                            ? {
-                                  textDecoration: 'line-through',
-                              }
-                            : null
-                    }
+                    className={checkbox.checked ? classes.Crossed : null}
                 />
             </form>
             <FaTimes
