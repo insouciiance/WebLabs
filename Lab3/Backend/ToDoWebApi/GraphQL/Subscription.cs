@@ -4,13 +4,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using HotChocolate;
-using HotChocolate.Data;
 using HotChocolate.Execution;
 using HotChocolate.Subscriptions;
 using HotChocolate.Types;
-using Microsoft.AspNetCore.Http;
 using ToDoWebApi.GraphQL.ToDos;
-using ToDoWebApi.GraphQL.Users;
 
 namespace ToDoWebApi.GraphQL
 {

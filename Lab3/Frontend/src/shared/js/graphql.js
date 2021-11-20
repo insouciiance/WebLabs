@@ -1,43 +1,6 @@
 import { authToken } from './authToken';
 
 const graphql = {
-    login: (userName, password) =>
-        `mutation {
-            login(input: {
-                userName: "${userName}",
-                password: "${password}"
-            })
-            {
-                jwtToken
-                expires
-                user {
-                    userName
-                }
-            }
-        }`,
-    register: (userName, email, password, passwordConfirm) =>
-        `mutation {
-            register(input: {
-                userName: "${userName}",
-                email: "${email}",
-                password: "${password}",
-                passwordConfirm: "${passwordConfirm}"
-            })
-            {
-                jwtToken
-                expires
-                user {
-                    userName
-                    email
-                }
-            }
-        }`,
-    logout: `mutation {
-        logout()
-        {
-            isSuccessful
-        }
-    }`,
     getNotes: `query {
         note(order: { dateCreated: DESC }) {
             id

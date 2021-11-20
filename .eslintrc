@@ -31,6 +31,7 @@
             "error",
             "after",
             { "overrides": { "?": "before", ":": "before" } }
-        ]
+        ],
+        "no-console": ["warn"]
     }
 }

@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation;
-using FluentValidation.Results;
-using HotChocolate;
-using ToDoWebApi.GraphQL.Users;
+using ToDoWebApi.Dtos.Auth;
 
 namespace ToDoWebApi.Services.Validators
 {

@@ -8,11 +8,8 @@ using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Data;
 using HotChocolate.Types;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using ToDoWebApi.Data.DbContexts;
-using ToDoWebApi.GraphQL.Users;
 using ToDoWebApi.Models;
-using ToDoWebApi.Services;
 
 namespace ToDoWebApi.GraphQL
 {

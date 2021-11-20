@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace ToDoWebApi.Services
 {
@@ -34,7 +33,7 @@ namespace ToDoWebApi.Services
             JwtSecurityToken jwt = new(
                 signingCredentials: signingCredentials,
                 claims: claims,
-                expires: DateTime.Now.AddHours(12)
+                expires: DateTime.Now.AddMinutes(10)
                 );
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }

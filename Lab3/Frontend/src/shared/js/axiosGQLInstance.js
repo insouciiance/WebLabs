@@ -1,13 +1,13 @@
 import axios from 'axios';
 import { authToken } from './authToken';
-import { baseURL } from './config';
+import { baseGQLURL } from './config';
 import { session } from './session';
 
-const axiosInstance = axios.create({
-    baseURL,
+const axiosGQLInstance = axios.create({
+    baseURL: baseGQLURL,
 });
 
-axiosInstance.interceptors.request.use(req => {
+axiosGQLInstance.interceptors.request.use(req => {
     const token = authToken.get();
     const sessionId = session.get();
     req.headers.authorization = `Bearer ${token?.token}`;
@@ -16,7 +16,7 @@ axiosInstance.interceptors.request.use(req => {
     return req;
 });
 
-axiosInstance.interceptors.response.use(null, error => {
+axiosGQLInstance.interceptors.response.use(null, error => {
     const { response } = error;
 
     if (!response) {
@@ -50,4 +50,4 @@ axiosInstance.interceptors.response.use(null, error => {
     return response;
 });
 
-export default axiosInstance;
+export default axiosGQLInstance;

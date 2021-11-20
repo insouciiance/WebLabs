@@ -100,21 +100,18 @@ namespace ToDoWebApi
 
             services.AddHttpContextAccessor();
 
+            services.AddControllers();
+
             services
                 .AddGraphQLServer()
                 .AddQueryType(d => d.Name("Query"))
                     .AddTypeExtension<UserQuery>()
                     .AddTypeExtension<ToDoNoteQuery>()
                 .AddMutationType(d => d.Name("Mutation"))
-                    .AddTypeExtension<UserMutation>()
                     .AddTypeExtension<ToDoNoteMutation>()
                     .AddTypeExtension<ToDoCheckboxMutation>()
                 .AddSubscriptionType<Subscription>()
                 .AddType<ApplicationUserType>()
-                .AddType<RegisterUserInputType>()
-                .AddType<LoginUserPayloadType>()
-                .AddType<LoginUserPayloadType>()
-                .AddType<LogoutUserPayloadType>()
                 .AddType<ToDoNoteType>()
                 .AddType<ToDoNoteInputType>()
                 .AddType<ToDoNotePayloadType>()
@@ -170,9 +167,12 @@ namespace ToDoWebApi
 
             app.UseAuthentication();
 
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGraphQL();
+                endpoints.MapControllers();
             });
         }
     }

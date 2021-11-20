@@ -10,9 +10,8 @@ import FormField from '../../../components/Form/FormField/FormField';
 import Popup from '../../../components/Popup/Popup';
 import Spinner from '../../../components/Spinner/Spinner';
 import { authToken } from '../../../shared/js/authToken';
-import axios from '../../../shared/js/axiosInstance';
+import axios from '../../../shared/js/axiosRESTInstance';
 import { credentials } from '../../../shared/js/credentials';
-import graphql from '../../../shared/js/graphql';
 import { session } from '../../../shared/js/session';
 import classes from './Login.scss';
 
@@ -37,31 +36,27 @@ class Login extends Component {
         });
 
         axios
-            .post('/', {
-                query: graphql.login(userName, password),
-            })
-            .then(res => {
+            .post('auth/login', { userName, password })
+            .then(({ data }) => {
                 const { onLogin } = this.props;
 
                 this.setState({
                     isLoading: false,
                 });
 
-                if (res.data.errors) {
-                    this.setState({
-                        errors: res.data.errors,
-                    });
-
-                    return;
-                }
-
-                const { jwtToken, expires, user } = res.data.data.login;
+                const { jwtToken, expires } = data;
 
                 authToken.set(jwtToken, expires);
-                credentials.set(user.userName);
+                credentials.set(userName);
                 session.set();
 
                 onLogin();
+            })
+            .catch(({ response }) => {
+                this.setState({
+                    isLoading: false,
+                    errors: response.data.errors,
+                });
             });
     };
 

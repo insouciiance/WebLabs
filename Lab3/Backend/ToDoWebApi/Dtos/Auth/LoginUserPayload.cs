@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ToDoWebApi.GraphQL.Users
+namespace ToDoWebApi.Dtos.Auth
 {
-    public record LogoutUserPayload(bool IsSuccessful);
+    public record LoginUserPayload(string JwtToken, DateTime Expires);
 }

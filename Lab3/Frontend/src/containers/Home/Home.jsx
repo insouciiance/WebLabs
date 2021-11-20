@@ -16,16 +16,17 @@ import { getMainDefinition } from '@apollo/client/utilities';
 import Popup from '../../components/Popup/Popup';
 import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
 import Spinner from '../../components/Spinner/Spinner';
-import { baseURL, baseURLWSS } from '../../shared/js/config';
+import { baseGQLURL, baseURLWSS } from '../../shared/js/config';
 import { authToken } from '../../shared/js/authToken';
 import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
 import ToDoNote from '../ToDoNote/ToDoNote';
-import axios from '../../shared/js/axiosInstance';
+import axios from '../../shared/js/axiosGQLInstance';
 import graphql from '../../shared/js/graphql';
 
 import classes from './Home.scss';
 import { session } from '../../shared/js/session';
+import Backdrop from '../../components/Backdrop/Backdrop';
 
 const wsLink = new WebSocketLink({
     uri: baseURLWSS,
@@ -35,7 +36,7 @@ const wsLink = new WebSocketLink({
 });
 
 const httpLink = createHttpLink({
-    uri: baseURL,
+    uri: baseGQLURL,
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -394,7 +395,11 @@ const Home = () => {
         </Popup>
     ) : null;
 
-    const spinner = notesLoading ? <Spinner /> : null;
+    const spinner = notesLoading ? (
+        <Backdrop>
+            <Spinner />
+        </Backdrop>
+    ) : null;
 
     return (
         <>

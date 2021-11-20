@@ -30,5 +30,26 @@ namespace ToDoWebApi.Services.Extensions
 
             throw new GraphQLException(errors);
         }
+
+        public static async Task<IEnumerable<string>> ValidateAndGetStringsAsync<T>(this AbstractValidator<T> validator, T input)
+        {
+            List<string> errors = new();
+
+            ValidationResult validationResult = await validator.ValidateAsync(input);
+
+            if (validationResult.IsValid)
+            {
+                return null;
+            }
+
+            List<ValidationFailure> validationFailures = validationResult.Errors;
+
+            foreach (ValidationFailure failure in validationFailures)
+            {
+                errors.Add(failure.ErrorMessage);
+            }
+
+            return errors;
+        }
     }
 }

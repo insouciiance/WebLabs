@@ -6,9 +6,8 @@ import Register from './containers/Auth/Register/Register';
 import Home from './containers/Home/Home';
 import Layout from './hoc/Layout/Layout';
 import { authToken } from './shared/js/authToken';
-import axios from './shared/js/axiosInstance';
+import axios from './shared/js/axiosRESTInstance';
 import { credentials } from './shared/js/credentials';
-import graphql from './shared/js/graphql';
 import { session } from './shared/js/session';
 
 class App extends Component {
@@ -37,20 +36,12 @@ class App extends Component {
             return;
         }
 
-        axios
-            .post('/', {
-                query: graphql.logout,
-            })
-            .then(res => {
-                const { data, errors } = res.data;
-
-                if (!errors && data.logout.isSuccessful) {
-                    authToken.reset();
-                    credentials.reset();
-                    session.reset();
-                    this.setState({ isAuthenticated: false });
-                }
-            });
+        axios.post('/auth/logout').then(() => {
+            authToken.reset();
+            credentials.reset();
+            session.reset();
+            this.setState({ isAuthenticated: false });
+        });
     };
 
     render() {
