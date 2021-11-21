@@ -8,7 +8,7 @@ import Form from '../../../components/Form/Form';
 import FormField from '../../../components/Form/FormField/FormField';
 import Popup from '../../../components/Popup/Popup';
 import Spinner from '../../../components/Spinner/Spinner';
-import { authToken } from '../../../shared/js/authToken';
+import { authTokens } from '../../../shared/js/authTokens';
 import axios from '../../../shared/js/axiosRESTInstance';
 import { credentials } from '../../../shared/js/credentials';
 import graphql from '../../../shared/js/graphql';
@@ -52,7 +52,7 @@ class Register extends Component {
 
                 const { jwtToken, expires, user } = data;
 
-                authToken.set(jwtToken, expires);
+                authTokens.set(jwtToken, expires);
                 credentials.set(user.userName);
                 session.set();
 

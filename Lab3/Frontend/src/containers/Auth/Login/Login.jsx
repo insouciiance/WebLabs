@@ -9,7 +9,7 @@ import Form from '../../../components/Form/Form';
 import FormField from '../../../components/Form/FormField/FormField';
 import Popup from '../../../components/Popup/Popup';
 import Spinner from '../../../components/Spinner/Spinner';
-import { authToken } from '../../../shared/js/authToken';
+import { authTokens } from '../../../shared/js/authTokens';
 import axios from '../../../shared/js/axiosRESTInstance';
 import { credentials } from '../../../shared/js/credentials';
 import { session } from '../../../shared/js/session';
@@ -44,9 +44,8 @@ class Login extends Component {
                     isLoading: false,
                 });
 
-                const { jwtToken, expires } = data;
-
-                authToken.set(jwtToken, expires);
+                const { authToken, refreshToken, expires } = data;
+                authTokens.set(authToken, refreshToken, expires);
                 credentials.set(userName);
                 session.set();
 

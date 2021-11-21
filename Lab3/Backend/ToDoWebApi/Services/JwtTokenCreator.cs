@@ -20,22 +20,48 @@ namespace ToDoWebApi.Services
             _configuration = configuration;
         }
 
-        public string Create(IdentityUser user)
+        public (string Token, DateTime Expires) CreateAuthToken(IdentityUser user)
         {
             Claim[] claims =
             {
-                new (JwtRegisteredClaimNames.Sub, user.Id)
+                new (JwtRegisteredClaimNames.Sub, user.Id),
+                new (JwtRegisteredClaimNames.Typ, "Auth")
             };
 
             string signingKeyPhrase = _configuration["SigningKeyPhrase"];
             SymmetricSecurityKey signingKey = new (Encoding.UTF8.GetBytes(signingKeyPhrase));
             SigningCredentials signingCredentials = new(signingKey, SecurityAlgorithms.HmacSha256);
+
+            DateTime expires = DateTime.Now.AddMinutes(15);
+
             JwtSecurityToken jwt = new(
                 signingCredentials: signingCredentials,
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(10)
+                expires: expires
                 );
-            return new JwtSecurityTokenHandler().WriteToken(jwt);
+            return (new JwtSecurityTokenHandler().WriteToken(jwt), expires);
+        }
+
+        public (string Token, DateTime Expires) CreateRefreshToken(IdentityUser user)
+        {
+            Claim[] claims =
+            {
+                new (JwtRegisteredClaimNames.Sub, user.Id),
+                new (JwtRegisteredClaimNames.Typ, "Refresh")
+            };
+
+            string signingKeyPhrase = _configuration["SigningKeyPhrase"];
+            SymmetricSecurityKey signingKey = new(Encoding.UTF8.GetBytes(signingKeyPhrase));
+            SigningCredentials signingCredentials = new(signingKey, SecurityAlgorithms.HmacSha256);
+
+            DateTime expires = DateTime.Now.AddHours(12);
+
+            JwtSecurityToken jwt = new(
+                signingCredentials: signingCredentials,
+                claims: claims,
+                expires: expires
+            );
+            return (new JwtSecurityTokenHandler().WriteToken(jwt), expires);
         }
     }
 }

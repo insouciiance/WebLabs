@@ -5,7 +5,7 @@ import Login from './containers/Auth/Login/Login';
 import Register from './containers/Auth/Register/Register';
 import Home from './containers/Home/Home';
 import Layout from './hoc/Layout/Layout';
-import { authToken } from './shared/js/authToken';
+import { authTokens } from './shared/js/authTokens';
 import axios from './shared/js/axiosRESTInstance';
 import { credentials } from './shared/js/credentials';
 import { session } from './shared/js/session';
@@ -14,14 +14,14 @@ class App extends Component {
     constructor(props) {
         super(props);
 
-        const isTokenValid = authToken.valid();
+        const isTokenValid = authTokens.valid();
 
         this.state = {
             isAuthenticated: isTokenValid,
         };
 
         if (!isTokenValid) {
-            authToken.reset();
+            authTokens.reset();
             credentials.reset();
             session.reset();
             return;
@@ -31,13 +31,13 @@ class App extends Component {
     }
 
     onLogout = () => {
-        if (!authToken.exists()) {
+        if (!authTokens.exists()) {
             this.setState({ isAuthenticated: false });
             return;
         }
 
         axios.post('/auth/logout').then(() => {
-            authToken.reset();
+            authTokens.reset();
             credentials.reset();
             session.reset();
             this.setState({ isAuthenticated: false });

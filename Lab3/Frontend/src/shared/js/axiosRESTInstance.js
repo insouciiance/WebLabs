@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { authToken } from './authToken';
+import moment from 'moment';
+import { authTokens } from './authTokens';
 import { baseRESTURL } from './config';
 import { session } from './session';
 
@@ -8,11 +9,10 @@ const axiosRESTInstance = axios.create({
 });
 
 axiosRESTInstance.interceptors.request.use(req => {
-    const token = authToken.get();
+    const token = authTokens.get();
     const sessionId = session.get();
-    req.headers.authorization = `Bearer ${token?.token}`;
+    req.headers.authorization ??= `Bearer ${token?.authToken}`;
     req.headers.sessionId = sessionId;
-
     return req;
 });
 
@@ -33,6 +33,51 @@ axiosRESTInstance.interceptors.response.use(null, error => {
     }
 
     const { status } = error.response;
+
+    if (status === 401) {
+        const { refreshToken, expires } = authTokens.get();
+
+        if (!authTokens.exists() || moment(expires).isBefore(moment())) {
+            errors = [
+                {
+                    message: 'Authorization error.',
+                },
+            ];
+
+            error.response = {
+                data: { errors },
+            };
+
+            return Promise.reject(error);
+        }
+
+        authTokens.reset();
+
+        return axiosRESTInstance
+            .post('/auth/refresh', null, {
+                headers: {
+                    authorization: `Bearer ${refreshToken}`,
+                },
+            })
+            .then(res => {
+                authTokens.set(res.data, refreshToken, expires);
+
+                return Promise.resolve(res);
+            })
+            .catch(error => {
+                errors = [
+                    {
+                        message: 'Authorization error.',
+                    },
+                ];
+
+                error.response = {
+                    data: { errors },
+                };
+
+                return Promise.reject(error);
+            });
+    }
 
     if (status === 400) {
         const validationErrors = error.response.data.errors;

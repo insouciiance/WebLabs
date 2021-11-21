@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -60,7 +61,18 @@ namespace ToDoWebApi
                 options.UseSqlServer(connectionString);
             });
 
+            services.AddDbContextPool<RefreshTokensDbContext>(options =>
+            {
+                string connectionString = Environment.IsDevelopment() ?
+                    Configuration["LocalConnection"] :
+                    Configuration["DefaultConnection"];
+
+                options.UseSqlServer(connectionString);
+            });
+
             services.AddScoped<JwtTokenCreator>();
+
+            services.AddScoped<JwtRefreshTokenHandler>();
 
             services.AddScoped(p => p.GetRequiredService<IDbContextFactory<ToDosDbContext>>().CreateDbContext());
 
@@ -94,9 +106,17 @@ namespace ToDoWebApi
                         ValidateAudience = false,
                         ValidateIssuer = false,
                         ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true
+                        ValidateIssuerSigningKey = true,
+                        //TODO: remove timespan zero
+                        ClockSkew = TimeSpan.Zero
                     };
                 });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Auth", policy => policy.RequireClaim(JwtRegisteredClaimNames.Typ, "Auth"));
+                options.AddPolicy("Refresh", policy => policy.RequireClaim(JwtRegisteredClaimNames.Typ, "Refresh"));
+            });
 
             services.AddHttpContextAccessor();
 

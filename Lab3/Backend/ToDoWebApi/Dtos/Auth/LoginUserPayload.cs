@@ -5,5 +5,5 @@ using System.Threading.Tasks;
 
 namespace ToDoWebApi.Dtos.Auth
 {
-    public record LoginUserPayload(string JwtToken, DateTime Expires);
+    public record LoginUserPayload(string AuthToken, string RefreshToken, DateTime Expires);
 }

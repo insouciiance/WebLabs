@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ToDoWebApi.Data.DbContexts;
 using ToDoWebApi.Dtos.Auth;
 using ToDoWebApi.Models;
 using ToDoWebApi.Services;
@@ -17,17 +20,29 @@ namespace ToDoWebApi.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
+        private readonly RefreshTokensDbContext _refreshTokensDbContext;
+
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IHttpContextAccessor _contextAccessor;
 
         private readonly JwtTokenCreator _tokenCreator;
+        private readonly JwtRefreshTokenHandler _refreshTokenHandler;
 
-        public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
-            JwtTokenCreator tokenCreator)
+        public AuthController(
+            RefreshTokensDbContext refreshTokensDbContext,
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            IHttpContextAccessor contextAccessor,
+            JwtTokenCreator tokenCreator,
+            JwtRefreshTokenHandler refreshTokenHandler)
         {
+            _refreshTokensDbContext = refreshTokensDbContext;
             _userManager = userManager;
             _signInManager = signInManager;
+            _contextAccessor = contextAccessor;
             _tokenCreator = tokenCreator;
+            _refreshTokenHandler = refreshTokenHandler;
         }
 
         [Route("register")]
@@ -61,10 +76,11 @@ namespace ToDoWebApi.Controllers
 
             await _signInManager.SignInAsync(user, false);
 
-            string jwtToken = _tokenCreator.Create(user);
-            DateTime expires = DateTime.Now.AddMinutes(10);
+            var refreshToken = await _refreshTokenHandler.WriteIfExpiredAsync(user);
 
-            LoginUserPayload payload = new(jwtToken, expires);
+            var authToken = _tokenCreator.CreateAuthToken(user);
+
+            LoginUserPayload payload = new(authToken.Token, refreshToken.Token, refreshToken.Expires);
 
             return Ok(payload);
         }
@@ -95,15 +111,43 @@ namespace ToDoWebApi.Controllers
                 return BadRequest(new { errors = new[] { ErrorMessages.InvalidCredentials } });
             }
 
-            string jwtToken = _tokenCreator.Create(user);
-            DateTime expires = DateTime.Now.AddMinutes(10);
+            var refreshToken = await _refreshTokenHandler.WriteIfExpiredAsync(user);
 
-            LoginUserPayload payload = new(jwtToken, expires);
+            var authToken = _tokenCreator.CreateAuthToken(user);
+
+            LoginUserPayload payload = new(authToken.Token, refreshToken.Token, refreshToken.Expires);
 
             return Ok(payload);
         }
 
-        [Authorize]
+        [Authorize(Policy = "Refresh")]
+        [Route("refresh")]
+        public async Task<IActionResult> Refresh()
+        {
+            string tokenHeader = _contextAccessor.HttpContext!.Request.Headers["Authorization"].ToString();
+            string refreshToken = tokenHeader.Split(' ')[1];
+
+            bool isRefreshValid = await _refreshTokenHandler.IsTokenValidAsync(refreshToken);
+
+            if (!isRefreshValid)
+            {
+                return Forbid();
+            }
+
+            string userId = _contextAccessor.HttpContext!.User.Claims.First().Value;
+            ApplicationUser user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user is null)
+            {
+                return NotFound();
+            }
+
+            var authToken = _tokenCreator.CreateAuthToken(user);
+
+            return Ok(new { refreshToken, authToken = authToken.Token, expires = authToken.Expires });
+        }
+
+        [Authorize(Policy = "Auth")]
         [Route("logout")]
         public async Task<IActionResult> Logout()
         {

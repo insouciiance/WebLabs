@@ -23,7 +23,7 @@ namespace ToDoWebApi.GraphQL
     [ExtendObjectType("Mutation")]
     public class ToDoNoteMutation
     {
-        [Authorize]
+        [Authorize(Policy = "Auth")]
         [UseDbContext(typeof(ToDosDbContext))]
         public async Task<ToDoNotePayload> AddNote(
             ToDoNoteInput input,
@@ -62,7 +62,7 @@ namespace ToDoWebApi.GraphQL
             return new ToDoNotePayload(newNote);
         }
 
-        [Authorize]
+        [Authorize(Policy = "Auth")]
         [UseDbContext(typeof(ToDosDbContext))]
         public async Task<ToDoNotePutPayload> PutNote(
             ToDoNotePutInput input,
@@ -101,7 +101,7 @@ namespace ToDoWebApi.GraphQL
             return new ToDoNotePutPayload(noteToPut);
         }
 
-        [Authorize]
+        [Authorize(Policy = "Auth")]
         [UseDbContext(typeof(ToDosDbContext))]
         public async Task<ToDoNoteDeletePayload> DeleteNote(
             ToDoNoteDeleteInput input,

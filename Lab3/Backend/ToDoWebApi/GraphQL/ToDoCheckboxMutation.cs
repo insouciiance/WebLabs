@@ -23,7 +23,7 @@ namespace ToDoWebApi.GraphQL
     [ExtendObjectType("Mutation")]
     public class ToDoCheckboxMutation
     {
-        [Authorize]
+        [Authorize(Policy = "Auth")]
         [UseDbContext(typeof(ToDosDbContext))]
         public async Task<ToDoCheckboxPayload> AddCheckbox(
             ToDoCheckboxInput input,
@@ -70,7 +70,7 @@ namespace ToDoWebApi.GraphQL
             return new ToDoCheckboxPayload(checkbox);
         }
 
-        [Authorize]
+        [Authorize(Policy = "Auth")]
         [UseDbContext(typeof(ToDosDbContext))]
         public async Task<ToDoCheckboxPutPayload> PutCheckbox(
             ToDoCheckboxPutInput input,
@@ -118,7 +118,7 @@ namespace ToDoWebApi.GraphQL
             return new ToDoCheckboxPutPayload(checkboxToPut);
         }
 
-        [Authorize]
+        [Authorize(Policy = "Auth")]
         [UseDbContext(typeof(ToDosDbContext))]
         public async Task<ToDoCheckboxDeletePayload> DeleteCheckbox(
             ToDoCheckboxDeleteInput input,

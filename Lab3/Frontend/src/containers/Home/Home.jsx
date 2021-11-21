@@ -17,7 +17,7 @@ import Popup from '../../components/Popup/Popup';
 import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
 import Spinner from '../../components/Spinner/Spinner';
 import { baseGQLURL, baseURLWSS } from '../../shared/js/config';
-import { authToken } from '../../shared/js/authToken';
+import { authTokens } from '../../shared/js/authTokens';
 import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
 import ToDoNote from '../ToDoNote/ToDoNote';
@@ -40,7 +40,7 @@ const httpLink = createHttpLink({
 });
 
 const authLink = setContext((_, { headers }) => {
-    const { token } = authToken.get();
+    const { token } = authTokens.get();
     return {
         headers: {
             ...headers,

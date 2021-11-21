@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { authToken } from '../../shared/js/authToken';
+import { authTokens } from '../../shared/js/authTokens';
 import { credentials } from '../../shared/js/credentials';
 
 import classes from './Layout.scss';
@@ -8,7 +8,7 @@ import classes from './Layout.scss';
 const Layout = props => {
     const { children, onLogout } = props;
 
-    const userAuthenticated = authToken.exists();
+    const userAuthenticated = authTokens.exists();
 
     const headerText = credentials.exists()
         ? `Hello, ${credentials.get().username}`

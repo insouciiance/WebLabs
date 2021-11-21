@@ -17,7 +17,7 @@ namespace ToDoWebApi.GraphQL
     [ExtendObjectType("Query")]
     public class UserQuery
     {
-        [Authorize]
+        [Authorize(Policy = "Auth")]
         [GraphQLDescription("Gets current user's data.")]
         [UseDbContext(typeof(ToDosDbContext))]
         [UseFiltering]

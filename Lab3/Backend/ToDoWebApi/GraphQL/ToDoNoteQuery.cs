@@ -16,7 +16,7 @@ namespace ToDoWebApi.GraphQL
     [ExtendObjectType("Query")]
     public class ToDoNoteQuery
     {
-        [Authorize]
+        [Authorize(Policy = "Auth")]
         [GraphQLDescription("Gets current user's notes.")]
         [UseDbContext(typeof(ToDosDbContext))]
         [UseFiltering]

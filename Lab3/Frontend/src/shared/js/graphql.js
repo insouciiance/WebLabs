@@ -1,4 +1,4 @@
-import { authToken } from './authToken';
+import { authTokens } from './authTokens';
 
 const graphql = {
     getNotes: `query {
@@ -106,10 +106,8 @@ const graphql = {
                 }
             }
         }`,
-    onNotesChangeSubscription: () => {
-        const { token } = authToken.get();
-        return `subscription {
-        onNotesUpdate(jwtToken: "${token}")
+    onNotesChangeSubscription: () => `subscription {
+        onNotesUpdate(jwtToken: "${authTokens.get()?.authToken}")
         {
             notes {
                 id
@@ -125,8 +123,7 @@ const graphql = {
             }
             sessionId
         }
-    }`;
-    },
+    }`,
 };
 
 export default graphql;
