@@ -44,8 +44,8 @@ class Login extends Component {
                     isLoading: false,
                 });
 
-                const { authToken, refreshToken, expires } = data;
-                authTokens.set(authToken, refreshToken, expires);
+                const { authToken, refreshToken } = data;
+                authTokens.set(authToken, refreshToken);
                 credentials.set(userName);
                 session.set();
 

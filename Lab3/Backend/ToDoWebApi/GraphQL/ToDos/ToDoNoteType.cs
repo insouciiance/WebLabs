@@ -22,13 +22,13 @@ namespace ToDoWebApi.GraphQL.ToDos
 
             descriptor
                 .Field(n => n.Checkboxes)
-                .ResolveWith<Resolvers>(r => r.GetCheckboxes(default, default))
+                .ResolveWith<Resolvers>(r => Resolvers.GetCheckboxes(default, default))
                 .UseDbContext<ToDosDbContext>()
                 .Description("Gets all checkboxes inside the note.");
 
             descriptor
                 .Field(n => n.User)
-                .ResolveWith<Resolvers>(r => r.GetUser(default, default))
+                .ResolveWith<Resolvers>(r => Resolvers.GetUser(default, default))
                 .UseDbContext<ToDosDbContext>()
                 .Description("Gets the user to whom the note belongs");
         }
@@ -36,12 +36,12 @@ namespace ToDoWebApi.GraphQL.ToDos
         private class Resolvers
         {
             [UseDbContext(typeof(ToDosDbContext))]
-            public IQueryable<ToDoCheckbox> GetCheckboxes(ToDoNote note, [ScopedService] ToDosDbContext context)
+            public static IQueryable<ToDoCheckbox> GetCheckboxes(ToDoNote note, [ScopedService] ToDosDbContext context)
             {
                 return context.Checkboxes.Where(n => n.NoteId == note.Id).OrderBy(c => c.DateCreated);
             }
 
-            public ApplicationUser GetUser(ToDoNote note, [Service] ToDosDbContext context)
+            public static ApplicationUser GetUser(ToDoNote note, [Service] ToDosDbContext context)
             {
                 return context.Users.FirstOrDefault(u => u.Id == note.UserId);
             }

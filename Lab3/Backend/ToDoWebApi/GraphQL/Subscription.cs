@@ -26,7 +26,7 @@ namespace ToDoWebApi.GraphQL
             [Service] ITopicEventReceiver eventReceiver,
             CancellationToken cancellationToken)
         {
-            return await eventReceiver.SubscribeAsync<string, OnNotesUpdateMessage>("OnNotesUpdate_" + jwtToken, cancellationToken);
+            return await eventReceiver.SubscribeAsync<string, OnNotesUpdateMessage>("OnNotesUpdate_" + jwtToken, cancellationToken).ConfigureAwait(false);
         }
     }
 }

@@ -69,14 +69,14 @@ namespace ToDoWebApi.GraphQL.Users
 
             descriptor
                 .Field(u => u.Notes)
-                .ResolveWith<Resolvers>(r => r.GetNotes(default, default))
+                .ResolveWith<Resolvers>(r => Resolvers.GetNotes(default, default))
                 .UseDbContext<ToDosDbContext>()
                 .Description("Gets the user's notes.");
         }
 
         private class Resolvers
         {
-            public IQueryable<ToDoNote> GetNotes(ApplicationUser user, [Service] ToDosDbContext context)
+            public static IQueryable<ToDoNote> GetNotes(ApplicationUser user, [Service] ToDosDbContext context)
             {
                 return context.Notes.Where(n => n.UserId == user.Id);
             }

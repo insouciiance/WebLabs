@@ -23,6 +23,6 @@ namespace ToDoWebApi.Models
 
         public ApplicationUser User { get; set; }
 
-        public ICollection<ToDoCheckbox> Checkboxes { get; set; } = new List<ToDoCheckbox>();
+        public ICollection<ToDoCheckbox> Checkboxes { get; } = new List<ToDoCheckbox>();
     }
 }

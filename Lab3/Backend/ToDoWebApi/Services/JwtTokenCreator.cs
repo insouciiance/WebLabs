@@ -30,15 +30,14 @@ namespace ToDoWebApi.Services
 
             string signingKeyPhrase = _configuration["SigningKeyPhrase"];
             SymmetricSecurityKey signingKey = new (Encoding.UTF8.GetBytes(signingKeyPhrase));
-            SigningCredentials signingCredentials = new(signingKey, SecurityAlgorithms.HmacSha256);
+            SigningCredentials signingCredentials = new (signingKey, SecurityAlgorithms.HmacSha256);
 
             DateTime expires = DateTime.Now.AddMinutes(15);
 
-            JwtSecurityToken jwt = new(
+            JwtSecurityToken jwt = new (
                 signingCredentials: signingCredentials,
                 claims: claims,
-                expires: expires
-                );
+                expires: expires);
             return (new JwtSecurityTokenHandler().WriteToken(jwt), expires);
         }
 
@@ -51,16 +50,15 @@ namespace ToDoWebApi.Services
             };
 
             string signingKeyPhrase = _configuration["SigningKeyPhrase"];
-            SymmetricSecurityKey signingKey = new(Encoding.UTF8.GetBytes(signingKeyPhrase));
-            SigningCredentials signingCredentials = new(signingKey, SecurityAlgorithms.HmacSha256);
+            SymmetricSecurityKey signingKey = new (Encoding.UTF8.GetBytes(signingKeyPhrase));
+            SigningCredentials signingCredentials = new (signingKey, SecurityAlgorithms.HmacSha256);
 
             DateTime expires = DateTime.Now.AddHours(12);
 
-            JwtSecurityToken jwt = new(
+            JwtSecurityToken jwt = new (
                 signingCredentials: signingCredentials,
                 claims: claims,
-                expires: expires
-            );
+                expires: expires);
             return (new JwtSecurityTokenHandler().WriteToken(jwt), expires);
         }
     }

@@ -72,11 +72,11 @@ namespace ToDoWebApi.Controllers
 
             await _signInManager.SignInAsync(user, false).ConfigureAwait(false);
 
-            var refreshToken = await _refreshTokenHandler.WriteIfExpiredAsync(user).ConfigureAwait(false);
+            var (refreshToken, _) = await _refreshTokenHandler.WriteIfExpiredAsync(user).ConfigureAwait(false);
 
-            var authToken = _tokenCreator.CreateAuthToken(user);
+            var (authToken, _) = _tokenCreator.CreateAuthToken(user);
 
-            LoginUserPayload payload = new (authToken.Token, refreshToken.Token, refreshToken.Expires);
+            LoginUserPayload payload = new (authToken, refreshToken, user.UserName);
 
             return Ok(payload);
         }
@@ -107,11 +107,11 @@ namespace ToDoWebApi.Controllers
                 return BadRequest(new { errors = new[] { ErrorMessages.InvalidCredentials } });
             }
 
-            var (refreshToken, expires) = await _refreshTokenHandler.WriteIfExpiredAsync(user).ConfigureAwait(false);
+            var (refreshToken, _) = await _refreshTokenHandler.WriteIfExpiredAsync(user).ConfigureAwait(false);
 
             var (authToken, _) = _tokenCreator.CreateAuthToken(user);
 
-            LoginUserPayload payload = new (authToken, refreshToken, expires);
+            LoginUserPayload payload = new (authToken, refreshToken, user.UserName);
 
             return Ok(payload);
         }
@@ -140,7 +140,7 @@ namespace ToDoWebApi.Controllers
 
             var authToken = _tokenCreator.CreateAuthToken(user);
 
-            return Ok(new { refreshToken, authToken = authToken.Token, expires = authToken.Expires });
+            return Ok(new { refreshToken, authToken = authToken.Token });
         }
 
         [Authorize(Policy = "Auth")]

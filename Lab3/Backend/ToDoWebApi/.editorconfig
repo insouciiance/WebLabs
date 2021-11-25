@@ -232,8 +232,12 @@ dotnet_diagnostic.SA1649.severity = none
 dotnet_style_parentheses_in_other_operators=never_if_unnecessary:silent
 dotnet_diagnostic.CA1031.severity=silent
 dotnet_diagnostic.CA1062.severity=silent
+dotnet_diagnostic.CA1801.severity=silent
+dotnet_diagnostic.CA1724.severity=silent
 
 [*.cs]
 csharp_using_directive_placement=outside_namespace:silent
 dotnet_diagnostic.SA1200.severity=silent
 dotnet_diagnostic.SA1210.severity=silent
+dotnet_diagnostic.CA1812.severity=silent
+dotnet_diagnostic.SA1313.severity=silent

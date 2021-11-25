@@ -50,10 +50,10 @@ class Register extends Component {
                     isLoading: false,
                 });
 
-                const { jwtToken, expires, user } = data;
+                const { authToken, refreshToken, username } = data;
 
-                authTokens.set(jwtToken, expires);
-                credentials.set(user.userName);
+                authTokens.set(authToken, refreshToken);
+                credentials.set(username);
                 session.set();
 
                 onLogin();

@@ -48,7 +48,7 @@ namespace ToDoWebApi.Services.Validators
                 .Unless(input => string.IsNullOrWhiteSpace(input.Password))
                 .WithMessage(ErrorMessages.PasswordLength);
 
-            RuleFor(input => new {input.Password, input.PasswordConfirm})
+            RuleFor(input => new { input.Password, input.PasswordConfirm })
                 .Must(passwords => passwords.Password.Equals(passwords.PasswordConfirm))
                 .Unless(input => string.IsNullOrWhiteSpace(input.PasswordConfirm))
                 .WithMessage(ErrorMessages.PasswordsMatch);

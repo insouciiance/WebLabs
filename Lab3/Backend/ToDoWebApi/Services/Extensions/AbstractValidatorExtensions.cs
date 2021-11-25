@@ -12,7 +12,7 @@ namespace ToDoWebApi.Services.Extensions
     {
         public static async Task ValidateAndThrowGraphQLExceptionAsync<T>(this AbstractValidator<T> validator, T input)
         {
-            ValidationResult validationResult = await validator.ValidateAsync(input);
+            ValidationResult validationResult = await validator.ValidateAsync(input).ConfigureAwait(false);
 
             if (validationResult.IsValid)
             {
@@ -21,7 +21,7 @@ namespace ToDoWebApi.Services.Extensions
 
             List<ValidationFailure> validationFailures = validationResult.Errors;
 
-            List<IError> errors = new();
+            List<IError> errors = new ();
 
             foreach (ValidationFailure failure in validationFailures)
             {
@@ -33,9 +33,9 @@ namespace ToDoWebApi.Services.Extensions
 
         public static async Task<IEnumerable<string>> ValidateAndGetStringsAsync<T>(this AbstractValidator<T> validator, T input)
         {
-            List<string> errors = new();
+            List<string> errors = new ();
 
-            ValidationResult validationResult = await validator.ValidateAsync(input);
+            ValidationResult validationResult = await validator.ValidateAsync(input).ConfigureAwait(false);
 
             if (validationResult.IsValid)
             {

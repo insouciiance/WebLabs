@@ -8,6 +8,6 @@ namespace ToDoWebApi.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        public ICollection<ToDoNote> Notes { get; set; } = new List<ToDoNote>();
+        public ICollection<ToDoNote> Notes { get; } = new List<ToDoNote>();
     }
 }

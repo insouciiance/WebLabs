@@ -1,13 +1,16 @@
-import moment from 'moment';
+import day from 'dayjs';
+import lsTest from './lsTest';
 
 export const session = {
     get() {
-        return sessionStorage.getItem('sessionId');
+        return lsTest() ? sessionStorage.getItem('sessionId') : null;
     },
     set() {
-        sessionStorage.setItem('sessionId', moment().valueOf());
+        if (!lsTest()) return;
+        sessionStorage.setItem('sessionId', day().valueOf());
     },
     reset() {
+        if (!lsTest()) return;
         sessionStorage.removeItem('sessionId');
     },
     exists() {

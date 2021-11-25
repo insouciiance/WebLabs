@@ -14,6 +14,6 @@ namespace ToDoWebApi.Data.DbContexts
     {
         public DbSet<RefreshToken> RefreshTokens { get; set; }
 
-        public RefreshTokensDbContext(DbContextOptions options) : base(options) {}
+        public RefreshTokensDbContext(DbContextOptions options) : base(options) { }
     }
 }

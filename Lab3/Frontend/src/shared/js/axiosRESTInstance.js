@@ -1,5 +1,5 @@
 import axios from 'axios';
-import moment from 'moment';
+import day from 'dayjs';
 import { authTokens } from './authTokens';
 import { baseRESTURL } from './config';
 import { session } from './session';
@@ -37,7 +37,7 @@ axiosRESTInstance.interceptors.response.use(null, error => {
     if (status === 401) {
         const { refreshToken, expires } = authTokens.get();
 
-        if (!authTokens.exists() || moment(expires).isBefore(moment())) {
+        if (!authTokens.exists() || day(expires).isBefore(day())) {
             errors = [
                 {
                     message: 'Authorization error.',

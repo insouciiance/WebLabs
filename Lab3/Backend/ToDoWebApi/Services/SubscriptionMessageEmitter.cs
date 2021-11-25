@@ -29,12 +29,12 @@ namespace ToDoWebApi.Services
 
             string sessionId = contextAccessor.HttpContext.Request.Headers["sessionId"].ToString();
 
-            OnNotesUpdateMessage message = new(messageNotes, sessionId);
+            OnNotesUpdateMessage message = new (messageNotes, sessionId);
 
             string tokenHeader = contextAccessor.HttpContext.Request.Headers["Authorization"].ToString();
             string jwtToken = tokenHeader.Split(' ')[1];
 
-            await eventSender.SendAsync("OnNotesUpdate_" + jwtToken, message, cancellationToken);
+            await eventSender.SendAsync("OnNotesUpdate_" + jwtToken, message, cancellationToken).ConfigureAwait(false);
         }
     }
 }

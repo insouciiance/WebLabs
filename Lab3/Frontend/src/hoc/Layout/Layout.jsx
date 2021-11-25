@@ -2,6 +2,7 @@ import React from 'react';
 
 import { authTokens } from '../../shared/js/authTokens';
 import { credentials } from '../../shared/js/credentials';
+import lsTest from '../../shared/js/lsTest';
 
 import classes from './Layout.scss';
 

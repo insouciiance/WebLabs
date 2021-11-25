@@ -32,16 +32,16 @@ namespace ToDoWebApi.GraphQL
             [Service] ITopicEventSender eventSender,
             CancellationToken cancellationToken)
         {
-            HtmlSanitizer sanitizer = new();
-            ToDoNoteInput sanitizedInput = new(
+            HtmlSanitizer sanitizer = new ();
+            ToDoNoteInput sanitizedInput = new (
                 sanitizer.Sanitize(input.Name));
 
-            ToDoNoteInputValidator validator = new();
-            await validator.ValidateAndThrowGraphQLExceptionAsync(sanitizedInput);
+            ToDoNoteInputValidator validator = new ();
+            await validator.ValidateAndThrowGraphQLExceptionAsync(sanitizedInput).ConfigureAwait(false);
 
             string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
 
-            ToDoNote newNote = new()
+            ToDoNote newNote = new ()
             {
                 Id = Guid.NewGuid().ToString(),
                 Name = sanitizedInput.Name,
@@ -51,13 +51,13 @@ namespace ToDoWebApi.GraphQL
 
             context.Notes.Add(newNote);
 
-            await context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             await SubscriptionMessageEmitter.EmitOnNotesUpdate(
                 contextAccessor,
                 context,
                 eventSender,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
 
             return new ToDoNotePayload(newNote);
         }
@@ -71,13 +71,13 @@ namespace ToDoWebApi.GraphQL
             [Service] ITopicEventSender eventSender,
             CancellationToken cancellationToken)
         {
-            HtmlSanitizer sanitizer = new();
-            ToDoNotePutInput sanitizedInput = new(
+            HtmlSanitizer sanitizer = new ();
+            ToDoNotePutInput sanitizedInput = new (
                 sanitizer.Sanitize(input.Id),
                 sanitizer.Sanitize(input.Name));
 
-            ToDoNotePutInputValidator validator = new();
-            await validator.ValidateAndThrowGraphQLExceptionAsync(sanitizedInput);
+            ToDoNotePutInputValidator validator = new ();
+            await validator.ValidateAndThrowGraphQLExceptionAsync(sanitizedInput).ConfigureAwait(false);
 
             string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
 
@@ -90,13 +90,13 @@ namespace ToDoWebApi.GraphQL
 
             noteToPut.Name = sanitizedInput.Name;
 
-            await context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             await SubscriptionMessageEmitter.EmitOnNotesUpdate(
                 contextAccessor,
                 context,
                 eventSender,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
 
             return new ToDoNotePutPayload(noteToPut);
         }
@@ -110,12 +110,12 @@ namespace ToDoWebApi.GraphQL
             [Service] ITopicEventSender eventSender,
             CancellationToken cancellationToken)
         {
-            HtmlSanitizer sanitizer = new();
-            ToDoNoteDeleteInput sanitizedInput = new(
+            HtmlSanitizer sanitizer = new ();
+            ToDoNoteDeleteInput sanitizedInput = new (
                 sanitizer.Sanitize(input.Id));
 
-            ToDoNoteDeleteInputValidator validator = new();
-            await validator.ValidateAndThrowGraphQLExceptionAsync(sanitizedInput);
+            ToDoNoteDeleteInputValidator validator = new ();
+            await validator.ValidateAndThrowGraphQLExceptionAsync(sanitizedInput).ConfigureAwait(false);
 
             string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
 
@@ -128,13 +128,13 @@ namespace ToDoWebApi.GraphQL
 
             context.Notes.Remove(noteToDelete);
 
-            await context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             await SubscriptionMessageEmitter.EmitOnNotesUpdate(
                 contextAccessor,
                 context,
                 eventSender,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
 
             return new ToDoNoteDeletePayload(true);
         }

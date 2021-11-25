@@ -2,7 +2,7 @@ import axios from 'axios';
 import { authTokens } from './authTokens';
 import { baseGQLURL } from './config';
 import { session } from './session';
-import moment from 'moment';
+import day from 'dayjs';
 import refreshRequest from './refreshRequest';
 
 const axiosGQLInstance = axios.create({
@@ -33,7 +33,7 @@ axiosGQLInstance.interceptors.response.use(
 
         if (
             !authTokens.exists() ||
-            moment(authTokens.get().expires).isBefore(moment())
+            day(authTokens.get().expires).isBefore(day())
         ) {
             errors = [
                 {

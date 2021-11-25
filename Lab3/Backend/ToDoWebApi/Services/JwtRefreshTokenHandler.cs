@@ -22,7 +22,7 @@ namespace ToDoWebApi.Services
 
         public async Task<(string Token, DateTime Expires)> WriteIfExpiredAsync(ApplicationUser user)
         {
-            RefreshToken prevToken = await _refreshTokensDbContext.RefreshTokens.FirstOrDefaultAsync(t => t.UserId == user.Id);
+            RefreshToken prevToken = await _refreshTokensDbContext.RefreshTokens.FirstOrDefaultAsync(t => t.UserId == user.Id).ConfigureAwait(false);
 
             if (prevToken is not null)
             {
@@ -36,7 +36,7 @@ namespace ToDoWebApi.Services
 
             var refreshToken = _tokenCreator.CreateRefreshToken(user);
 
-            RefreshToken newToken = new()
+            RefreshToken newToken = new ()
             {
                 Id = Guid.NewGuid().ToString(),
                 UserId = user.Id,
@@ -45,14 +45,14 @@ namespace ToDoWebApi.Services
             };
             _refreshTokensDbContext.RefreshTokens.Add(newToken);
 
-            await _refreshTokensDbContext.SaveChangesAsync();
+            await _refreshTokensDbContext.SaveChangesAsync().ConfigureAwait(false);
 
             return refreshToken;
         }
 
         public async Task<bool> IsTokenValidAsync(string token)
         {
-            RefreshToken refreshToken = await _refreshTokensDbContext.RefreshTokens.FirstOrDefaultAsync(t => t.Token == token);
+            RefreshToken refreshToken = await _refreshTokensDbContext.RefreshTokens.FirstOrDefaultAsync(t => t.Token == token).ConfigureAwait(false);
 
             return refreshToken is not null && refreshToken.Expires > DateTime.Now;
         }

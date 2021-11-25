@@ -17,7 +17,7 @@ namespace ToDoWebApi.Data.DbContexts
 
         public DbSet<ToDoCheckbox> Checkboxes { get; set; }
 
-        public ToDosDbContext(DbContextOptions options) : base(options) {}
+        public ToDosDbContext(DbContextOptions options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

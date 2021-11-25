@@ -32,13 +32,13 @@ namespace ToDoWebApi.GraphQL
             [Service] ITopicEventSender eventSender,
             CancellationToken cancellationToken)
         {
-            HtmlSanitizer sanitizer = new();
-            ToDoCheckboxInput sanitizedInput = new(
+            HtmlSanitizer sanitizer = new ();
+            ToDoCheckboxInput sanitizedInput = new (
                 sanitizer.Sanitize(input.Text),
                 sanitizer.Sanitize(input.NoteId));
 
-            ToDoCheckboxInputValidator validator = new();
-            await validator.ValidateAndThrowGraphQLExceptionAsync(sanitizedInput);
+            ToDoCheckboxInputValidator validator = new ();
+            await validator.ValidateAndThrowGraphQLExceptionAsync(sanitizedInput).ConfigureAwait(false);
 
             string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
             ToDoNote checkboxNote = context.Notes.FirstOrDefault(n => n.Id == sanitizedInput.NoteId);
@@ -48,7 +48,7 @@ namespace ToDoWebApi.GraphQL
                 throw new GraphQLException(ErrorMessages.CantAddCheckbox);
             }
 
-            ToDoCheckbox checkbox = new()
+            ToDoCheckbox checkbox = new ()
             {
                 Id = Guid.NewGuid().ToString(),
                 Text = sanitizedInput.Text,
@@ -59,13 +59,13 @@ namespace ToDoWebApi.GraphQL
 
             context.Checkboxes.Add(checkbox);
 
-            await context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             await SubscriptionMessageEmitter.EmitOnNotesUpdate(
                 contextAccessor,
                 context,
                 eventSender,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
 
             return new ToDoCheckboxPayload(checkbox);
         }
@@ -79,14 +79,14 @@ namespace ToDoWebApi.GraphQL
             [Service] ITopicEventSender eventSender,
             CancellationToken cancellationToken)
         {
-            HtmlSanitizer sanitizer = new();
-            ToDoCheckboxPutInput sanitizedInput = new(
+            HtmlSanitizer sanitizer = new ();
+            ToDoCheckboxPutInput sanitizedInput = new (
                 sanitizer.Sanitize(input.Id),
                 sanitizer.Sanitize(input.Text),
                 input.Checked);
 
-            ToDoCheckboxPutInputValidator validator = new();
-            await validator.ValidateAndThrowGraphQLExceptionAsync(sanitizedInput);
+            ToDoCheckboxPutInputValidator validator = new ();
+            await validator.ValidateAndThrowGraphQLExceptionAsync(sanitizedInput).ConfigureAwait(false);
 
             string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
 
@@ -97,7 +97,7 @@ namespace ToDoWebApi.GraphQL
                 throw new GraphQLException(ErrorMessages.CantUpdateCheckbox);
             }
 
-            await context.Entry(checkboxToPut).Navigation("Note").LoadAsync(cancellationToken);
+            await context.Entry(checkboxToPut).Navigation("Note").LoadAsync(cancellationToken).ConfigureAwait(false);
 
             if (checkboxToPut.Note.UserId != userId)
             {
@@ -107,13 +107,13 @@ namespace ToDoWebApi.GraphQL
             checkboxToPut.Text = sanitizedInput.Text;
             checkboxToPut.Checked = sanitizedInput.Checked;
 
-            await context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             await SubscriptionMessageEmitter.EmitOnNotesUpdate(
                 contextAccessor,
                 context,
                 eventSender,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
 
             return new ToDoCheckboxPutPayload(checkboxToPut);
         }
@@ -127,12 +127,12 @@ namespace ToDoWebApi.GraphQL
             [Service] ITopicEventSender eventSender,
             CancellationToken cancellationToken)
         {
-            HtmlSanitizer sanitizer = new();
-            ToDoCheckboxDeleteInput sanitizedInput = new(
+            HtmlSanitizer sanitizer = new ();
+            ToDoCheckboxDeleteInput sanitizedInput = new (
                 sanitizer.Sanitize(input.Id));
 
-            ToDoCheckboxDeleteInputValidator validator = new();
-            await validator.ValidateAndThrowGraphQLExceptionAsync(sanitizedInput);
+            ToDoCheckboxDeleteInputValidator validator = new ();
+            await validator.ValidateAndThrowGraphQLExceptionAsync(sanitizedInput).ConfigureAwait(false);
 
             string userId = contextAccessor.HttpContext!.User.Claims.First().Value;
 
@@ -143,7 +143,7 @@ namespace ToDoWebApi.GraphQL
                 throw new GraphQLException(ErrorMessages.CantDeleteCheckbox);
             }
 
-            await context.Entry(checkboxToDelete).Navigation("Note").LoadAsync(cancellationToken);
+            await context.Entry(checkboxToDelete).Navigation("Note").LoadAsync(cancellationToken).ConfigureAwait(false);
 
             if (checkboxToDelete.Note.UserId != userId)
             {
@@ -152,13 +152,13 @@ namespace ToDoWebApi.GraphQL
 
             context.Checkboxes.Remove(checkboxToDelete);
 
-            await context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             await SubscriptionMessageEmitter.EmitOnNotesUpdate(
                 contextAccessor,
                 context,
                 eventSender,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
 
             return new ToDoCheckboxDeletePayload(true);
         }

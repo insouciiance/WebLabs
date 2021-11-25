@@ -22,7 +22,7 @@ namespace ToDoWebApi.GraphQL.ToDos
 
             descriptor
                 .Field(c => c.Note)
-                .ResolveWith<Resolvers>(r => r.GetNote(default, default))
+                .ResolveWith<Resolvers>(r => Resolvers.GetNote(default, default))
                 .UseDbContext<ToDosDbContext>()
                 .Description("Gets the checkbox's note.");
         }
@@ -30,7 +30,7 @@ namespace ToDoWebApi.GraphQL.ToDos
         private class Resolvers
         {
             [UseDbContext(typeof(ToDosDbContext))]
-            public ToDoNote GetNote(ToDoCheckbox checkbox, [ScopedService] ToDosDbContext context)
+            public static ToDoNote GetNote(ToDoCheckbox checkbox, [ScopedService] ToDosDbContext context)
             {
                 return context.Notes.FirstOrDefault(n => n.Id == checkbox.NoteId);
             }
