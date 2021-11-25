@@ -1,14 +1,14 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using AspNetCoreRateLimit;
 using GraphQL.Server.Ui.Voyager;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -88,7 +88,7 @@ namespace ToDoWebApi
                 .AddEntityFrameworkStores<ToDosDbContext>();
 
             string signingKeyPhrase = Configuration["SigningKeyPhrase"];
-            SymmetricSecurityKey signingKey = new(Encoding.UTF8.GetBytes(signingKeyPhrase));
+            SymmetricSecurityKey signingKey = new (Encoding.UTF8.GetBytes(signingKeyPhrase));
 
             services
                 .AddAuthentication(options =>
@@ -107,7 +107,6 @@ namespace ToDoWebApi
                         ValidateIssuer = false,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        //TODO: remove timespan zero
                         ClockSkew = TimeSpan.Zero
                     };
                 });

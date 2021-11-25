@@ -20,8 +20,6 @@ namespace ToDoWebApi.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly RefreshTokensDbContext _refreshTokensDbContext;
-
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IHttpContextAccessor _contextAccessor;
@@ -30,14 +28,12 @@ namespace ToDoWebApi.Controllers
         private readonly JwtRefreshTokenHandler _refreshTokenHandler;
 
         public AuthController(
-            RefreshTokensDbContext refreshTokensDbContext,
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IHttpContextAccessor contextAccessor,
             JwtTokenCreator tokenCreator,
             JwtRefreshTokenHandler refreshTokenHandler)
         {
-            _refreshTokensDbContext = refreshTokensDbContext;
             _userManager = userManager;
             _signInManager = signInManager;
             _contextAccessor = contextAccessor;
@@ -48,15 +44,15 @@ namespace ToDoWebApi.Controllers
         [Route("register")]
         public async Task<IActionResult> Register([FromBody] RegisterUserInput input)
         {
-            RegisterUserInputValidator validator = new();
-            IEnumerable<string> validationResult = await validator.ValidateAndGetStringsAsync(input);
+            RegisterUserInputValidator validator = new ();
+            IEnumerable<string> validationResult = await validator.ValidateAndGetStringsAsync(input).ConfigureAwait(false);
 
             if (validationResult is not null)
             {
                 return BadRequest(new { errors = validationResult });
             }
 
-            ApplicationUser user = new()
+            ApplicationUser user = new ()
             {
                 UserName = input.UserName,
                 Email = input.Email
@@ -67,20 +63,20 @@ namespace ToDoWebApi.Controllers
                 return BadRequest(new { errors = new[] { ErrorMessages.UserExists } });
             }
 
-            IdentityResult result = await _userManager.CreateAsync(user, input.Password);
+            IdentityResult result = await _userManager.CreateAsync(user, input.Password).ConfigureAwait(false);
 
             if (!result.Succeeded)
             {
                 return BadRequest(new { errors = new[] { ErrorMessages.InvalidCredentials } });
             }
 
-            await _signInManager.SignInAsync(user, false);
+            await _signInManager.SignInAsync(user, false).ConfigureAwait(false);
 
-            var refreshToken = await _refreshTokenHandler.WriteIfExpiredAsync(user);
+            var refreshToken = await _refreshTokenHandler.WriteIfExpiredAsync(user).ConfigureAwait(false);
 
             var authToken = _tokenCreator.CreateAuthToken(user);
 
-            LoginUserPayload payload = new(authToken.Token, refreshToken.Token, refreshToken.Expires);
+            LoginUserPayload payload = new (authToken.Token, refreshToken.Token, refreshToken.Expires);
 
             return Ok(payload);
         }
@@ -88,8 +84,8 @@ namespace ToDoWebApi.Controllers
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginUserInput input)
         {
-            LoginUserInputValidator validator = new();
-            IEnumerable<string> validationResult = await validator.ValidateAndGetStringsAsync(input);
+            LoginUserInputValidator validator = new ();
+            IEnumerable<string> validationResult = await validator.ValidateAndGetStringsAsync(input).ConfigureAwait(false);
 
             if (validationResult is not null)
             {
@@ -104,18 +100,18 @@ namespace ToDoWebApi.Controllers
                 return BadRequest(new { errors = new[] { ErrorMessages.InvalidCredentials } });
             }
 
-            SignInResult result = await _signInManager.PasswordSignInAsync(user, input.Password, false, false);
+            SignInResult result = await _signInManager.PasswordSignInAsync(user, input.Password, false, false).ConfigureAwait(false);
 
             if (!result.Succeeded)
             {
                 return BadRequest(new { errors = new[] { ErrorMessages.InvalidCredentials } });
             }
 
-            var refreshToken = await _refreshTokenHandler.WriteIfExpiredAsync(user);
+            var (refreshToken, expires) = await _refreshTokenHandler.WriteIfExpiredAsync(user).ConfigureAwait(false);
 
-            var authToken = _tokenCreator.CreateAuthToken(user);
+            var (authToken, _) = _tokenCreator.CreateAuthToken(user);
 
-            LoginUserPayload payload = new(authToken.Token, refreshToken.Token, refreshToken.Expires);
+            LoginUserPayload payload = new (authToken, refreshToken, expires);
 
             return Ok(payload);
         }
@@ -127,7 +123,7 @@ namespace ToDoWebApi.Controllers
             string tokenHeader = _contextAccessor.HttpContext!.Request.Headers["Authorization"].ToString();
             string refreshToken = tokenHeader.Split(' ')[1];
 
-            bool isRefreshValid = await _refreshTokenHandler.IsTokenValidAsync(refreshToken);
+            bool isRefreshValid = await _refreshTokenHandler.IsTokenValidAsync(refreshToken).ConfigureAwait(false);
 
             if (!isRefreshValid)
             {
@@ -135,7 +131,7 @@ namespace ToDoWebApi.Controllers
             }
 
             string userId = _contextAccessor.HttpContext!.User.Claims.First().Value;
-            ApplicationUser user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            ApplicationUser user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == userId).ConfigureAwait(false);
 
             if (user is null)
             {
@@ -153,7 +149,7 @@ namespace ToDoWebApi.Controllers
         {
             try
             {
-                await _signInManager.SignOutAsync();
+                await _signInManager.SignOutAsync().ConfigureAwait(false);
             }
             catch
             {
