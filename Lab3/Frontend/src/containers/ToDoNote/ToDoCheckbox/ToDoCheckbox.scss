@@ -1,0 +1,56 @@
+@use '/Lab3/Frontend/src/shared/scss/shared.scss' as *;
+
+.CheckboxWrapper {
+    align-items: center;
+    border-radius: 3px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0.2rem;
+    transition: background-color 0.075s;
+
+    .CheckboxTextWrapper,
+    input,
+    form {
+        background-color: $main-color;
+        color: $main-color-dark;
+        font-size: 0.875rem;
+        height: 100%;
+        line-height: 1rem;
+        transition: inherit;
+
+        &:hover {
+            cursor: text;
+        }
+    }
+
+    form {
+        width: calc(100% - 3rem);
+    }
+
+    input {
+        width: 100%;
+    }
+
+    .Crossed {
+        text-decoration: line-through;
+    }
+
+    &:hover,
+    &:hover input {
+        background-color: $main-color-bright;
+    }
+}
+
+.CheckSquare {
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.DeleteButton {
+    cursor: pointer;
+    transition: 0.2s;
+
+    &:hover {
+        color: $warning-color;
+    }
+}

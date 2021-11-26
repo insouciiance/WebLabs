@@ -1,0 +1,10 @@
+@use '/Lab3/Frontend/src/shared/scss/shared.scss' as *;
+
+input {
+    background-color: $secondary-color;
+    border: 0;
+    color: $main-color-bright;
+    font-size: 1.3rem;
+    line-height: 1.5rem;
+    padding: 0.1rem;
+}

@@ -1,0 +1,27 @@
+@use '/Lab3/Frontend/src/shared/scss/shared.scss' as *;
+
+.FormWrapper {
+    display: flex;
+    justify-content: center;
+    padding-top: 12.5rem;
+
+    @media screen and (max-width: 37.5rem) {
+        padding-top: 10rem;
+    }
+}
+
+.FormCta {
+    color: $main-color-bright;
+    padding-bottom: 1rem;
+}
+
+.AuthRedirectWrapper {
+    padding-top: 2rem;
+    text-align: center;
+
+    a {
+        color: $main-color;
+        font-size: 1.1rem;
+        text-decoration: underline;
+    }
+}

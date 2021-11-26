@@ -1,0 +1,58 @@
+@use '/Lab3/Frontend/src/shared/scss/shared.scss' as *;
+
+.AddNoteWrapper {
+    background-color: $secondary-color;
+    border-radius: 5px;
+    margin: 2rem auto;
+    padding: 1rem;
+    width: 20%;
+
+    .AddNoteCta {
+        color: $main-color-bright;
+        text-align: center;
+    }
+
+    form {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+        input {
+            background-color: $main-color;
+            color: $main-color-dark;
+            font-weight: bold;
+            margin: 0.5rem 0;
+            width: 100%;
+        }
+
+        button {
+            width: 50%;
+        }
+    }
+
+    @media screen and (max-width: 93.75rem) {
+        width: 30%;
+    }
+
+    @media screen and (max-width: 75rem) {
+        width: 40%;
+    }
+
+    @media screen and (max-width: 56.25rem) {
+        width: 50%;
+    }
+
+    @media screen and (max-width: 56.25rem) {
+        width: 60%;
+    }
+
+    @media screen and (max-width: 37.5rem) {
+        width: 100%;
+    }
+}
+
+.NotesContainer {
+    display: flex;
+    flex-wrap: wrap;
+}

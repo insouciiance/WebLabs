@@ -1,0 +1,15 @@
+@use '/Lab3/Frontend/src/shared/scss/shared.scss' as *;
+
+.PopupContainer {
+    background-color: $main-color-dark;
+    border: 1px solid $secondary-color;
+    border-radius: 5px;
+    padding: 1rem;
+    text-align: center;
+    z-index: 100;
+}
+
+.DismissButtonWrapper {
+    padding-top: 1rem;
+    text-align: center;
+}

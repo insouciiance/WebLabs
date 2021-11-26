@@ -1,0 +1,17 @@
+@use '/Lab3/Frontend/src/shared/scss/shared.scss' as *;
+
+* {
+    box-sizing: border-box;
+    font-family: $main-font-family;
+    margin: 0;
+    padding: 0;
+
+    &:focus {
+        outline: 1px solid $main-accent-color;
+    }
+}
+
+:root,
+body {
+    background-color: $main-color-dark;
+}
