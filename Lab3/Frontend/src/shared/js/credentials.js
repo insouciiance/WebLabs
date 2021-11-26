@@ -1,9 +1,8 @@
-import lsTest from './lsTest';
+import lsAdapter from './lsAdapter';
 
 export const credentials = {
     get() {
-        if (!lsTest()) return null;
-        const username = localStorage.getItem('username');
+        const username = lsAdapter.get('username');
 
         if (username) {
             return {
@@ -14,12 +13,10 @@ export const credentials = {
         return null;
     },
     set(username) {
-        if (!lsTest()) return;
-        localStorage.setItem('username', username);
+        lsAdapter.set('username', username);
     },
     reset() {
-        if (!lsTest()) return;
-        localStorage.removeItem('username');
+        lsAdapter.remove('username');
     },
     exists() {
         return !!this.get();

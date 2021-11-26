@@ -1,13 +1,11 @@
 import day from 'dayjs';
 import jwtDecode from 'jwt-decode';
-import lsTest from './lsTest';
+import lsAdapter from './lsAdapter';
 
 export const authTokens = {
     get() {
-        if (!lsTest()) return false;
-
-        const authToken = localStorage.getItem('authToken');
-        const refreshToken = localStorage.getItem('refreshToken');
+        const authToken = lsAdapter.get('authToken');
+        const refreshToken = lsAdapter.get('refreshToken');
 
         let decodedToken;
 
@@ -32,14 +30,12 @@ export const authTokens = {
         return null;
     },
     set(authToken, refreshToken) {
-        if (!lsTest()) return;
-        localStorage.setItem('authToken', authToken);
-        localStorage.setItem('refreshToken', refreshToken);
+        lsAdapter.set('authToken', authToken);
+        lsAdapter.set('refreshToken', refreshToken);
     },
     reset() {
-        if (!lsTest()) return;
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('refreshToken');
+        lsAdapter.remove('authToken');
+        lsAdapter.remove('refreshToken');
     },
     exists() {
         return !!this.get();
@@ -49,7 +45,7 @@ export const authTokens = {
             return false;
         }
 
-        const refreshToken = localStorage.getItem('refreshToken');
+        const refreshToken = lsAdapter.get('refreshToken');
 
         const { exp } = jwtDecode(refreshToken);
 

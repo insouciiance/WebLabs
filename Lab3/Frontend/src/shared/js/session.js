@@ -1,17 +1,15 @@
 import day from 'dayjs';
-import lsTest from './lsTest';
+import ssAdapter from './ssAdapter';
 
 export const session = {
     get() {
-        return lsTest() ? sessionStorage.getItem('sessionId') : null;
+        return ssAdapter.get('sessionId');
     },
     set() {
-        if (!lsTest()) return;
-        sessionStorage.setItem('sessionId', day().valueOf());
+        ssAdapter.set('sessionId', day().valueOf());
     },
     reset() {
-        if (!lsTest()) return;
-        sessionStorage.removeItem('sessionId');
+        ssAdapter.remove('sessionId');
     },
     exists() {
         return !!this.get();

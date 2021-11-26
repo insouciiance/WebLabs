@@ -32,6 +32,14 @@ class Register extends Component {
         e.preventDefault();
         const { userName, email, password, passwordConfirm } = this.state;
 
+        if (password != passwordConfirm) {
+            this.setState({
+                errors: [{ message: 'Passwords do not match.' }],
+            });
+
+            return;
+        }
+
         this.setState({
             isLoading: true,
         });
