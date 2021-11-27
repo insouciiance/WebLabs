@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Slider & Burger</title>
+        <link rel="stylesheet" href="style.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,400&display=swap"
+            rel="stylesheet" />
+    </head>
+    <body>
+        <header>
+            <input id="burger-toggle" type="checkbox" name="burger-toggle" />
+            <label class="backdrop" for="burger-toggle"></label>
+            <label class="burger" for="burger-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </label>
+            <nav>
+                <ul class="nav-links">
+                    <li class="nav-link"><a href="#">Home</a></li>
+                    <li class="nav-link"><a href="#">About us</a></li>
+                    <li class="nav-link"><a href="#">Contact</a></li>
+                    <li class="nav-link"><a href="#">Support</a></li>
+                </ul>
+            </nav>
+        </header>
+        <main>
+            <h1 class="slider-cta">Slider demo</h1>
+            <div class="slider-outer">
+                <input id="slide1" name="slide-selector" type="radio" checked />
+                <input id="slide2" name="slide-selector" type="radio" />
+                <input id="slide3" name="slide-selector" type="radio" />
+                <input id="slide4" name="slide-selector" type="radio" />
+                <div class="label-bars-container">
+                    <label class="label-bar" for="slide1"></label>
+                    <label class="label-bar" for="slide2"></label>
+                    <label class="label-bar" for="slide3"></label>
+                    <label class="label-bar" for="slide4"></label>
+                </div>
+                <div class="btn btn-left">
+                    <label class="btn-label btn-label-left" for="slide1">
+                        &#8592;
+                    </label>
+                    <label class="btn-label btn-label-left" for="slide2">
+                        &#8592;
+                    </label>
+                    <label class="btn-label btn-label-left" for="slide3">
+                        &#8592;
+                    </label>
+                    <label class="btn-label btn-label-left" for="slide4">
+                        &#8592;
+                    </label>
+                </div>
+                <div class="btn btn-right">
+                    <label class="btn-label btn-label-right" for="slide1">
+                        &#8594;
+                    </label>
+                    <label class="btn-label btn-label-right" for="slide2">
+                        &#8594;
+                    </label>
+                    <label class="btn-label btn-label-right" for="slide3">
+                        &#8594;
+                    </label>
+                    <label class="btn-label btn-label-right" for="slide4">
+                        &#8594;
+                    </label>
+                </div>
+                <div class="slider">
+                    <div class="slide"></div>
+                    <div class="slide"></div>
+                    <div class="slide"></div>
+                    <div class="slide"></div>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>
