@@ -10,6 +10,7 @@ html {
 
 body {
   margin: 0;
+  overflow-x: hidden;
   padding: 0;
 }
 
@@ -88,7 +89,7 @@ header {
   position: fixed;
   right: 0;
   top: 0;
-  z-index: 1;
+  z-index: 2;
 }
 
 .burger-toggle:checked ~ .backdrop {
@@ -103,7 +104,7 @@ header {
   right: -50%;
   top: 0;
   width: 20rem;
-  z-index: 2;
+  z-index: 3;
 }
 .burger-toggle:checked ~ nav .nav-links {
   flex-direction: column;
@@ -117,7 +118,6 @@ header {
 
 .slider-outer {
   margin: 0 15rem;
-  overflow: hidden;
   position: relative;
 }
 .slider-outer .btn {
@@ -136,6 +136,11 @@ header {
   user-select: none;
   width: 2.5rem;
   z-index: 0;
+}
+@media screen and (max-width: 37.5rem) {
+  .slider-outer .btn {
+    display: none;
+  }
 }
 .slider-outer .btn:hover {
   background-color: #e6e6e6;
@@ -184,6 +189,11 @@ header {
   padding-bottom: 0.5rem;
   width: 100%;
 }
+@media screen and (max-width: 37.5rem) {
+  .label-bars-container {
+    display: none;
+  }
+}
 .label-bars-container .label-bar {
   background-color: #e6e6e6;
   border: 1px solid #3d56b2;
@@ -195,8 +205,8 @@ header {
   margin: 0;
 }
 
-.slide1:checked ~ .slider {
-  transform: translateX(0);
+.slide1:checked ~ .slider-visible .slider {
+  left: 0;
 }
 .slide1:checked ~ .label-bars-container .label-bar[for=slide1] {
   background-color: #3d56b2;
@@ -208,8 +218,8 @@ header {
   z-index: 1;
 }
 
-.slide2:checked ~ .slider {
-  transform: translateX(-25%);
+.slide2:checked ~ .slider-visible .slider {
+  left: -100%;
 }
 .slide2:checked ~ .label-bars-container .label-bar[for=slide2] {
   background-color: #3d56b2;
@@ -221,8 +231,8 @@ header {
   z-index: 1;
 }
 
-.slide3:checked ~ .slider {
-  transform: translateX(-50%);
+.slide3:checked ~ .slider-visible .slider {
+  left: -200%;
 }
 .slide3:checked ~ .label-bars-container .label-bar[for=slide3] {
   background-color: #3d56b2;
@@ -234,8 +244,8 @@ header {
   z-index: 1;
 }
 
-.slide4:checked ~ .slider {
-  transform: translateX(-75%);
+.slide4:checked ~ .slider-visible .slider {
+  left: -300%;
 }
 .slide4:checked ~ .label-bars-container .label-bar[for=slide4] {
   background-color: #3d56b2;
@@ -247,15 +257,51 @@ header {
   z-index: 1;
 }
 
-.slider {
-  display: flex;
+.swipe-cta {
+  display: none;
+  font-size: 1rem;
+  font-weight: bold;
+  margin: auto;
+  text-align: center;
+  width: 70%;
+}
+@media screen and (max-width: 37.5rem) {
+  .swipe-cta {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+  }
+}
+.swipe-cta span {
+  font-size: 2rem;
+}
+
+.slider-visible {
   height: 40rem;
-  transition: transform 1s;
+  -ms-overflow-style: none;
+  overflow-x: auto;
+  position: relative;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.slider-visible::-webkit-scrollbar {
+  display: none;
+}
+
+.slider {
+  bottom: 0;
+  display: flex;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: left 1s;
   width: 400%;
 }
 .slider .slide {
   flex: 1 1;
   height: 100%;
+  scroll-snap-align: start;
   background-position: center;
   background-size: cover;
 }

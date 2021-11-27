@@ -12,6 +12,7 @@ html {
 
 body {
     margin: 0;
+    overflow-x: hidden;
     padding: 0;
 }
 
@@ -92,7 +93,7 @@ nav {
     position: fixed;
     right: 0;
     top: 0;
-    z-index: 1;
+    z-index: 2;
 }
 
 .burger-toggle:checked {
@@ -109,7 +110,7 @@ nav {
         right: -50%;
         top: 0;
         width: 20rem;
-        z-index: 2;
+        z-index: 3;
 
         .nav-links {
             flex-direction: column;
@@ -125,7 +126,6 @@ nav {
 
 .slider-outer {
     margin: 0 15rem;
-    overflow: hidden;
     position: relative;
 
     .btn {
@@ -144,6 +144,10 @@ nav {
         user-select: none;
         width: 2.5rem;
         z-index: 0;
+
+        @media screen and (max-width: 37.5rem) {
+            display: none;
+        }
 
         &:hover {
             background-color: $bright-bg-color;
@@ -195,6 +199,10 @@ nav {
     padding-bottom: 0.5rem;
     width: 100%;
 
+    @media screen and (max-width: 37.5rem) {
+        display: none;
+    }
+
     .label-bar {
         background-color: $bright-bg-color;
         border: 1px solid $dark-bg-color;
@@ -209,8 +217,8 @@ nav {
 }
 
 .slide1:checked {
-    ~ .slider {
-        transform: translateX(0);
+    ~ .slider-visible .slider {
+        left: 0;
     }
 
     ~ .label-bars-container .label-bar[for='slide1'] {
@@ -227,8 +235,8 @@ nav {
 }
 
 .slide2:checked {
-    ~ .slider {
-        transform: translateX(-25%);
+    ~ .slider-visible .slider {
+        left: -100%;
     }
 
     ~ .label-bars-container .label-bar[for='slide2'] {
@@ -245,8 +253,8 @@ nav {
 }
 
 .slide3:checked {
-    ~ .slider {
-        transform: translateX(-50%);
+    ~ .slider-visible .slider {
+        left: -200%;
     }
 
     ~ .label-bars-container .label-bar[for='slide3'] {
@@ -263,8 +271,8 @@ nav {
 }
 
 .slide4:checked {
-    ~ .slider {
-        transform: translateX(-75%);
+    ~ .slider-visible .slider {
+        left: -300%;
     }
 
     ~ .label-bars-container .label-bar[for='slide4'] {
@@ -280,15 +288,52 @@ nav {
     }
 }
 
-.slider {
-    display: flex;
+.swipe-cta {
+    display: none;
+    font-size: 1rem;
+    font-weight: bold;
+    margin: auto;
+    text-align: center;
+    width: 70%;
+
+    @media screen and (max-width: 37.5rem) {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    span {
+        font-size: 2rem;
+    }
+}
+
+.slider-visible {
     height: 40rem;
-    transition: transform 1s;
+    -ms-overflow-style: none;
+    overflow-x: auto;
+    position: relative;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.slider {
+    bottom: 0;
+    display: flex;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: left 1s;
     width: 400%;
 
     .slide {
         flex: 1 1;
         height: 100%;
+        scroll-snap-align: start;
         background: {
             position: center;
             size: cover;
