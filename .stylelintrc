@@ -12,7 +12,6 @@
                 { "ignoreValues": ["transparent", "inherit", "/rgba/"] }
             ]
         ],
-        "selector-class-pattern": null,
-        "selector-max-id": 1
+        "selector-class-pattern": null
     }
 }

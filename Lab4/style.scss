@@ -80,7 +80,7 @@ nav {
     }
 }
 
-#burger-toggle {
+.burger-toggle {
     display: none;
 }
 
@@ -95,7 +95,7 @@ nav {
     z-index: 1;
 }
 
-#burger-toggle:checked {
+.burger-toggle:checked {
     ~ .backdrop {
         display: block;
     }
@@ -208,7 +208,7 @@ nav {
     }
 }
 
-#slide1:checked {
+.slide1:checked {
     ~ .slider {
         transform: translateX(0);
     }
@@ -226,7 +226,7 @@ nav {
     }
 }
 
-#slide2:checked {
+.slide2:checked {
     ~ .slider {
         transform: translateX(-25%);
     }
@@ -244,7 +244,7 @@ nav {
     }
 }
 
-#slide3:checked {
+.slide3:checked {
     ~ .slider {
         transform: translateX(-50%);
     }
@@ -262,7 +262,7 @@ nav {
     }
 }
 
-#slide4:checked {
+.slide4:checked {
     ~ .slider {
         transform: translateX(-75%);
     }
