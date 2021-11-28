@@ -64,11 +64,13 @@ header {
   justify-content: space-between;
   padding: 1rem 0.5rem;
   width: 4rem;
+  z-index: 4;
 }
 .burger span {
   background-color: #e6e6e6;
   display: inline-block;
   height: 3px;
+  transition: 0.3s;
   width: 100%;
 }
 @media screen and (max-width: 62.5rem) {
@@ -96,10 +98,11 @@ header {
   display: block;
 }
 .burger-toggle:checked ~ nav {
-  animation: burger-menu-translation 0.5s ease forwards;
+  animation: burger-menu-translation 0.5s ease-out forwards;
   background-color: #3d56b2;
   bottom: 0;
   display: block;
+  padding-top: 4rem;
   position: fixed;
   right: -50%;
   top: 0;
@@ -108,6 +111,18 @@ header {
 }
 .burger-toggle:checked ~ nav .nav-links {
   flex-direction: column;
+}
+.burger-toggle:checked ~ .burger span:nth-of-type(1) {
+  transform: rotateZ(30deg) scaleX(1.2);
+  transform-origin: left;
+}
+.burger-toggle:checked ~ .burger span:nth-of-type(2) {
+  transform: scaleX(0);
+  transform-origin: center;
+}
+.burger-toggle:checked ~ .burger span:nth-of-type(3) {
+  transform: rotateZ(-30deg) scaleX(1.2);
+  transform-origin: left;
 }
 
 .slider-cta {
@@ -320,7 +335,7 @@ header {
 
 @keyframes burger-menu-translation {
   from {
-    right: -50%;
+    right: -100%;
   }
   to {
     right: 0;
