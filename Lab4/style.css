@@ -73,6 +73,15 @@ header {
   transition: 0.3s;
   width: 100%;
 }
+.burger span:nth-of-type(1) {
+  transform-origin: left;
+}
+.burger span:nth-of-type(2) {
+  transform-origin: center;
+}
+.burger span:nth-of-type(3) {
+  transform-origin: left;
+}
 @media screen and (max-width: 62.5rem) {
   .burger {
     display: flex;
@@ -114,15 +123,12 @@ header {
 }
 .burger-toggle:checked ~ .burger span:nth-of-type(1) {
   transform: rotateZ(30deg) scaleX(1.2);
-  transform-origin: left;
 }
 .burger-toggle:checked ~ .burger span:nth-of-type(2) {
   transform: scaleX(0);
-  transform-origin: center;
 }
 .burger-toggle:checked ~ .burger span:nth-of-type(3) {
   transform: rotateZ(-30deg) scaleX(1.2);
-  transform-origin: left;
 }
 
 .slider-cta {
