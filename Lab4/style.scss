@@ -133,8 +133,8 @@ nav {
         display: block;
         padding-top: 4rem;
         position: fixed;
-        right: -50%;
         top: 0;
+        transform: translateX(100%);
         width: 20rem;
         z-index: 3;
 
@@ -248,7 +248,7 @@ nav {
 
 .slide1:checked {
     ~ .slider-visible .slider {
-        left: 0;
+        transform: translateX(0);
     }
 
     ~ .label-bars-container .label-bar[for='slide1'] {
@@ -266,7 +266,7 @@ nav {
 
 .slide2:checked {
     ~ .slider-visible .slider {
-        left: -100%;
+        transform: translateX(-25%);
     }
 
     ~ .label-bars-container .label-bar[for='slide2'] {
@@ -284,7 +284,7 @@ nav {
 
 .slide3:checked {
     ~ .slider-visible .slider {
-        left: -200%;
+        transform: translateX(-50%);
     }
 
     ~ .label-bars-container .label-bar[for='slide3'] {
@@ -302,7 +302,7 @@ nav {
 
 .slide4:checked {
     ~ .slider-visible .slider {
-        left: -300%;
+        transform: translateX(-75%);
     }
 
     ~ .label-bars-container .label-bar[for='slide4'] {
@@ -344,7 +344,7 @@ nav {
     position: absolute;
     right: 0;
     top: 0;
-    transition: left 1s;
+    transition: transform 1s;
     width: 400%;
 
     .slide {
@@ -408,9 +408,9 @@ nav {
 
 @keyframes burger-menu-translation {
     from {
-        right: -100%;
+        transform: translateX(100%);
     }
     to {
-        right: 0;
+        transform: translateX(0);
     }
 }
