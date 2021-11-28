@@ -163,10 +163,6 @@ nav {
         width: 2.5rem;
         z-index: 0;
 
-        @media screen and (max-width: 37.5rem) {
-            display: none;
-        }
-
         &:hover {
             background-color: $bright-bg-color;
         }
@@ -216,10 +212,6 @@ nav {
     justify-content: space-between;
     padding-bottom: 0.5rem;
     width: 100%;
-
-    @media screen and (max-width: 37.5rem) {
-        display: none;
-    }
 
     .label-bar {
         background-color: $bright-bg-color;
@@ -314,12 +306,6 @@ nav {
     text-align: center;
     width: 70%;
 
-    @media screen and (max-width: 37.5rem) {
-        align-items: center;
-        display: flex;
-        justify-content: space-between;
-    }
-
     span {
         font-size: 2rem;
     }
@@ -327,15 +313,8 @@ nav {
 
 .slider-visible {
     height: 40rem;
-    -ms-overflow-style: none;
-    overflow-x: auto;
+    overflow-x: hidden;
     position: relative;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;
-
-    &::-webkit-scrollbar {
-        display: none;
-    }
 }
 
 .slider {
@@ -351,7 +330,6 @@ nav {
     .slide {
         flex: 1 1;
         height: 100%;
-        scroll-snap-align: start;
         background: {
             position: center;
             size: cover;
@@ -371,6 +349,39 @@ nav {
 
         &:nth-of-type(4) {
             background-image: url('./assets/slide4.jpg');
+        }
+    }
+}
+
+@supports (scroll-snap-type: x mandatory) and (scroll-snap-align: start) {
+    @media screen and (max-width: 37.5rem) {
+        .swipe-cta {
+            align-items: center;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .label-bars-container {
+            display: none;
+        }
+
+        .btn {
+            display: none;
+        }
+
+        .slider-visible {
+            -ms-overflow-style: none;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+
+        .slide {
+            scroll-snap-align: start;
         }
     }
 }

@@ -152,11 +152,6 @@ header {
   width: 2.5rem;
   z-index: 0;
 }
-@media screen and (max-width: 37.5rem) {
-  .slider-outer .btn {
-    display: none;
-  }
-}
 .slider-outer .btn:hover {
   background-color: #e6e6e6;
 }
@@ -203,11 +198,6 @@ header {
   justify-content: space-between;
   padding-bottom: 0.5rem;
   width: 100%;
-}
-@media screen and (max-width: 37.5rem) {
-  .label-bars-container {
-    display: none;
-  }
 }
 .label-bars-container .label-bar {
   background-color: #e6e6e6;
@@ -280,27 +270,14 @@ header {
   text-align: center;
   width: 70%;
 }
-@media screen and (max-width: 37.5rem) {
-  .swipe-cta {
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
-  }
-}
 .swipe-cta span {
   font-size: 2rem;
 }
 
 .slider-visible {
   height: 40rem;
-  -ms-overflow-style: none;
-  overflow-x: auto;
+  overflow-x: hidden;
   position: relative;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-}
-.slider-visible::-webkit-scrollbar {
-  display: none;
 }
 
 .slider {
@@ -316,7 +293,6 @@ header {
 .slider .slide {
   flex: 1 1;
   height: 100%;
-  scroll-snap-align: start;
   background-position: center;
   background-size: cover;
 }
@@ -333,6 +309,37 @@ header {
   background-image: url("./assets/slide4.jpg");
 }
 
+@supports (scroll-snap-type: x mandatory) and (scroll-snap-align: start) {
+  @media screen and (max-width: 37.5rem) {
+    .swipe-cta {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .label-bars-container {
+      display: none;
+    }
+
+    .btn {
+      display: none;
+    }
+
+    .slider-visible {
+      -ms-overflow-style: none;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .slider-visible::-webkit-scrollbar {
+      display: none;
+    }
+
+    .slide {
+      scroll-snap-align: start;
+    }
+  }
+}
 @keyframes burger-menu-translation {
   from {
     right: -100%;
