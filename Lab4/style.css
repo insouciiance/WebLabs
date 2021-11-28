@@ -61,25 +61,32 @@ header {
   cursor: pointer;
   display: none;
   flex-direction: column;
+  height: 2rem;
   justify-content: space-between;
-  padding: 1rem 0.5rem;
-  width: 4rem;
+  margin: 1rem 0.5rem;
+  position: relative;
+  width: 3rem;
   z-index: 4;
 }
 .burger span {
   background-color: #e6e6e6;
   display: inline-block;
   height: 3px;
+  position: absolute;
   transition: 0.3s;
   width: 100%;
 }
 .burger span:nth-of-type(1) {
+  top: 0;
   transform-origin: left;
 }
 .burger span:nth-of-type(2) {
+  top: 50%;
+  transform: translateY(-50%);
   transform-origin: center;
 }
 .burger span:nth-of-type(3) {
+  bottom: 0;
   transform-origin: left;
 }
 @media screen and (max-width: 62.5rem) {
@@ -103,6 +110,9 @@ header {
   z-index: 2;
 }
 
+.burger-toggle:checked ~ .burger {
+  position: fixed;
+}
 .burger-toggle:checked ~ .backdrop {
   display: block;
 }
