@@ -120,6 +120,7 @@ nav {
 .burger-toggle:checked {
     ~ .burger {
         position: fixed;
+        right: 0;
     }
 
     ~ .backdrop {

@@ -112,6 +112,7 @@ header {
 
 .burger-toggle:checked ~ .burger {
   position: fixed;
+  right: 0;
 }
 .burger-toggle:checked ~ .backdrop {
   display: block;
