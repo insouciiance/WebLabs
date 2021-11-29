@@ -123,6 +123,7 @@ header {
   display: block;
   padding-top: 4rem;
   position: fixed;
+  right: 0;
   top: 0;
   transform: translateX(100%);
   width: 20rem;
@@ -325,37 +326,6 @@ header {
   background-image: url("./assets/slide4.jpg");
 }
 
-@supports (scroll-snap-type: x mandatory) and (scroll-snap-align: start) {
-  @media screen and (max-width: 37.5rem) {
-    .swipe-cta {
-      align-items: center;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .label-bars-container {
-      display: none;
-    }
-
-    .btn {
-      display: none;
-    }
-
-    .slider-visible {
-      -ms-overflow-style: none;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      scrollbar-width: none;
-    }
-    .slider-visible::-webkit-scrollbar {
-      display: none;
-    }
-
-    .slide {
-      scroll-snap-align: start;
-    }
-  }
-}
 @keyframes burger-menu-translation {
   from {
     transform: translateX(100%);
