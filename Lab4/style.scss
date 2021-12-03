@@ -156,6 +156,12 @@ nav {
     ~ .burger span:nth-of-type(3) {
         transform: rotateZ(-30deg) scaleX(1.2);
     }
+
+    @media screen and (min-width: 37.5rem) {
+        ~ .burger {
+            display: flex;
+        }
+    }
 }
 
 .slider-cta {
